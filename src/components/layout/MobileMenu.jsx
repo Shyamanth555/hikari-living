@@ -1,0 +1,82 @@
+import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { Link } from 'react-router-dom';
+import { X } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import { POLICY_LINKS } from '../../lib/constants';
+
+export function MobileMenu({ open, onOpenChange, categories }) {
+  const { isAuthenticated, isAdmin } = useAuth();
+
+  const close = () => onOpenChange(false);
+
+  return (
+    <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
+      <DialogPrimitive.Portal>
+        <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-ink-900/40" />
+        <DialogPrimitive.Content
+          className="fixed left-0 top-0 z-50 flex h-full w-full max-w-xs flex-col overflow-y-auto bg-cream-50 shadow-xl focus:outline-none"
+          aria-describedby={undefined}
+        >
+          <div className="flex items-center justify-between border-b border-border px-5 py-4">
+            <DialogPrimitive.Title className="font-display text-lg">Menu</DialogPrimitive.Title>
+            <DialogPrimitive.Close className="cursor-pointer" aria-label="Close menu">
+              <X className="h-5 w-5" />
+            </DialogPrimitive.Close>
+          </div>
+
+          <nav className="flex flex-1 flex-col gap-1 px-5 py-4 text-sm">
+            <Link to="/shop" onClick={close} className="py-2.5 font-medium">
+              Shop
+            </Link>
+            {categories.map((cat) => (
+              <Link key={cat._id} to={`/category/${cat.slug}`} onClick={close} className="py-2.5">
+                {cat.name}
+              </Link>
+            ))}
+            <Link to="/about" onClick={close} className="py-2.5">
+              Our Story
+            </Link>
+            <Link to="/track-order" onClick={close} className="py-2.5">
+              Track Order
+            </Link>
+            <Link to="/contact" onClick={close} className="py-2.5">
+              Contact
+            </Link>
+
+            <div className="my-3 border-t border-border" />
+
+            {isAuthenticated ? (
+              <>
+                <Link to="/account" onClick={close} className="py-2.5">
+                  My Account
+                </Link>
+                {isAdmin && (
+                  <Link to="/admin" onClick={close} className="py-2.5">
+                    Admin Panel
+                  </Link>
+                )}
+              </>
+            ) : (
+              <>
+                <Link to="/login" onClick={close} className="py-2.5">
+                  Log in
+                </Link>
+                <Link to="/register" onClick={close} className="py-2.5">
+                  Create account
+                </Link>
+              </>
+            )}
+
+            <div className="my-3 border-t border-border" />
+
+            {POLICY_LINKS.map((link) => (
+              <Link key={link.href} to={link.href} onClick={close} className="py-2 text-xs text-muted-foreground">
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+        </DialogPrimitive.Content>
+      </DialogPrimitive.Portal>
+    </DialogPrimitive.Root>
+  );
+}
