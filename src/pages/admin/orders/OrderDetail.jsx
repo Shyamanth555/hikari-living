@@ -1,10 +1,14 @@
 import { useParams } from 'react-router-dom';
+import { AlertTriangle, RefreshCw, Truck } from 'lucide-react';
 import { Spinner } from '../../../components/ui/Spinner';
 import { OrderStatusBadge } from '../../../components/common/OrderStatusBadge';
 import { PriceDisplay } from '../../../components/common/PriceDisplay';
 import { OrderStatusUpdater } from '../../../components/admin/OrderStatusUpdater';
 import { TrackingForm } from '../../../components/admin/TrackingForm';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/Card';
+import { Badge } from '../../../components/ui/Badge';
+import { Button } from '../../../components/ui/Button';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../../../components/ui/Accordion';
 import { useAsync } from '../../../hooks/useAsync';
 import { orderApi } from '../../../api/orderApi';
 import { useToast } from '../../../context/ToastContext';
@@ -17,6 +21,7 @@ export default function OrderDetail() {
   const { toast } = useToast();
   const [updatingStatus, setUpdatingStatus] = useState(false);
   const [updatingTracking, setUpdatingTracking] = useState(false);
+  const [retryingShipment, setRetryingShipment] = useState(false);
 
   const handleStatusUpdate = async (status) => {
     setUpdatingStatus(true);
@@ -41,6 +46,24 @@ export default function OrderDetail() {
       toast({ title: 'Could not update tracking', description: err?.response?.data?.message, variant: 'destructive' });
     } finally {
       setUpdatingTracking(false);
+    }
+  };
+
+  const handleRetryShipment = async () => {
+    setRetryingShipment(true);
+    try {
+      await orderApi.adminRetryShiprocket(id);
+      toast({ title: 'Shiprocket shipment created', variant: 'success' });
+      refetch();
+    } catch (err) {
+      toast({
+        title: 'Shiprocket shipment failed',
+        description: err?.response?.data?.message,
+        variant: 'destructive',
+      });
+      refetch();
+    } finally {
+      setRetryingShipment(false);
     }
   };
 
@@ -143,7 +166,68 @@ export default function OrderDetail() {
               <CardTitle>Shipment Tracking</CardTitle>
             </CardHeader>
             <CardContent>
-              <TrackingForm tracking={order.tracking} onSubmit={handleTrackingUpdate} submitting={updatingTracking} />
+              {order.shipmentError && (
+                <div className="mb-4 rounded-md border border-destructive/30 bg-red-50 p-3">
+                  <div className="flex items-center gap-2 text-sm font-medium text-destructive">
+                    <AlertTriangle className="h-4 w-4" /> Automatic shipment failed
+                  </div>
+                  <p className="mt-1 text-sm text-destructive/90">{order.shipmentError}</p>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="mt-3"
+                    disabled={retryingShipment}
+                    onClick={handleRetryShipment}
+                  >
+                    <RefreshCw className="h-3.5 w-3.5" />
+                    {retryingShipment ? 'Retrying…' : order.tracking?.trackingId ? 'Retry Pickup Request' : 'Retry Shiprocket Shipment'}
+                  </Button>
+                </div>
+              )}
+
+              {order.tracking?.provider === 'shiprocket' && order.tracking?.trackingId ? (
+                <div className="rounded-md bg-cream-100 p-4">
+                  <div className="mb-2 flex items-center gap-2">
+                    <Truck className="h-4 w-4 text-foreground" />
+                    <span className="text-sm font-medium text-foreground">{order.tracking.carrier}</span>
+                    <Badge variant="accent">via Shiprocket</Badge>
+                    <Badge variant={order.tracking.pickupScheduled ? 'accent' : 'warning'}>
+                      {order.tracking.pickupScheduled ? 'Pickup scheduled' : 'Pickup pending'}
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-muted-foreground">AWB: {order.tracking.trackingId}</p>
+                  {order.tracking.trackingUrl && (
+                    <a
+                      href={order.tracking.trackingUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-2 inline-block text-sm font-medium text-primary hover:underline"
+                    >
+                      Track shipment →
+                    </a>
+                  )}
+                </div>
+              ) : (
+                !order.shipmentError && (
+                  <p className="text-sm text-muted-foreground">
+                    No shipment yet — created automatically once the order is paid (or immediately for Cash on
+                    Delivery).
+                  </p>
+                )
+              )}
+
+              <Accordion type="single" collapsible className="mt-4">
+                <AccordionItem value="manual">
+                  <AccordionTrigger className="text-sm">Manual tracking override</AccordionTrigger>
+                  <AccordionContent>
+                    <p className="mb-3 text-xs text-muted-foreground">
+                      For shipments outside Shiprocket, or to correct the details above. Submitting this replaces
+                      whatever tracking info is currently shown.
+                    </p>
+                    <TrackingForm tracking={order.tracking} onSubmit={handleTrackingUpdate} submitting={updatingTracking} />
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             </CardContent>
           </Card>
         </div>

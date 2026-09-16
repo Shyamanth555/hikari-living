@@ -14,4 +14,6 @@ export const orderApi = {
     axiosClient.put(`/admin/orders/${id}/status`, { status }).then((r) => r.data),
   adminUpdateTracking: (id, data) =>
     axiosClient.put(`/admin/orders/${id}/tracking`, data).then((r) => r.data),
+  adminRetryShiprocket: (id) =>
+    axiosClient.post(`/admin/orders/${id}/shiprocket/retry`).then((r) => r.data),
 };

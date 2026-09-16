@@ -18,6 +18,7 @@ const productSchema = z.object({
   compareAtPrice: z.union([z.coerce.number().min(0), z.literal('')]).optional(),
   category: z.string().min(1, 'Category is required'),
   stock: z.coerce.number().min(0, 'Stock must be 0 or more'),
+  weight: z.coerce.number().min(0, 'Weight must be 0 or more').optional(),
   sku: z.string().optional(),
   status: z.enum(['active', 'draft']),
   featured: z.boolean().optional(),
@@ -43,6 +44,7 @@ export function ProductForm({ defaultValues, categories = [], onSubmit, submitti
       price: '',
       compareAtPrice: '',
       stock: 0,
+      weight: 0.5,
       sku: '',
       status: 'draft',
       featured: false,
@@ -91,7 +93,7 @@ export function ProductForm({ defaultValues, categories = [], onSubmit, submitti
         {errors.description && <p className="text-xs text-destructive">{errors.description.message}</p>}
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-4">
         <div className="space-y-1.5">
           <Label htmlFor="price">Price (₹)</Label>
           <Input id="price" type="number" step="0.01" {...register('price')} />
@@ -105,6 +107,12 @@ export function ProductForm({ defaultValues, categories = [], onSubmit, submitti
           <Label htmlFor="stock">Stock</Label>
           <Input id="stock" type="number" {...register('stock')} />
           {errors.stock && <p className="text-xs text-destructive">{errors.stock.message}</p>}
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="weight">Weight (kg)</Label>
+          <Input id="weight" type="number" step="0.01" {...register('weight')} />
+          {errors.weight && <p className="text-xs text-destructive">{errors.weight.message}</p>}
+          <p className="text-xs text-muted-foreground">Per unit — used for shipping calculations</p>
         </div>
       </div>
 
