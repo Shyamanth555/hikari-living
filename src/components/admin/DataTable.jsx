@@ -19,9 +19,9 @@ export function DataTable({ columns, rows, loading, page, pages, onPageChange, e
   return (
     <div className="overflow-hidden rounded-lg border border-border">
       {/* Tablet / desktop */}
-      <div className="hidden overflow-x-auto md:block">
+      <div className="hidden max-h-[60vh] overflow-auto md:block">
         <table className="w-full text-left text-sm">
-          <thead className="border-b border-border bg-cream-100">
+          <thead className="sticky top-0 z-10 border-b border-border bg-cream-100">
             <tr>
               {columns.map((col) => (
                 <th key={col.key} className="whitespace-nowrap px-4 py-3 font-medium text-muted-foreground">
@@ -57,7 +57,7 @@ export function DataTable({ columns, rows, loading, page, pages, onPageChange, e
       </div>
 
       {/* Mobile: cards */}
-      <div className="divide-y divide-border md:hidden">
+      <div className="max-h-[60vh] divide-y divide-border overflow-auto md:hidden">
         {loading &&
           Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="space-y-2 p-4">

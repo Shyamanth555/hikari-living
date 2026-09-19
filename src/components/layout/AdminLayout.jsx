@@ -10,10 +10,10 @@ export function AdminLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex h-screen overflow-hidden">
       <AdminSidebar />
-      <div className="min-w-0 flex-1">
-        <header className="flex h-16 items-center justify-between border-b border-border px-5">
+      <div className="flex min-w-0 flex-1 flex-col">
+        <header className="flex h-16 shrink-0 items-center justify-between border-b border-border px-5">
           <div className="flex items-center gap-3">
             <button
               type="button"
@@ -33,7 +33,7 @@ export function AdminLayout() {
             Log out
           </button>
         </header>
-        <main className="p-5 md:p-8">
+        <main className="min-h-0 flex-1 overflow-y-auto p-5 md:p-8">
           <Outlet />
         </main>
       </div>

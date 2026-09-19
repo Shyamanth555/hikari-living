@@ -54,7 +54,7 @@ export function AdminSidebarContent({ onNavigate }) {
 
 export function AdminSidebar() {
   return (
-    <aside className="hidden w-60 shrink-0 border-r border-border bg-cream-100 md:block">
+    <aside className="hidden w-60 shrink-0 overflow-y-auto border-r border-border bg-cream-100 md:block">
       <AdminSidebarContent />
     </aside>
   );
