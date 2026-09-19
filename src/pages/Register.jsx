@@ -11,7 +11,11 @@ import { useAuth } from '../context/AuthContext';
 
 const schema = z.object({
   name: z.string().min(1, 'Name is required'),
-  email: z.string().email('Enter a valid email'),
+  email: z.string().min(1, 'Email is required').email('Enter a valid email'),
+  phone: z
+    .string()
+    .min(1, 'Phone number is required')
+    .regex(/^\d{10}$/, 'Enter a valid 10-digit phone number'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
 });
 
@@ -51,17 +55,40 @@ export default function Register() {
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4">
           <div className="space-y-1.5">
-            <Label htmlFor="name">Full name</Label>
+            <Label htmlFor="name">
+              Full name <span className="text-destructive">*</span>
+            </Label>
             <Input id="name" {...register('name')} />
             {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">
+              Email <span className="text-destructive">*</span>
+            </Label>
             <Input id="email" type="email" {...register('email')} />
             {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="phone">
+              Phone number <span className="text-destructive">*</span>
+            </Label>
+            <Input
+              id="phone"
+              inputMode="numeric"
+              maxLength={10}
+              placeholder="10-digit mobile number"
+              {...register('phone', {
+                onChange: (e) => {
+                  e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10);
+                },
+              })}
+            />
+            {errors.phone && <p className="text-xs text-destructive">{errors.phone.message}</p>}
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="password">
+              Password <span className="text-destructive">*</span>
+            </Label>
             <Input id="password" type="password" {...register('password')} />
             {errors.password && <p className="text-xs text-destructive">{errors.password.message}</p>}
           </div>
