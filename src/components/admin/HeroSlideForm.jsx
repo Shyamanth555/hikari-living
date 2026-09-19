@@ -55,7 +55,7 @@ export function HeroSlideForm({ defaultValues, products = [], onSubmit, submitti
     <form onSubmit={handleSubmit(submit)} className="space-y-6">
       <div className="space-y-1.5">
         <Label>Desktop image</Label>
-        <p className="text-xs text-muted-foreground">Recommended 1920×1080 (16:9)</p>
+        <p className="text-xs text-muted-foreground">Recommended 2400×900px (wide banner, ratio 8:3) — shown edge-to-edge on tablet/desktop</p>
         <ImageUploader images={image} onChange={setImage} max={1} />
         {image.length === 0 && <p className="text-xs text-destructive">A desktop image is required</p>}
       </div>
@@ -63,8 +63,8 @@ export function HeroSlideForm({ defaultValues, products = [], onSubmit, submitti
       <div className="space-y-1.5">
         <Label>Mobile image (optional)</Label>
         <p className="text-xs text-muted-foreground">
-          Same 16:9 landscape ratio, e.g. 1200×675 — a smaller file that loads faster on mobile. Falls back to the
-          desktop image if left empty.
+          Recommended 1080×1080px (square, ratio 1:1) — shown edge-to-edge on phones. Falls back to the desktop
+          image if left empty.
         </p>
         <ImageUploader images={mobileImage} onChange={setMobileImage} max={1} />
       </div>
