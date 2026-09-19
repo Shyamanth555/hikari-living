@@ -23,6 +23,7 @@ const productSchema = z.object({
   sku: z.string().optional(),
   status: z.enum(['active', 'draft']),
   featured: z.boolean().optional(),
+  isNewLaunch: z.boolean().optional(),
   tags: z.string().optional(),
 });
 
@@ -55,6 +56,7 @@ export function ProductForm({ defaultValues, categories = [], onSubmit, submitti
       sku: '',
       status: 'draft',
       featured: false,
+      isNewLaunch: false,
       ...defaultValues,
       category: defaultValues?.category?._id || defaultValues?.category || '',
       tags: (defaultValues?.tags || []).join(', '),
@@ -221,14 +223,22 @@ export function ProductForm({ defaultValues, categories = [], onSubmit, submitti
         </Button>
       </div>
 
-      <label className="flex items-center gap-2 text-sm">
-        <Checkbox checked={watch('featured')} onCheckedChange={(v) => setValue('featured', !!v)} />
-        Feature on home page
-      </label>
+      <div className="space-y-2">
+        <label className="flex items-center gap-2 text-sm">
+          <Checkbox checked={watch('featured')} onCheckedChange={(v) => setValue('featured', !!v)} />
+          Feature on home page
+        </label>
+        <label className="flex items-center gap-2 text-sm">
+          <Checkbox checked={watch('isNewLaunch')} onCheckedChange={(v) => setValue('isNewLaunch', !!v)} />
+          Show in New Launches
+        </label>
+      </div>
 
-      <Button type="submit" disabled={submitting} size="lg">
-        {submitting ? 'Saving…' : submitLabel}
-      </Button>
+      <div className="flex justify-end">
+        <Button type="submit" disabled={submitting} size="lg">
+          {submitting ? 'Saving…' : submitLabel}
+        </Button>
+      </div>
     </form>
   );
 }

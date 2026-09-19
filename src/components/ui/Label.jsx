@@ -5,7 +5,7 @@ import { cn } from '../../lib/cn';
 const Label = forwardRef(({ className, ...props }, ref) => (
   <LabelPrimitive.Root
     ref={ref}
-    className={cn('text-sm font-medium text-foreground', className)}
+    className={cn('block text-sm font-medium text-foreground', className)}
     {...props}
   />
 ));

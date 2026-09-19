@@ -84,7 +84,7 @@ export default function CategoryList() {
     <div>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <h1 className="font-display text-2xl text-foreground">Categories</h1>
-        <Button asChild>
+        <Button asChild className="ml-auto">
           <Link to="/admin/categories/new">
             <Plus className="h-4 w-4" /> Add Category
           </Link>

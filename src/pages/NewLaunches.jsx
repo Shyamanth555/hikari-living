@@ -8,7 +8,10 @@ import { useState } from 'react';
 
 export default function NewLaunches() {
   const [page, setPage] = useState(1);
-  const { data, loading } = useAsync(() => productApi.list({ sort: 'newest', page, limit: 12 }), [page]);
+  const { data, loading } = useAsync(
+    () => productApi.list({ newLaunch: true, sort: 'newest', page, limit: 12 }),
+    [page]
+  );
 
   return (
     <div className="container-page py-10">

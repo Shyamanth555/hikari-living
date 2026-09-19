@@ -50,9 +50,11 @@ export function TrackingForm({ tracking, onSubmit, submitting = false }) {
           onChange={(e) => setForm((f) => ({ ...f, trackingUrl: e.target.value }))}
         />
       </div>
-      <Button type="submit" disabled={submitting}>
-        {submitting ? 'Saving…' : tracking?.trackingId ? 'Update tracking' : 'Add tracking'}
-      </Button>
+      <div className="flex justify-end">
+        <Button type="submit" disabled={submitting}>
+          {submitting ? 'Saving…' : tracking?.trackingId ? 'Update tracking' : 'Add tracking'}
+        </Button>
+      </div>
     </form>
   );
 }

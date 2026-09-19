@@ -70,9 +70,11 @@ export function CategoryForm({ defaultValues, onSubmit, submitting = false, subm
         Active (visible on storefront)
       </label>
 
-      <Button type="submit" disabled={submitting} size="lg">
-        {submitting ? 'Saving…' : submitLabel}
-      </Button>
+      <div className="flex justify-end">
+        <Button type="submit" disabled={submitting} size="lg">
+          {submitting ? 'Saving…' : submitLabel}
+        </Button>
+      </div>
     </form>
   );
 }

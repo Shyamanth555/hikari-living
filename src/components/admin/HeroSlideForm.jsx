@@ -114,9 +114,11 @@ export function HeroSlideForm({ defaultValues, products = [], onSubmit, submitti
         Active (visible on homepage)
       </label>
 
-      <Button type="submit" disabled={submitting} size="lg">
-        {submitting ? 'Saving…' : submitLabel}
-      </Button>
+      <div className="flex justify-end">
+        <Button type="submit" disabled={submitting} size="lg">
+          {submitting ? 'Saving…' : submitLabel}
+        </Button>
+      </div>
     </form>
   );
 }

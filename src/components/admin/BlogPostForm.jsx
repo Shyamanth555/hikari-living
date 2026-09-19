@@ -127,9 +127,11 @@ export function BlogPostForm({ defaultValues, onSubmit, submitting = false, subm
         </div>
       </div>
 
-      <Button type="submit" disabled={submitting} size="lg">
-        {submitting ? 'Saving…' : submitLabel}
-      </Button>
+      <div className="flex justify-end">
+        <Button type="submit" disabled={submitting} size="lg">
+          {submitting ? 'Saving…' : submitLabel}
+        </Button>
+      </div>
     </form>
   );
 }
