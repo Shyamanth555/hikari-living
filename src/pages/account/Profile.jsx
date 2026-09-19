@@ -33,7 +33,9 @@ function InfoTab() {
   return (
     <form onSubmit={handleSubmit} className="max-w-md space-y-4">
       <div className="space-y-1.5">
-        <Label htmlFor="name">Full name</Label>
+        <Label htmlFor="name">
+          Full name <span className="text-destructive">*</span>
+        </Label>
         <Input id="name" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} />
       </div>
       <div className="space-y-1.5">
@@ -41,7 +43,9 @@ function InfoTab() {
         <Input id="email" value={user.email} disabled />
       </div>
       <div className="space-y-1.5">
-        <Label htmlFor="phone">Phone</Label>
+        <Label htmlFor="phone">
+          Phone <span className="text-destructive">*</span>
+        </Label>
         <Input
           id="phone"
           inputMode="numeric"
@@ -187,7 +191,9 @@ function PasswordTab() {
   return (
     <form onSubmit={handleSubmit} className="max-w-md space-y-4">
       <div className="space-y-1.5">
-        <Label htmlFor="currentPassword">Current password</Label>
+        <Label htmlFor="currentPassword">
+          Current password <span className="text-destructive">*</span>
+        </Label>
         <Input
           id="currentPassword"
           type="password"
@@ -196,7 +202,9 @@ function PasswordTab() {
         />
       </div>
       <div className="space-y-1.5">
-        <Label htmlFor="newPassword">New password</Label>
+        <Label htmlFor="newPassword">
+          New password <span className="text-destructive">*</span>
+        </Label>
         <Input
           id="newPassword"
           type="password"

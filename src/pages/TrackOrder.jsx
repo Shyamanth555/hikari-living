@@ -42,7 +42,9 @@ export default function TrackOrder() {
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-4">
           <div className="space-y-1.5">
-            <Label htmlFor="orderNumber">Order number</Label>
+            <Label htmlFor="orderNumber">
+              Order number <span className="text-destructive">*</span>
+            </Label>
             <Input
               id="orderNumber"
               placeholder="HL-20260101-12345"
@@ -52,7 +54,9 @@ export default function TrackOrder() {
             />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">
+              Email <span className="text-destructive">*</span>
+            </Label>
             <Input
               id="email"
               type="email"

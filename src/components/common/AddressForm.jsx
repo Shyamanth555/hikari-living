@@ -105,12 +105,16 @@ export function AddressForm({ defaultValues, onSubmit, submitLabel = 'Save addre
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
-          <Label htmlFor="fullName">Full name</Label>
+          <Label htmlFor="fullName">
+            Full name <span className="text-destructive">*</span>
+          </Label>
           <Input id="fullName" {...register('fullName')} />
           {errors.fullName && <p className="text-xs text-destructive">{errors.fullName.message}</p>}
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="phone">Phone</Label>
+          <Label htmlFor="phone">
+            Phone <span className="text-destructive">*</span>
+          </Label>
           <Input
             id="phone"
             inputMode="numeric"
@@ -127,7 +131,9 @@ export function AddressForm({ defaultValues, onSubmit, submitLabel = 'Save addre
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="addressLine1">Address line 1</Label>
+        <Label htmlFor="addressLine1">
+          Address line 1 <span className="text-destructive">*</span>
+        </Label>
         <Input id="addressLine1" {...register('addressLine1')} />
         {errors.addressLine1 && <p className="text-xs text-destructive">{errors.addressLine1.message}</p>}
       </div>
@@ -139,7 +145,9 @@ export function AddressForm({ defaultValues, onSubmit, submitLabel = 'Save addre
 
       <div className="grid gap-4 grid-cols-2">
         <div className="space-y-1.5">
-          <Label htmlFor="postalCode">Pincode</Label>
+          <Label htmlFor="postalCode">
+            Pincode <span className="text-destructive">*</span>
+          </Label>
           <Input
             id="postalCode"
             inputMode="numeric"
@@ -157,7 +165,9 @@ export function AddressForm({ defaultValues, onSubmit, submitLabel = 'Save addre
           {errors.postalCode && <p className="text-xs text-destructive">{errors.postalCode.message}</p>}
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="city">City</Label>
+          <Label htmlFor="city">
+            City <span className="text-destructive">*</span>
+          </Label>
           <Input id="city" disabled placeholder="Auto-filled from pincode" {...register('city')} />
           {errors.city && <p className="text-xs text-destructive">{errors.city.message}</p>}
         </div>
@@ -165,12 +175,16 @@ export function AddressForm({ defaultValues, onSubmit, submitLabel = 'Save addre
 
       <div className="grid gap-4 grid-cols-2">
         <div className="space-y-1.5">
-          <Label htmlFor="state">State</Label>
+          <Label htmlFor="state">
+            State <span className="text-destructive">*</span>
+          </Label>
           <Input id="state" disabled placeholder="Auto-filled from pincode" {...register('state')} />
           {errors.state && <p className="text-xs text-destructive">{errors.state.message}</p>}
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="country">Country</Label>
+          <Label htmlFor="country">
+            Country <span className="text-destructive">*</span>
+          </Label>
           <Input id="country" disabled placeholder="Auto-filled from pincode" {...register('country')} />
         </div>
       </div>

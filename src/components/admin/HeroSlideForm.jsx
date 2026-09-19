@@ -52,7 +52,9 @@ export function HeroSlideForm({ defaultValues, products = [], onSubmit, submitti
   return (
     <form onSubmit={handleSubmit(submit)} className="space-y-6">
       <div className="space-y-1.5">
-        <Label>Hero image</Label>
+        <Label>
+          Hero image <span className="text-destructive">*</span>
+        </Label>
         <p className="text-xs text-muted-foreground">
           Recommended 1920×1080px (16:9 landscape). The banner uses this same ratio on every screen size, so as
           long as your photo is this ratio it will show in full, with no cropping, on both phones and desktop.
@@ -62,7 +64,9 @@ export function HeroSlideForm({ defaultValues, products = [], onSubmit, submitti
       </div>
 
       <div className="space-y-1.5">
-        <Label>Linked product</Label>
+        <Label>
+          Linked product <span className="text-destructive">*</span>
+        </Label>
         <Controller
           control={control}
           name="product"

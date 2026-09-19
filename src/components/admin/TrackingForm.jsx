@@ -18,7 +18,9 @@ export function TrackingForm({ tracking, onSubmit, submitting = false }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-1.5">
-        <Label htmlFor="carrier">Carrier</Label>
+        <Label htmlFor="carrier">
+          Carrier <span className="text-destructive">*</span>
+        </Label>
         <Input
           id="carrier"
           placeholder="e.g. Delhivery, Bluedart"
@@ -28,7 +30,9 @@ export function TrackingForm({ tracking, onSubmit, submitting = false }) {
         />
       </div>
       <div className="space-y-1.5">
-        <Label htmlFor="trackingId">Tracking ID</Label>
+        <Label htmlFor="trackingId">
+          Tracking ID <span className="text-destructive">*</span>
+        </Label>
         <Input
           id="trackingId"
           value={form.trackingId}

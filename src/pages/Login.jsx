@@ -50,12 +50,16 @@ export default function Login() {
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4">
           <div className="space-y-1.5">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">
+              Email <span className="text-destructive">*</span>
+            </Label>
             <Input id="email" type="email" {...register('email')} />
             {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">
+              Password <span className="text-destructive">*</span>
+            </Label>
             <Input id="password" type="password" {...register('password')} />
             {errors.password && <p className="text-xs text-destructive">{errors.password.message}</p>}
           </div>

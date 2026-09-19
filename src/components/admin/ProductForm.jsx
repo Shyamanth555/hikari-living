@@ -79,13 +79,17 @@ export function ProductForm({ defaultValues, categories = [], onSubmit, submitti
   return (
     <form onSubmit={handleSubmit(submit)} className="space-y-6">
       <div className="space-y-1.5">
-        <Label>Images</Label>
+        <Label>
+          Images <span className="text-destructive">*</span>
+        </Label>
         <ImageUploader images={images} onChange={setImages} />
         {images.length === 0 && <p className="text-xs text-destructive">At least one image is required</p>}
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="name">Product name</Label>
+        <Label htmlFor="name">
+          Product name <span className="text-destructive">*</span>
+        </Label>
         <Input id="name" {...register('name')} />
         {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
       </div>
@@ -96,14 +100,18 @@ export function ProductForm({ defaultValues, categories = [], onSubmit, submitti
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="description">Description</Label>
+        <Label htmlFor="description">
+          Description <span className="text-destructive">*</span>
+        </Label>
         <Textarea id="description" rows={5} {...register('description')} />
         {errors.description && <p className="text-xs text-destructive">{errors.description.message}</p>}
       </div>
 
       <div className="grid gap-4 sm:grid-cols-4">
         <div className="space-y-1.5">
-          <Label htmlFor="price">Price (₹)</Label>
+          <Label htmlFor="price">
+            Price (₹) <span className="text-destructive">*</span>
+          </Label>
           <Input id="price" type="number" step="0.01" {...register('price')} />
           {errors.price && <p className="text-xs text-destructive">{errors.price.message}</p>}
         </div>
@@ -112,7 +120,9 @@ export function ProductForm({ defaultValues, categories = [], onSubmit, submitti
           <Input id="compareAtPrice" type="number" step="0.01" {...register('compareAtPrice')} />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="stock">Stock</Label>
+          <Label htmlFor="stock">
+            Stock <span className="text-destructive">*</span>
+          </Label>
           <Input id="stock" type="number" {...register('stock')} />
           {errors.stock && <p className="text-xs text-destructive">{errors.stock.message}</p>}
         </div>
@@ -126,7 +136,9 @@ export function ProductForm({ defaultValues, categories = [], onSubmit, submitti
 
       <div className="grid gap-4 sm:grid-cols-3">
         <div className="space-y-1.5">
-          <Label>Category</Label>
+          <Label>
+            Category <span className="text-destructive">*</span>
+          </Label>
           <Controller
             control={control}
             name="category"

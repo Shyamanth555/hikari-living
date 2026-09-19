@@ -61,7 +61,9 @@ export function BlogPostForm({ defaultValues, onSubmit, submitting = false, subm
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="title">Title</Label>
+        <Label htmlFor="title">
+          Title <span className="text-destructive">*</span>
+        </Label>
         <Input id="title" {...register('title')} />
         {errors.title && <p className="text-xs text-destructive">{errors.title.message}</p>}
       </div>
@@ -72,7 +74,9 @@ export function BlogPostForm({ defaultValues, onSubmit, submitting = false, subm
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="content">Content (Markdown)</Label>
+        <Label htmlFor="content">
+          Content (Markdown) <span className="text-destructive">*</span>
+        </Label>
         <Tabs defaultValue="write">
           <TabsList>
             <TabsTrigger value="write">Write</TabsTrigger>

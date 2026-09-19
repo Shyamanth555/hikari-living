@@ -41,7 +41,9 @@ function ReviewForm({ productId, onSubmitted }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4 rounded-lg border border-border p-5">
       <div className="space-y-1.5">
-        <Label>Your rating</Label>
+        <Label>
+          Your rating <span className="text-destructive">*</span>
+        </Label>
         <RatingInput value={rating} onChange={setRating} />
       </div>
       <div className="space-y-1.5">
@@ -49,7 +51,9 @@ function ReviewForm({ productId, onSubmitted }) {
         <Input id="review-title" value={title} onChange={(e) => setTitle(e.target.value)} />
       </div>
       <div className="space-y-1.5">
-        <Label htmlFor="review-comment">Your review</Label>
+        <Label htmlFor="review-comment">
+          Your review <span className="text-destructive">*</span>
+        </Label>
         <Textarea id="review-comment" rows={4} value={comment} onChange={(e) => setComment(e.target.value)} required />
       </div>
       <Button type="submit" disabled={submitting}>

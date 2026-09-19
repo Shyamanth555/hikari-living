@@ -37,11 +37,15 @@ export function EnquiryForm({ type = 'general', subject, messagePlaceholder, sub
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-1.5">
-        <Label htmlFor="enquiry-name">Name</Label>
+        <Label htmlFor="enquiry-name">
+          Name <span className="text-destructive">*</span>
+        </Label>
         <Input id="enquiry-name" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} required />
       </div>
       <div className="space-y-1.5">
-        <Label htmlFor="enquiry-email">Email</Label>
+        <Label htmlFor="enquiry-email">
+          Email <span className="text-destructive">*</span>
+        </Label>
         <Input
           id="enquiry-email"
           type="email"
@@ -55,7 +59,9 @@ export function EnquiryForm({ type = 'general', subject, messagePlaceholder, sub
         <Input id="enquiry-phone" value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} />
       </div>
       <div className="space-y-1.5">
-        <Label htmlFor="enquiry-message">Message</Label>
+        <Label htmlFor="enquiry-message">
+          Message <span className="text-destructive">*</span>
+        </Label>
         <Textarea
           id="enquiry-message"
           rows={5}

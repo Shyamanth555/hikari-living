@@ -48,7 +48,9 @@ export function CategoryForm({ defaultValues, onSubmit, submitting = false, subm
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="name">Category name</Label>
+        <Label htmlFor="name">
+          Category name <span className="text-destructive">*</span>
+        </Label>
         <Input id="name" {...register('name')} />
         {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
       </div>
