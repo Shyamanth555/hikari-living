@@ -20,7 +20,6 @@ const heroSlideSchema = z.object({
 
 export function HeroSlideForm({ defaultValues, products = [], onSubmit, submitting = false, submitLabel = 'Save slide' }) {
   const [image, setImage] = useState(defaultValues?.image?.url ? [defaultValues.image] : []);
-  const [mobileImage, setMobileImage] = useState(defaultValues?.mobileImage?.url ? [defaultValues.mobileImage] : []);
 
   const {
     register,
@@ -47,26 +46,19 @@ export function HeroSlideForm({ defaultValues, products = [], onSubmit, submitti
     onSubmit({
       ...values,
       image: image[0],
-      mobileImage: mobileImage[0] || { url: '', publicId: '' },
     });
   };
 
   return (
     <form onSubmit={handleSubmit(submit)} className="space-y-6">
       <div className="space-y-1.5">
-        <Label>Desktop image</Label>
-        <p className="text-xs text-muted-foreground">Recommended 2400×900px (wide banner, ratio 8:3) — shown edge-to-edge on tablet/desktop</p>
-        <ImageUploader images={image} onChange={setImage} max={1} />
-        {image.length === 0 && <p className="text-xs text-destructive">A desktop image is required</p>}
-      </div>
-
-      <div className="space-y-1.5">
-        <Label>Mobile image (optional)</Label>
+        <Label>Hero image</Label>
         <p className="text-xs text-muted-foreground">
-          Recommended 1080×1080px (square, ratio 1:1) — shown edge-to-edge on phones. Falls back to the desktop
-          image if left empty.
+          Recommended 1920×1080px (16:9 landscape). The banner uses this same ratio on every screen size, so as
+          long as your photo is this ratio it will show in full, with no cropping, on both phones and desktop.
         </p>
-        <ImageUploader images={mobileImage} onChange={setMobileImage} max={1} />
+        <ImageUploader images={image} onChange={setImage} max={1} />
+        {image.length === 0 && <p className="text-xs text-destructive">An image is required</p>}
       </div>
 
       <div className="space-y-1.5">

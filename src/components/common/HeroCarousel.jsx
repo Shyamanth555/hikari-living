@@ -35,7 +35,7 @@ export function HeroCarousel({ slides }) {
 
   return (
     <div
-      className="relative aspect-square w-full touch-pan-y overflow-hidden bg-cream-200 md:aspect-8/3"
+      className="relative aspect-video w-full touch-pan-y overflow-hidden bg-cream-200"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onTouchStart={handleTouchStart}
@@ -50,15 +50,12 @@ export function HeroCarousel({ slides }) {
           )}
           aria-hidden={i !== index}
         >
-          <picture>
-            {slide.mobileImage?.url && <source media="(max-width: 767px)" srcSet={slide.mobileImage.url} />}
-            <img
-              src={slide.image?.url}
-              alt={slide.heading || slide.product?.name || ''}
-              className="h-full w-full object-contain"
-              loading={i === 0 ? 'eager' : 'lazy'}
-            />
-          </picture>
+          <img
+            src={slide.image?.url}
+            alt={slide.heading || slide.product?.name || ''}
+            className="h-full w-full object-cover"
+            loading={i === 0 ? 'eager' : 'lazy'}
+          />
 
           <div className="absolute inset-0 bg-gradient-to-t from-ink-900/70 via-ink-900/10 to-transparent" />
 
