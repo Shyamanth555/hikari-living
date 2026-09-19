@@ -43,7 +43,7 @@ export function ProductCard({ product }) {
           </button>
         )}
         {product.compareAtPrice > product.price && (
-          <span className="absolute left-3 top-3 rounded-full bg-clay-500 px-2.5 py-1 text-xs font-medium text-cream-50">
+          <span className="absolute left-3 top-3 rounded-full bg-gold-500 px-2.5 py-1 text-xs font-medium text-cream-50">
             {Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100)}% off
           </span>
         )}
@@ -55,8 +55,10 @@ export function ProductCard({ product }) {
       </div>
       <div className="mt-3 space-y-1">
         <p className="text-xs uppercase tracking-wide text-muted-foreground">{product.category?.name}</p>
-        <h3 className="text-sm font-medium text-foreground group-hover:underline">{product.name}</h3>
-        <PriceDisplay price={product.price} compareAtPrice={product.compareAtPrice} />
+        <h3 className="line-clamp-2 min-h-10 text-sm font-medium text-foreground group-hover:underline">
+          {product.name}
+        </h3>
+        <PriceDisplay price={product.price} compareAtPrice={product.compareAtPrice} showBadge={false} />
       </div>
     </Link>
   );

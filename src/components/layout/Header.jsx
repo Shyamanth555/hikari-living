@@ -36,7 +36,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-cream-50/95 backdrop-blur">
-      <div className="container-page flex h-16 items-center justify-between gap-4 md:h-20">
+      <div className="container-page relative flex h-16 items-center justify-between gap-4 md:h-20">
         <button
           type="button"
           className="md:hidden cursor-pointer"
@@ -46,8 +46,12 @@ export function Header() {
           <Menu className="h-6 w-6" />
         </button>
 
-        <Link to="/" className="font-display text-xl tracking-tight text-foreground md:text-2xl">
-          {BRAND_NAME}
+        <Link
+          to="/"
+          aria-label={BRAND_NAME}
+          className="absolute left-1/2 top-1/2 shrink-0 -translate-x-1/2 -translate-y-1/2 md:static md:left-auto md:top-auto md:translate-x-0 md:translate-y-0"
+        >
+          <img src="/logo.png" alt={BRAND_NAME} className="h-12 w-12 object-contain md:h-14 md:w-14" />
         </Link>
 
         <nav className="hidden items-center gap-7 md:flex">
@@ -104,7 +108,7 @@ export function Header() {
           </Link>
 
           <DropdownMenu>
-            <DropdownMenuTrigger aria-label="Account menu" className="cursor-pointer">
+            <DropdownMenuTrigger aria-label="Account menu" className="hidden cursor-pointer md:block">
               <User className="h-5 w-5 text-foreground" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">

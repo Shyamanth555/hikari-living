@@ -26,7 +26,7 @@ export default function ContactMessages() {
     {
       key: 'type',
       label: 'Type',
-      render: (row) => <Badge variant={row.type === 'general' ? 'neutral' : 'clay'}>{TYPE_LABELS[row.type] || row.type}</Badge>,
+      render: (row) => <Badge variant={row.type === 'general' ? 'neutral' : 'gold'}>{TYPE_LABELS[row.type] || row.type}</Badge>,
     },
     { key: 'message', label: 'Message', render: (row) => <span className="line-clamp-2 max-w-xs">{row.message}</span> },
     {

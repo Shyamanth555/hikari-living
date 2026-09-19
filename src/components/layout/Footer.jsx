@@ -7,7 +7,7 @@ export function Footer() {
     <footer className="border-t border-border bg-cream-100">
       <div className="container-page grid gap-10 py-14 md:grid-cols-4">
         <div>
-          <h2 className="font-display text-xl text-foreground">{BRAND_NAME}</h2>
+          <img src="/logo.png" alt={BRAND_NAME} className="h-14 w-14 object-contain" />
           <p className="mt-3 max-w-xs text-sm text-muted-foreground">
             Handcrafted sculptures and idols — Divine Series, car dashboard idols, and Pride of India statues, made
             by experienced artisans.

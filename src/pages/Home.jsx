@@ -4,6 +4,7 @@ import { SEO } from '../components/common/SEO';
 import { ProductGrid } from '../components/product/ProductGrid';
 import { RatingStars } from '../components/common/RatingStars';
 import { HeroCarousel } from '../components/common/HeroCarousel';
+import { CategoryCarousel } from '../components/common/CategoryCarousel';
 import { Button } from '../components/ui/Button';
 import { useAsync } from '../hooks/useAsync';
 import { productApi } from '../api/productApi';
@@ -103,26 +104,15 @@ export default function Home() {
       </section>
 
       {categories && categories.length > 0 && (
-        <section className="container-page py-14">
-          <h2 className="font-display text-2xl text-foreground">Shop by Collection</h2>
-          <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
-            {categories.map((cat) => (
-              <Link key={cat._id} to={`/category/${cat.slug}`} className="group text-center">
-                <div className="aspect-square overflow-hidden rounded-lg bg-cream-200">
-                  <img
-                    src={cat.image?.url}
-                    alt={cat.name}
-                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
-                </div>
-                <p className="mt-2.5 text-sm font-medium text-foreground">{cat.name}</p>
-              </Link>
-            ))}
+        <section className="pt-14 pb-8">
+          <h2 className="container-page font-display text-2xl text-foreground">Shop by Collection</h2>
+          <div className="mt-6">
+            <CategoryCarousel categories={categories} />
           </div>
         </section>
       )}
 
-      <section className="container-page py-14">
+      <section className="container-page pt-8 pb-14">
         <div className="mb-6 flex items-end justify-between">
           <h2 className="font-display text-2xl text-foreground">Featured</h2>
           <Link to="/shop" className="text-sm font-medium text-foreground hover:underline">

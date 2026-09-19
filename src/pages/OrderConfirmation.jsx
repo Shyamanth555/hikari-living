@@ -28,7 +28,7 @@ export default function OrderConfirmation() {
     <div className="container-page py-14">
       <SEO title="Order Confirmed" />
       <div className="mx-auto max-w-xl text-center">
-        <CheckCircle2 className="mx-auto h-14 w-14 text-sage-500" strokeWidth={1.5} />
+        <CheckCircle2 className="mx-auto h-14 w-14 text-pine-500" strokeWidth={1.5} />
         <h1 className="mt-4 font-display text-3xl text-foreground">Thank you for your order</h1>
         <p className="mt-2 text-muted-foreground">
           Order <span className="font-medium text-foreground">{order.orderNumber}</span> has been placed

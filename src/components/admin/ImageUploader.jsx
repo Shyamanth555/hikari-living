@@ -71,7 +71,7 @@ export function ImageUploader({ images = [], onChange, max = 8 }) {
             disabled={uploading}
             className={cn(
               'flex aspect-square flex-col items-center justify-center gap-1.5 rounded-md border-2 border-dashed text-muted-foreground transition-colors cursor-pointer',
-              dragOver ? 'border-primary bg-clay-50' : 'border-border hover:bg-cream-100'
+              dragOver ? 'border-primary bg-gold-50' : 'border-border hover:bg-cream-100'
             )}
           >
             {uploading ? <Loader2 className="h-5 w-5 animate-spin" /> : <ImagePlus className="h-5 w-5" />}

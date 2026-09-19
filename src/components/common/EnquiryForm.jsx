@@ -28,7 +28,7 @@ export function EnquiryForm({ type = 'general', subject, messagePlaceholder, sub
 
   if (submitted) {
     return (
-      <div className="rounded-lg border border-sage-500/30 bg-sage-50 p-6 text-sage-600">
+      <div className="rounded-lg border border-pine-500/30 bg-pine-50 p-6 text-pine-600">
         Thanks for reaching out — our team will get back to you soon.
       </div>
     );

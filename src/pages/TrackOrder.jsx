@@ -85,7 +85,7 @@ export default function TrackOrder() {
             </ul>
 
             {result.status === 'delivered' ? (
-              <p className="mt-5 flex items-center gap-2 text-sm text-sage-600">
+              <p className="mt-5 flex items-center gap-2 text-sm text-pine-600">
                 <PackageCheck className="h-4 w-4" /> Delivered — thanks for shopping with us.
               </p>
             ) : result.tracking?.trackingId ? (

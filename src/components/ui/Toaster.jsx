@@ -13,11 +13,11 @@ export default function Toaster({ toasts, onDismiss }) {
           className={cn(
             'flex items-start gap-3 rounded-lg border p-4 shadow-lg bg-cream-50',
             t.variant === 'destructive' && 'border-destructive/30',
-            t.variant === 'success' && 'border-sage-500/30',
+            t.variant === 'success' && 'border-pine-500/30',
             t.variant === 'default' && 'border-border'
           )}
         >
-          {t.variant === 'success' && <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-sage-500" />}
+          {t.variant === 'success' && <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-pine-500" />}
           {t.variant === 'destructive' && <XCircle className="mt-0.5 h-5 w-5 shrink-0 text-destructive" />}
           <div className="flex-1 text-sm">
             {t.title && <p className="font-medium text-foreground">{t.title}</p>}

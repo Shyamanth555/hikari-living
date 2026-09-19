@@ -14,7 +14,7 @@ export function PriceDisplay({ price, compareAtPrice, size = 'md', showBadge = t
         <span className="text-sm text-muted-foreground line-through">{formatCurrency(compareAtPrice)}</span>
       )}
       {hasDiscount && showBadge && (
-        <span className="text-sm font-medium text-clay-600">{percentOff}% off</span>
+        <span className="text-sm font-medium text-gold-600">{percentOff}% off</span>
       )}
     </div>
   );

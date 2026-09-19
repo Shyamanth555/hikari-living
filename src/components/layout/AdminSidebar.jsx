@@ -17,9 +17,12 @@ export const ADMIN_NAV_ITEMS = [
 export function AdminSidebarContent({ onNavigate }) {
   return (
     <>
-      <div className="px-5 py-6">
-        <p className="font-display text-lg">{BRAND_NAME}</p>
-        <p className="text-xs text-muted-foreground">Admin Panel</p>
+      <div className="flex items-center gap-2.5 px-5 py-6">
+        <img src="/logo.png" alt={BRAND_NAME} className="h-9 w-9 object-contain" />
+        <div>
+          <p className="font-display text-base leading-tight">{BRAND_NAME}</p>
+          <p className="text-xs text-muted-foreground">Admin Panel</p>
+        </div>
       </div>
       <nav className="flex flex-col gap-1 px-3">
         {ADMIN_NAV_ITEMS.map(({ to, label, icon: Icon, end }) => (

@@ -3,7 +3,7 @@ import { ORDER_STATUS_LABELS } from '../../lib/constants';
 
 const VARIANT_MAP = {
   pending: 'neutral',
-  processing: 'clay',
+  processing: 'gold',
   shipped: 'accent',
   delivered: 'accent',
   cancelled: 'destructive',

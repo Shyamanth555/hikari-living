@@ -17,26 +17,28 @@
   --color-ink-800: #2b2620;
   --color-ink-900: #1c1813;
 
-  --color-clay-50: #fbf1ea;
-  --color-clay-100: #f5e0d0;
-  --color-clay-300: #e3ab86;
-  --color-clay-500: #c1653b;
-  --color-clay-600: #a8512c;
-  --color-clay-700: #874022;
+  /* Gold and pine — taken from the Hikari Living logo mark */
+  --color-gold-50: #fbf3df;
+  --color-gold-100: #f3e2b8;
+  --color-gold-300: #d9b45e;
+  --color-gold-500: #b8862e;
+  --color-gold-600: #9c6f22;
+  --color-gold-700: #7d5a1c;
 
-  --color-sage-50: #f2f4ee;
-  --color-sage-300: #b7c4a4;
-  --color-sage-500: #6b7a5e;
-  --color-sage-600: #566249;
+  --color-pine-50: #eaf0ec;
+  --color-pine-300: #6c9280;
+  --color-pine-500: #234936;
+  --color-pine-600: #1a3a2b;
+  --color-pine-700: #142e22;
 
   --color-background: var(--color-cream-50);
   --color-foreground: var(--color-ink-800);
   --color-border: var(--color-ink-200);
   --color-muted: var(--color-cream-200);
   --color-muted-foreground: var(--color-ink-400);
-  --color-primary: var(--color-clay-500);
+  --color-primary: var(--color-gold-500);
   --color-primary-foreground: var(--color-cream-50);
-  --color-accent: var(--color-sage-500);
+  --color-accent: var(--color-pine-500);
   --color-accent-foreground: var(--color-cream-50);
   --color-destructive: #b3402f;
 
@@ -44,6 +46,17 @@
   --radius-md: 0.625rem;
   --radius-lg: 0.875rem;
   --radius-xl: 1.25rem;
+
+  --animate-marquee: marquee 28s linear infinite;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 @layer base {
@@ -65,6 +78,7 @@
   h1, h2, h3, h4 {
     font-family: var(--font-display);
     letter-spacing: -0.01em;
+    color: var(--color-pine-700);
   }
 }
 

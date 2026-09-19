@@ -5,9 +5,14 @@ import { useAuth } from '../../context/AuthContext';
 import { POLICY_LINKS } from '../../lib/constants';
 
 export function MobileMenu({ open, onOpenChange, categories }) {
-  const { isAuthenticated, isAdmin } = useAuth();
+  const { user, isAuthenticated, isAdmin, logout } = useAuth();
 
   const close = () => onOpenChange(false);
+
+  const handleLogout = () => {
+    logout();
+    close();
+  };
 
   return (
     <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
@@ -69,14 +74,21 @@ export function MobileMenu({ open, onOpenChange, categories }) {
 
             {isAuthenticated ? (
               <>
+                <p className="py-1 text-xs text-muted-foreground">Hi, {user?.name?.split(' ')[0]}</p>
                 <Link to="/account" onClick={close} className="py-2.5">
                   My Account
+                </Link>
+                <Link to="/account/orders" onClick={close} className="py-2.5">
+                  My Orders
                 </Link>
                 {isAdmin && (
                   <Link to="/admin" onClick={close} className="py-2.5">
                     Admin Panel
                   </Link>
                 )}
+                <button type="button" onClick={handleLogout} className="py-2.5 text-left cursor-pointer">
+                  Log out
+                </button>
               </>
             ) : (
               <>
