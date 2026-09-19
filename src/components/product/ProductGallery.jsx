@@ -39,7 +39,7 @@ export function ProductGallery({ images = [], productName, onAddToCart, addToCar
             type="button"
             onClick={onAddToCart}
             disabled={addToCartDisabled}
-            className="absolute right-3 top-3 flex h-12 w-12 items-center justify-center rounded-full bg-cream-50/95 text-foreground shadow-md transition-colors hover:bg-cream-100 disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
+            className="absolute bottom-3 right-3 md:bottom-auto md:top-3 flex h-12 w-12 items-center justify-center rounded-full bg-cream-50/95 text-foreground shadow-md transition-colors hover:bg-cream-100 disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
             aria-label="Add to cart"
           >
             <ShoppingBag className="h-5 w-5" />

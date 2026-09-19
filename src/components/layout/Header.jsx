@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ChevronDown, Menu, Search, ShoppingBag, User } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
@@ -19,20 +19,11 @@ import {
 export function Header() {
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
   const { itemCount } = useCart();
-  const navigate = useNavigate();
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
 
   const { data: categories } = useAsync(() => categoryApi.list(), []);
-
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    if (searchTerm.trim()) {
-      navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
-    }
-  };
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-cream-50/95 backdrop-blur">
@@ -90,20 +81,7 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-4">
-          <form onSubmit={handleSearchSubmit} className="hidden items-center lg:flex">
-            <div className="relative">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <input
-                type="search"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search products…"
-                className="h-10 w-56 rounded-full border border-border bg-cream-100 pl-9 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
-          </form>
-
-          <Link to="/search" className="lg:hidden" aria-label="Search">
+          <Link to="/search" aria-label="Search">
             <Search className="h-5 w-5 text-foreground" />
           </Link>
 

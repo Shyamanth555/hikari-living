@@ -12,7 +12,7 @@ export default function SearchResults() {
   const [searchParams, setSearchParams] = useSearchParams();
   const initialQuery = searchParams.get('q') || '';
   const [query, setQuery] = useState(initialQuery);
-  const debouncedQuery = useDebounce(query, 400);
+  const debouncedQuery = useDebounce(query, 400).trim();
   const page = Number(searchParams.get('page')) || 1;
 
   useEffect(() => {
@@ -23,7 +23,7 @@ export default function SearchResults() {
   }, [debouncedQuery]);
 
   const { data, loading } = useAsync(
-    () => (debouncedQuery ? productApi.list({ search: debouncedQuery, page, limit: 12 }) : Promise.resolve(null)),
+    () => productApi.list({ search: debouncedQuery || undefined, page, limit: 12 }),
     [debouncedQuery, page]
   );
 
@@ -46,23 +46,17 @@ export default function SearchResults() {
       </div>
 
       <div className="mt-10">
-        {!debouncedQuery && <p className="text-center text-muted-foreground">Start typing to search the catalogue.</p>}
-
-        {debouncedQuery && (
-          <>
-            <p className="mb-6 text-sm text-muted-foreground">
-              {data ? `${data.total} results for "${debouncedQuery}"` : ''}
-            </p>
-            <ProductGrid products={data?.data} loading={loading} />
-            {data && (
-              <Pagination
-                page={data.page}
-                pages={data.pages}
-                onPageChange={(p) => setSearchParams({ q: debouncedQuery, page: p })}
-                className="mt-10"
-              />
-            )}
-          </>
+        <p className="mb-6 text-sm text-muted-foreground">
+          {data ? (debouncedQuery ? `${data.total} results for "${debouncedQuery}"` : `${data.total} products`) : ''}
+        </p>
+        <ProductGrid products={data?.data} loading={loading} />
+        {data && (
+          <Pagination
+            page={data.page}
+            pages={data.pages}
+            onPageChange={(p) => setSearchParams(debouncedQuery ? { q: debouncedQuery, page: p } : { page: p })}
+            className="mt-10"
+          />
         )}
       </div>
     </div>

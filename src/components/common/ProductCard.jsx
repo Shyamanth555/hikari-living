@@ -37,7 +37,7 @@ export function ProductCard({ product }) {
           <button
             type="button"
             onClick={handleQuickAdd}
-            className="absolute bottom-3 right-3 flex h-10 w-10 items-center justify-center rounded-full bg-cream-50/95 text-foreground opacity-0 shadow-md transition-opacity group-hover:opacity-100 cursor-pointer"
+            className="absolute bottom-3 right-3 flex h-10 w-10 items-center justify-center rounded-full bg-cream-50/95 text-foreground shadow-md transition-opacity md:opacity-0 md:group-hover:opacity-100 cursor-pointer"
             aria-label="Quick add to cart"
           >
             <ShoppingBag className="h-4.5 w-4.5" />
