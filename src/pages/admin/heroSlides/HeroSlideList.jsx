@@ -84,10 +84,7 @@ export default function HeroSlideList() {
   return (
     <div>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="font-display text-2xl text-foreground">Home Page Hero</h1>
-          <p className="text-sm text-muted-foreground">Slides shown in the homepage carousel, in sort-order.</p>
-        </div>
+        <h1 className="font-display text-2xl text-foreground">Home Page Hero</h1>
         <Button asChild>
           <Link to="/admin/hero-slides/new">
             <Plus className="h-4 w-4" /> Add Slide
