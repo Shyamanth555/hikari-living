@@ -43,8 +43,8 @@ export default function Shop() {
       <SEO title="Shop All Products" description="Browse the full Hikari Living collection." />
       <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Shop' }]} />
 
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-        <h1 className="font-display text-3xl text-foreground">All Sculptures</h1>
+      <div className="mb-6 flex flex-nowrap items-center justify-between gap-3 sm:gap-4">
+        <h1 className="font-display text-xl text-foreground sm:text-3xl">All Sculptures</h1>
         <ProductSort value={filters.sort} onChange={(sort) => updateParams({ ...filters, sort, page: 1 })} />
       </div>
 

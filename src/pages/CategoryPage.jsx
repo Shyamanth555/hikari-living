@@ -53,8 +53,8 @@ export default function CategoryPage() {
       <SEO title={category.name} description={category.description} />
       <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Shop', href: '/shop' }, { label: category.name }]} />
 
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-        <h1 className="font-display text-3xl text-foreground">{category.name}</h1>
+      <div className="mb-6 flex flex-nowrap items-center justify-between gap-3 sm:gap-4">
+        <h1 className="min-w-0 truncate font-display text-xl text-foreground sm:text-3xl">{category.name}</h1>
         <ProductSort value={sort} onChange={(nextSort) => updateParams({ sort: nextSort, page: 1 })} />
       </div>
 
