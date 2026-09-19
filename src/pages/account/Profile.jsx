@@ -223,10 +223,16 @@ function PasswordTab() {
 export default function Profile() {
   return (
     <Tabs defaultValue="info">
-      <TabsList>
-        <TabsTrigger value="info">Info</TabsTrigger>
-        <TabsTrigger value="addresses">Addresses</TabsTrigger>
-        <TabsTrigger value="password">Password</TabsTrigger>
+      <TabsList className="w-full">
+        <TabsTrigger value="info" className="flex-1">
+          Info
+        </TabsTrigger>
+        <TabsTrigger value="addresses" className="flex-1">
+          Addresses
+        </TabsTrigger>
+        <TabsTrigger value="password" className="flex-1">
+          Password
+        </TabsTrigger>
       </TabsList>
       <TabsContent value="info">
         <InfoTab />
