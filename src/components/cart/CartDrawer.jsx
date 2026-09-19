@@ -5,6 +5,7 @@ import { useCart } from '../../context/CartContext';
 import { Button } from '../ui/Button';
 import { formatCurrency } from '../../lib/formatCurrency';
 import { EmptyState } from '../common/EmptyState';
+import { PriceDisplay } from '../common/PriceDisplay';
 
 export function CartDrawer({ open, onOpenChange }) {
   const { items, subtotal, updateQuantity, removeItem, loading } = useCart();
@@ -49,7 +50,7 @@ export function CartDrawer({ open, onOpenChange }) {
                     >
                       {product.name}
                     </Link>
-                    <p className="text-sm text-muted-foreground">{formatCurrency(product.price)}</p>
+                    <PriceDisplay price={product.price} compareAtPrice={product.compareAtPrice} size="sm" />
                     <div className="mt-2 flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2">
                         <button

@@ -17,6 +17,7 @@ import { userApi } from '../api/userApi';
 import { formatCurrency } from '../lib/formatCurrency';
 import { PAYMENT_METHODS } from '../lib/constants';
 import { cn } from '../lib/cn';
+import { calculateSavings } from '../lib/cartMath';
 
 function loadRazorpayScript() {
   return new Promise((resolve) => {
@@ -233,7 +234,7 @@ export default function Checkout() {
         </div>
 
         <div>
-          <CartSummary subtotal={subtotal} />
+          <CartSummary subtotal={subtotal} savings={calculateSavings(items)} />
         </div>
       </div>
     </div>

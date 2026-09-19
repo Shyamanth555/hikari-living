@@ -8,6 +8,7 @@ import { Button } from '../components/ui/Button';
 import { Spinner } from '../components/ui/Spinner';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { calculateSavings } from '../lib/cartMath';
 
 export default function Cart() {
   const { items, subtotal, loading, updateQuantity, removeItem } = useCart();
@@ -57,7 +58,7 @@ export default function Cart() {
           </div>
 
           <div>
-            <CartSummary subtotal={subtotal}>
+            <CartSummary subtotal={subtotal} savings={calculateSavings(items)}>
               <Button size="lg" className="mt-5 w-full" onClick={handleCheckout}>
                 Proceed to Checkout
               </Button>

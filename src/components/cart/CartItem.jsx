@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Trash2 } from 'lucide-react';
 import { formatCurrency } from '../../lib/formatCurrency';
 import { QuantitySelector } from '../common/QuantitySelector';
+import { PriceDisplay } from '../common/PriceDisplay';
 
 export function CartItem({ product, quantity, onUpdateQuantity, onRemove }) {
   return (
@@ -10,12 +11,12 @@ export function CartItem({ product, quantity, onUpdateQuantity, onRemove }) {
         <img src={product.images?.[0]?.url} alt={product.name} className="h-24 w-24 rounded-md object-cover" />
       </Link>
 
-      <div className="flex flex-1 flex-col justify-between">
+      <div className="flex flex-1 flex-col justify-between gap-3">
         <div>
           <Link to={`/product/${product.slug}`} className="font-medium text-foreground hover:underline">
             {product.name}
           </Link>
-          <p className="text-sm text-muted-foreground">{formatCurrency(product.price)} each</p>
+          <PriceDisplay price={product.price} compareAtPrice={product.compareAtPrice} size="sm" className="mt-1" />
         </div>
 
         <div className="flex items-center justify-between">
