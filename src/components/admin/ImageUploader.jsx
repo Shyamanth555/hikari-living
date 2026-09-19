@@ -1,11 +1,13 @@
 import { useRef, useState } from 'react';
-import { ImagePlus, Loader2, X } from 'lucide-react';
+import { ImagePlus, Loader2, RefreshCw, X } from 'lucide-react';
 import { uploadApi } from '../../api/uploadApi';
 import { useToast } from '../../context/ToastContext';
 import { cn } from '../../lib/cn';
 
 export function ImageUploader({ images = [], onChange, max = 8 }) {
   const inputRef = useRef(null);
+  const replaceInputRef = useRef(null);
+  const replaceIndexRef = useRef(null);
   const [uploading, setUploading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const { toast } = useToast();
@@ -37,20 +39,66 @@ export function ImageUploader({ images = [], onChange, max = 8 }) {
     uploadApi.remove(image.publicId).catch(() => {});
   };
 
+  const startReplace = (index) => {
+    replaceIndexRef.current = index;
+    replaceInputRef.current?.click();
+  };
+
+  const handleReplaceFile = async (files) => {
+    const index = replaceIndexRef.current;
+    const file = files?.[0];
+    if (!file || index === null || index === undefined) return;
+
+    const oldImage = images[index];
+    setUploading(true);
+    try {
+      const [uploaded] = await uploadApi.upload([file]);
+      const next = [...images];
+      next[index] = uploaded;
+      onChange(next);
+      if (oldImage) uploadApi.remove(oldImage.publicId).catch(() => {});
+    } catch (err) {
+      toast({
+        title: 'Replace failed',
+        description: err?.response?.data?.message || 'Please try again',
+        variant: 'destructive',
+      });
+    } finally {
+      setUploading(false);
+    }
+  };
+
   return (
     <div>
       <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
-        {images.map((img) => (
+        {images.map((img, index) => (
           <div key={img.publicId} className="group relative aspect-square overflow-hidden rounded-md border border-border">
             <img src={img.url} alt="" className="h-full w-full object-cover" />
-            <button
-              type="button"
-              onClick={() => handleRemove(img)}
-              className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-ink-900/70 text-cream-50 opacity-0 transition-opacity group-hover:opacity-100 cursor-pointer"
-              aria-label="Remove image"
-            >
-              <X className="h-3.5 w-3.5" />
-            </button>
+            <div className="absolute inset-x-0 top-0 flex items-center justify-between p-1.5">
+              <button
+                type="button"
+                onClick={() => startReplace(index)}
+                disabled={uploading}
+                className="flex h-6 w-6 items-center justify-center rounded-full bg-ink-900/70 text-cream-50 cursor-pointer disabled:opacity-40"
+                aria-label="Replace image"
+              >
+                <RefreshCw className="h-3.5 w-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => handleRemove(img)}
+                disabled={uploading}
+                className="flex h-6 w-6 items-center justify-center rounded-full bg-ink-900/70 text-cream-50 cursor-pointer disabled:opacity-40"
+                aria-label="Remove image"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            </div>
+            {index === 0 && (
+              <span className="absolute bottom-1.5 left-1.5 rounded bg-ink-900/70 px-1.5 py-0.5 text-[10px] font-medium text-cream-50">
+                Main photo
+              </span>
+            )}
           </div>
         ))}
 
@@ -88,6 +136,16 @@ export function ImageUploader({ images = [], onChange, max = 8 }) {
         className="hidden"
         onChange={(e) => {
           handleFiles(e.target.files);
+          e.target.value = '';
+        }}
+      />
+      <input
+        ref={replaceInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={(e) => {
+          handleReplaceFile(e.target.files);
           e.target.value = '';
         }}
       />
