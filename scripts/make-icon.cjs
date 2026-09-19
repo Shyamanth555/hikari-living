@@ -4,14 +4,10 @@ const path = require('path');
 const SRC = path.join(__dirname, '..', 'public', 'logo.png');
 const OUT = path.join(__dirname, '..', 'pwa-icon-source.png');
 
-// Crop just the house/roof mark from the top-center of the wide logo, then pad
-// it onto a square cream canvas so it works as a home-screen / maskable icon.
+// Pads the full logo (mark + "Hikari Living" wordmark + tagline) onto a square
+// cream canvas, unscaled/uncropped, so the app icon shows the whole logo.
 async function run() {
-  const cropped = await sharp(SRC)
-    .extract({ left: 1040, top: 0, width: 580, height: 290 })
-    .toBuffer();
-
-  await sharp(cropped)
+  await sharp(SRC)
     .resize(800, 800, {
       fit: 'contain',
       background: { r: 253, g: 253, b: 244, alpha: 1 },
