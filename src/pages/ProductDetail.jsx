@@ -20,7 +20,7 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 
 const DELIVERY_INFO = [
-  { icon: Truck, text: 'Free shipping over ₹1,999', detail: 'Delivered in 4–8 business days' },
+  { icon: Truck, text: 'Free shipping on every order', detail: 'Delivered in 4–8 business days' },
   { icon: RotateCcw, text: 'Easy returns', detail: '7-day return window on eligible items' },
   { icon: ShieldCheck, text: 'Secure payments', detail: 'Razorpay-protected checkout' },
   { icon: Package, text: 'Carefully packed', detail: 'Every piece insured in transit' },

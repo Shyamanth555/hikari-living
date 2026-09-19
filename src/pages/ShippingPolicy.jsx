@@ -1,5 +1,4 @@
 import { SEO } from '../components/common/SEO';
-import { formatCurrency } from '../lib/formatCurrency';
 
 export default function ShippingPolicy() {
   return (
@@ -12,10 +11,7 @@ export default function ShippingPolicy() {
         <div className="mt-8 space-y-6 text-sm leading-relaxed text-muted-foreground">
           <section>
             <h2 className="mb-2 font-display text-lg text-foreground">Shipping Rates</h2>
-            <p>
-              We offer free shipping on all orders over {formatCurrency(1999)}. Orders below this amount are
-              charged a flat shipping fee of {formatCurrency(99)}, calculated at checkout.
-            </p>
+            <p>We offer free shipping on every order, with no minimum order value.</p>
           </section>
           <section>
             <h2 className="mb-2 font-display text-lg text-foreground">Processing Time</h2>
