@@ -15,7 +15,7 @@ import { TESTIMONIALS } from '../lib/testimonials';
 import { BRAND_NAME } from '../lib/constants';
 
 const PROMOS = [
-  { icon: Truck, title: 'Free shipping over ₹1,999', description: 'On all orders across India' },
+  { icon: Truck, title: 'Free shipping over ₹1,999', description: 'Delivered across India' },
   { icon: Hammer, title: 'Handcrafted by artisans', description: 'Brass, panchaloha, marble, and wood' },
   { icon: ShieldCheck, title: 'Secure, careful packaging', description: 'Every piece insured in transit' },
 ];
@@ -85,7 +85,7 @@ export default function Home() {
       )}
 
       <section className="border-b border-border">
-        <div className="container-page grid gap-8 py-10 sm:grid-cols-3">
+        <div className="container-page flex flex-col gap-8 py-10 sm:flex-row sm:justify-between">
           {PROMOS.map((promo) => (
             <div key={promo.title} className="flex items-start gap-3">
               <promo.icon className="mt-0.5 h-6 w-6 shrink-0 text-primary" strokeWidth={1.5} />
