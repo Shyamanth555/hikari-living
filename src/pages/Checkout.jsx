@@ -14,7 +14,6 @@ import { useToast } from '../context/ToastContext';
 import { orderApi } from '../api/orderApi';
 import { paymentApi } from '../api/paymentApi';
 import { userApi } from '../api/userApi';
-import { formatCurrency } from '../lib/formatCurrency';
 import { PAYMENT_METHODS } from '../lib/constants';
 import { cn } from '../lib/cn';
 import { calculateSavings } from '../lib/cartMath';
@@ -223,12 +222,13 @@ export default function Checkout() {
           )}
 
           {selectedAddress && (
-            <Button size="lg" disabled={placing} onClick={() => handlePlaceOrder(selectedAddress)} className="mt-6">
-              {placing
-                ? 'Processing…'
-                : paymentMethod === 'cod'
-                  ? `Place Order — Pay ${formatCurrency(subtotal)} on Delivery`
-                  : `Pay ${formatCurrency(subtotal)}`}
+            <Button
+              size="lg"
+              disabled={placing}
+              onClick={() => handlePlaceOrder(selectedAddress)}
+              className="mt-6 w-full"
+            >
+              {placing ? 'Processing…' : 'Place Order'}
             </Button>
           )}
         </div>
