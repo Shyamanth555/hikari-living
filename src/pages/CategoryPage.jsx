@@ -53,15 +53,12 @@ export default function CategoryPage() {
       <SEO title={category.name} description={category.description} />
       <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Shop', href: '/shop' }, { label: category.name }]} />
 
-      <div className="mb-8">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <h1 className="font-display text-3xl text-foreground">{category.name}</h1>
-        {category.description && <p className="mt-2 max-w-2xl text-muted-foreground">{category.description}</p>}
-      </div>
-
-      <div className="mb-6 flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">{data ? `${data.total} products` : ''}</p>
         <ProductSort value={sort} onChange={(nextSort) => updateParams({ sort: nextSort, page: 1 })} />
       </div>
+
+      {category.description && <p className="mb-6 max-w-2xl text-muted-foreground">{category.description}</p>}
 
       <ProductGrid products={data?.data} loading={productsLoading} />
 

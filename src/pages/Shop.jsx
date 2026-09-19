@@ -43,9 +43,14 @@ export default function Shop() {
       <SEO title="Shop All Products" description="Browse the full Hikari Living collection." />
       <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Shop' }]} />
 
-      <div className="flex flex-col gap-10 md:flex-row">
-        <aside className="hidden w-56 shrink-0 md:block">
-          <div className="mb-4 flex items-center gap-2 text-sm font-semibold">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+        <h1 className="font-display text-3xl text-foreground">All Sculptures</h1>
+        <ProductSort value={filters.sort} onChange={(sort) => updateParams({ ...filters, sort, page: 1 })} />
+      </div>
+
+      <div className="flex flex-col gap-10 md:flex-row md:items-start">
+        <aside className="hidden w-56 shrink-0 self-start md:sticky md:top-24 md:block">
+          <div className="mb-4 flex h-11 items-center gap-2 text-sm font-semibold">
             <SlidersHorizontal className="h-4 w-4" /> Filters
           </div>
           <ProductFilters
@@ -57,11 +62,6 @@ export default function Shop() {
         </aside>
 
         <div className="flex-1">
-          <div className="mb-6 flex items-center justify-between">
-            <p className="text-sm text-muted-foreground">{data ? `${data.total} products` : ''}</p>
-            <ProductSort value={filters.sort} onChange={(sort) => updateParams({ ...filters, sort, page: 1 })} />
-          </div>
-
           <ProductGrid products={data?.data} loading={loading} />
 
           {data && (

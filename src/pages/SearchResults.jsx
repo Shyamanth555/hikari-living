@@ -46,9 +46,6 @@ export default function SearchResults() {
       </div>
 
       <div className="mt-10">
-        <p className="mb-6 text-sm text-muted-foreground">
-          {data ? (debouncedQuery ? `${data.total} results for "${debouncedQuery}"` : `${data.total} products`) : ''}
-        </p>
         <ProductGrid products={data?.data} loading={loading} />
         {data && (
           <Pagination
