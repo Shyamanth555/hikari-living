@@ -67,7 +67,7 @@ export function MobileMenu({ open, onOpenChange, categories }) {
               Track Order
             </Link>
             <Link to="/contact" onClick={close} className="py-2.5">
-              Contact
+              Contact Us
             </Link>
 
             <div className="my-3 border-t border-border" />
@@ -103,7 +103,7 @@ export function MobileMenu({ open, onOpenChange, categories }) {
 
             <div className="my-3 border-t border-border" />
 
-            {POLICY_LINKS.map((link) => (
+            {POLICY_LINKS.filter((link) => link.href.startsWith('/policies')).map((link) => (
               <Link key={link.href} to={link.href} onClick={close} className="py-2 text-xs text-muted-foreground">
                 {link.label}
               </Link>
