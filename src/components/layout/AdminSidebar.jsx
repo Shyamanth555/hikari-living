@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Package, Tags, ShoppingCart, Users, Mail, Newspaper, GalleryHorizontal, ExternalLink } from 'lucide-react';
+import { LayoutDashboard, Package, Tags, ShoppingCart, Users, Mail, Newspaper, GalleryHorizontal, Star, ExternalLink } from 'lucide-react';
 import { cn } from '../../lib/cn';
 import { BRAND_NAME } from '../../lib/constants';
 
@@ -12,6 +12,7 @@ export const ADMIN_NAV_ITEMS = [
   { to: '/admin/customers', label: 'Customers', icon: Users },
   { to: '/admin/messages', label: 'Messages', icon: Mail },
   { to: '/admin/blog', label: 'Blog', icon: Newspaper },
+  { to: '/admin/reviews', label: 'Reviews', icon: Star },
 ];
 
 export function AdminSidebarContent({ onNavigate }) {

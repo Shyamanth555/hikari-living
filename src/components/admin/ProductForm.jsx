@@ -9,6 +9,7 @@ import { Button } from '../ui/Button';
 import { Checkbox } from '../ui/Checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/Select';
 import { ImageUploader } from './ImageUploader';
+import { Plus, Trash2 } from 'lucide-react';
 
 const productSchema = z.object({
   name: z.string().min(1, 'Product name is required'),
@@ -27,6 +28,12 @@ const productSchema = z.object({
 
 export function ProductForm({ defaultValues, categories = [], onSubmit, submitting = false, submitLabel = 'Save product' }) {
   const [images, setImages] = useState(defaultValues?.images || []);
+  const [specifications, setSpecifications] = useState(defaultValues?.specifications || []);
+
+  const addSpec = () => setSpecifications((s) => [...s, { key: '', value: '' }]);
+  const updateSpec = (i, field, val) =>
+    setSpecifications((s) => s.map((spec, idx) => (idx === i ? { ...spec, [field]: val } : spec)));
+  const removeSpec = (i) => setSpecifications((s) => s.filter((_, idx) => idx !== i));
 
   const {
     register,
@@ -65,6 +72,7 @@ export function ProductForm({ defaultValues, categories = [], onSubmit, submitti
       tags: values.tags
         ? values.tags.split(',').map((t) => t.trim()).filter(Boolean)
         : [],
+      specifications: specifications.filter((s) => s.key.trim() && s.value.trim()),
     });
   };
 
@@ -168,6 +176,37 @@ export function ProductForm({ defaultValues, categories = [], onSubmit, submitti
       <div className="space-y-1.5">
         <Label htmlFor="tags">Tags (comma-separated)</Label>
         <Input id="tags" placeholder="e.g. ganesha, brass, divine series" {...register('tags')} />
+      </div>
+
+      <div className="space-y-2">
+        <Label>Specifications (optional)</Label>
+        {specifications.map((spec, i) => (
+          <div key={i} className="flex gap-2">
+            <Input
+              placeholder="e.g. Material"
+              value={spec.key}
+              onChange={(e) => updateSpec(i, 'key', e.target.value)}
+              className="flex-1"
+            />
+            <Input
+              placeholder="e.g. Brass"
+              value={spec.value}
+              onChange={(e) => updateSpec(i, 'value', e.target.value)}
+              className="flex-1"
+            />
+            <button
+              type="button"
+              onClick={() => removeSpec(i)}
+              className="flex h-11 w-11 shrink-0 items-center justify-center text-muted-foreground hover:text-destructive cursor-pointer"
+              aria-label="Remove specification"
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          </div>
+        ))}
+        <Button type="button" variant="outline" size="sm" onClick={addSpec}>
+          <Plus className="h-3.5 w-3.5" /> Add specification
+        </Button>
       </div>
 
       <label className="flex items-center gap-2 text-sm">

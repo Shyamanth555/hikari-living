@@ -63,7 +63,7 @@ export default function Checkout() {
         email: user?.email,
         contact: shippingAddress.phone,
       },
-      theme: { color: '#b8862e' },
+      theme: { color: '#b08f42' },
       handler: async (response) => {
         try {
           await paymentApi.verify({

@@ -59,6 +59,7 @@ const BlogPostEdit = lazy(() => import('../pages/admin/blog/BlogPostEdit'));
 const HeroSlideList = lazy(() => import('../pages/admin/heroSlides/HeroSlideList'));
 const HeroSlideCreate = lazy(() => import('../pages/admin/heroSlides/HeroSlideCreate'));
 const HeroSlideEdit = lazy(() => import('../pages/admin/heroSlides/HeroSlideEdit'));
+const AdminReviewList = lazy(() => import('../pages/admin/reviews/ReviewList'));
 
 function PageFallback() {
   return (
@@ -128,6 +129,7 @@ export function AppRouter() {
             <Route path="hero-slides" element={<HeroSlideList />} />
             <Route path="hero-slides/new" element={<HeroSlideCreate />} />
             <Route path="hero-slides/:id/edit" element={<HeroSlideEdit />} />
+            <Route path="reviews" element={<AdminReviewList />} />
           </Route>
         </Route>
       </Routes>

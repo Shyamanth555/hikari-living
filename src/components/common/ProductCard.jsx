@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ShoppingBag } from 'lucide-react';
 import { PriceDisplay } from './PriceDisplay';
+import { RatingStars } from './RatingStars';
 import { useCart } from '../../context/CartContext';
 import { useToast } from '../../context/ToastContext';
 
@@ -58,6 +59,12 @@ export function ProductCard({ product }) {
         <h3 className="line-clamp-2 min-h-10 text-sm font-medium text-foreground group-hover:underline">
           {product.name}
         </h3>
+        {product.numReviews > 0 && (
+          <div className="flex items-center gap-1.5">
+            <RatingStars rating={product.ratingAverage} size="sm" />
+            <span className="text-xs text-muted-foreground">({product.numReviews})</span>
+          </div>
+        )}
         <PriceDisplay price={product.price} compareAtPrice={product.compareAtPrice} showBadge={false} />
       </div>
     </Link>

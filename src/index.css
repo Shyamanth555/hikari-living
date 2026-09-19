@@ -1,46 +1,60 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Fraunces", "Georgia", serif;
+  --font-display: "Playfair Display", "Georgia", serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 
-  /* Warm, premium neutral palette for a lifestyle/home-goods brand */
-  --color-cream-50: #fdfbf8;
-  --color-cream-100: #faf6f0;
-  --color-cream-200: #f3ece1;
-  --color-cream-300: #e8ddc9;
+  /* Hikari Living brand palette */
+  --color-cream-50: #fdfdf4; /* warm off-white — page background */
+  --color-cream-100: #f6f0cd; /* soft cream — secondary section backgrounds */
+  --color-cream-200: #e7efe7; /* soft sage — alt soft background */
+  --color-cream-300: #d9cd9d; /* light gold / beige — borders */
 
-  --color-ink-50: #f5f3f1;
-  --color-ink-200: #d8d2c9;
-  --color-ink-400: #8b8377;
-  --color-ink-600: #4a443c;
-  --color-ink-800: #2b2620;
-  --color-ink-900: #1c1813;
+  /* Deep green — brand text color and dark neutral scale */
+  --color-ink-50: #eaf0ec;
+  --color-ink-200: #d9cd9d;
+  --color-ink-400: #4c6971; /* teal doubles as secondary text */
+  --color-ink-600: #3a5548;
+  --color-ink-800: #264435; /* deep green — primary text */
+  --color-ink-900: #182b21;
 
-  /* Gold and pine — taken from the Hikari Living logo mark */
-  --color-gold-50: #fbf3df;
-  --color-gold-100: #f3e2b8;
-  --color-gold-300: #d9b45e;
-  --color-gold-500: #b8862e;
-  --color-gold-600: #9c6f22;
-  --color-gold-700: #7d5a1c;
+  /* Gold accent — used sparingly for CTAs, badges, ratings */
+  --color-gold-50: #f8f1e2;
+  --color-gold-100: #efe2c3;
+  --color-gold-300: #cbb077;
+  --color-gold-500: #b08f42; /* gold accent */
+  --color-gold-600: #8f7235;
+  --color-gold-700: #705a29;
 
-  --color-pine-50: #eaf0ec;
+  /* Pine — reuses the deep green family for success/positive states */
+  --color-pine-50: #e7efe7;
   --color-pine-300: #6c9280;
-  --color-pine-500: #234936;
-  --color-pine-600: #1a3a2b;
-  --color-pine-700: #142e22;
+  --color-pine-500: #264435;
+  --color-pine-600: #1a3327;
+
+  /* Teal — primary interactive color */
+  --color-teal-50: #eaf0f1;
+  --color-teal-300: #8ba3a8;
+  --color-teal-500: #4c6971; /* primary teal */
+  --color-teal-600: #3a5158;
 
   --color-background: var(--color-cream-50);
+  --color-background-soft: var(--color-cream-100);
+  --color-surface: #ffffff;
   --color-foreground: var(--color-ink-800);
-  --color-border: var(--color-ink-200);
-  --color-muted: var(--color-cream-200);
+  --color-border: var(--color-cream-300);
+  --color-muted: var(--color-cream-100);
   --color-muted-foreground: var(--color-ink-400);
-  --color-primary: var(--color-gold-500);
-  --color-primary-foreground: var(--color-cream-50);
-  --color-accent: var(--color-pine-500);
-  --color-accent-foreground: var(--color-cream-50);
-  --color-destructive: #b3402f;
+
+  --color-primary: var(--color-teal-500);
+  --color-primary-dark: #264435; /* deep green — primary button hover */
+  --color-primary-foreground: #ffffff;
+
+  --color-accent: var(--color-gold-500);
+  --color-accent-light: var(--color-cream-300);
+  --color-accent-foreground: #ffffff;
+
+  --color-destructive: #a8433a;
 
   --radius-sm: 0.375rem;
   --radius-md: 0.625rem;
@@ -78,7 +92,7 @@
   h1, h2, h3, h4 {
     font-family: var(--font-display);
     letter-spacing: -0.01em;
-    color: var(--color-pine-700);
+    color: var(--color-foreground);
   }
 }
 
