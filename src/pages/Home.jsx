@@ -35,9 +35,7 @@ export default function Home() {
 
       {heroSlides && heroSlides.length > 0 ? (
         <>
-          <section className="container-page pt-6 md:pt-10">
-            <HeroCarousel slides={heroSlides} />
-          </section>
+          <HeroCarousel slides={heroSlides} />
           <section className="border-b border-border">
             <div className="container-page flex flex-col items-center gap-5 py-12 text-center md:py-16">
               <p className="text-sm font-medium uppercase tracking-widest text-primary">Handcrafted in India</p>

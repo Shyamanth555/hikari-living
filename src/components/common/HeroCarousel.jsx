@@ -20,7 +20,7 @@ export function HeroCarousel({ slides }) {
 
   return (
     <div
-      className="relative aspect-video overflow-hidden rounded-xl bg-cream-200"
+      className="relative h-[50vh] w-full overflow-hidden bg-cream-200 sm:h-[60vh] lg:h-[70vh]"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
