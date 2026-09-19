@@ -42,7 +42,7 @@ export function Header() {
           aria-label={BRAND_NAME}
           className="absolute left-1/2 top-1/2 shrink-0 -translate-x-1/2 -translate-y-1/2 md:static md:left-auto md:top-auto md:translate-x-0 md:translate-y-0"
         >
-          <img src="/logo.png" alt={BRAND_NAME} className="h-12 w-12 object-contain md:h-14 md:w-14" />
+          <img src="/logo.png" alt={BRAND_NAME} className="h-10 w-auto object-contain md:h-12" />
         </Link>
 
         <nav className="hidden items-center gap-7 md:flex">

@@ -19,7 +19,7 @@ export function AdminSidebarContent({ onNavigate }) {
   return (
     <>
       <div className="flex items-center gap-2.5 px-5 py-6">
-        <img src="/logo.png" alt={BRAND_NAME} className="h-9 w-9 object-contain" />
+        <img src="/logo.png" alt={BRAND_NAME} className="h-9 w-auto object-contain" />
         <div>
           <p className="font-display text-base leading-tight">{BRAND_NAME}</p>
           <p className="text-xs text-muted-foreground">Admin Panel</p>
