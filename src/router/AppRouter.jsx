@@ -5,6 +5,7 @@ import { AdminLayout } from '../components/layout/AdminLayout';
 import { ProtectedRoute } from './ProtectedRoute';
 import { AdminRoute } from './AdminRoute';
 import { Spinner } from '../components/ui/Spinner';
+import { ScrollToTop } from '../components/common/ScrollToTop';
 
 import Home from '../pages/Home';
 import Shop from '../pages/Shop';
@@ -72,6 +73,7 @@ function PageFallback() {
 export function AppRouter() {
   return (
     <Suspense fallback={<PageFallback />}>
+      <ScrollToTop />
       <Routes>
         <Route element={<StorefrontLayout />}>
           <Route index element={<Home />} />
