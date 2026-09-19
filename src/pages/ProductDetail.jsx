@@ -98,7 +98,12 @@ export default function ProductDetail() {
       />
 
       <div className="grid gap-10 md:grid-cols-2">
-        <ProductGallery images={product.images} productName={product.name} />
+        <ProductGallery
+          images={product.images}
+          productName={product.name}
+          onAddToCart={handleAddToCart}
+          addToCartDisabled={product.stock <= 0 || adding}
+        />
 
         <div>
           <p className="text-xs uppercase tracking-wide text-muted-foreground">{product.category?.name}</p>
@@ -124,21 +129,16 @@ export default function ProductDetail() {
 
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <QuantitySelector value={quantity} onChange={setQuantity} max={Math.max(product.stock, 1)} />
-            <Button size="lg" disabled={product.stock <= 0 || adding} onClick={handleAddToCart} className="flex-1">
-              {product.stock <= 0 ? 'Out of stock' : adding ? 'Adding…' : 'Add to Cart'}
-            </Button>
-          </div>
-          {product.stock > 0 && (
             <Button
               size="lg"
               variant="accent"
-              disabled={buyingNow}
+              disabled={product.stock <= 0 || buyingNow}
               onClick={handleBuyNow}
-              className="mt-3 w-full"
+              className="flex-1"
             >
-              {buyingNow ? 'Please wait…' : 'Buy Now'}
+              {product.stock <= 0 ? 'Out of stock' : buyingNow ? 'Please wait…' : 'Buy Now'}
             </Button>
-          )}
+          </div>
 
           <div className="mt-8 space-y-3 rounded-lg bg-background-soft p-4">
             {DELIVERY_INFO.map((item) => (
