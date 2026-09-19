@@ -57,32 +57,29 @@ export default function Home() {
           </section>
         </>
       ) : (
-        <section className="border-b border-border bg-cream-100">
-          <div className="container-page grid items-center gap-10 py-16 md:grid-cols-2 md:py-24">
-            <div>
-              <p className="text-sm font-medium uppercase tracking-widest text-primary">Handcrafted in India</p>
-              <h1 className="mt-3 font-display text-4xl leading-tight text-foreground md:text-5xl">
-                Sculptures that carry meaning
-              </h1>
-              <p className="mt-5 max-w-md text-muted-foreground">
-                {BRAND_NAME} brings together handcrafted idols and statues — from home temple centrepieces to
-                car dashboard companions — made in brass, marble, and wood by experienced artisans.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Button asChild size="lg">
-                  <Link to="/shop">
-                    Shop All Sculptures <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </Button>
-              </div>
+        <section className="relative overflow-hidden border-b border-border bg-cream-100">
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+            <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-gold-300/40 blur-3xl" />
+            <div className="absolute -bottom-32 right-1/4 h-80 w-80 rounded-full bg-pine-300/30 blur-3xl" />
+            <div className="absolute left-1/4 top-1/2 h-72 w-72 -translate-y-1/2 rounded-full bg-primary/10 blur-3xl" />
+          </div>
+
+          <div className="container-page relative flex flex-col items-center gap-5 py-16 text-center md:py-28">
+            <p className="text-sm font-medium uppercase tracking-widest text-primary">Handcrafted in India</p>
+            <h1 className="font-display text-4xl leading-tight text-foreground md:text-6xl">
+              Sculptures that carry meaning
+            </h1>
+            <p className="max-w-lg text-muted-foreground md:text-lg">
+              {BRAND_NAME} brings together handcrafted idols and statues — from home temple centrepieces to
+              car dashboard companions — made in brass, marble, and wood by experienced artisans.
+            </p>
+            <div className="mt-2 flex flex-wrap justify-center gap-3">
+              <Button asChild size="lg">
+                <Link to="/shop">
+                  Shop All Sculptures <ArrowRight className="h-4 w-4" />
+                </Link>
+              </Button>
             </div>
-            {/* <div className="aspect-4/3 overflow-hidden rounded-xl bg-cream-200">
-              <img
-                src="https://picsum.photos/seed/hikari-sculpture-hero/1200/900"
-                alt="Handcrafted brass and marble sculptures from Hikari Living"
-                className="h-full w-full object-cover"
-              />
-            </div> */}
           </div>
         </section>
       )}
