@@ -25,9 +25,27 @@ export function ProductGallery({ images = [], productName, onAddToCart, addToCar
   };
 
   return (
-    <div>
+    <div className="flex flex-col-reverse gap-3 sm:flex-row">
+      {images.length > 1 && (
+        <div className="flex gap-3 overflow-x-auto sm:w-16 sm:shrink-0 sm:flex-col sm:overflow-x-visible sm:overflow-y-auto">
+          {images.map((img, i) => (
+            <button
+              key={img.publicId || i}
+              type="button"
+              onClick={() => setActive(i)}
+              className={cn(
+                'aspect-square w-16 shrink-0 overflow-hidden rounded-md border-2 cursor-pointer sm:w-full',
+                i === active ? 'border-primary' : 'border-transparent'
+              )}
+            >
+              <img src={img.url} alt={`${productName} ${i + 1}`} className="h-full w-full object-cover" />
+            </button>
+          ))}
+        </div>
+      )}
+
       <div
-        className="relative aspect-square touch-pan-y overflow-hidden rounded-lg bg-cream-200"
+        className="relative aspect-square flex-1 touch-pan-y overflow-hidden rounded-lg bg-cream-200"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
@@ -66,23 +84,6 @@ export function ProductGallery({ images = [], productName, onAddToCart, addToCar
           </>
         )}
       </div>
-      {images.length > 1 && (
-        <div className="mt-3 grid grid-cols-5 gap-3">
-          {images.map((img, i) => (
-            <button
-              key={img.publicId || i}
-              type="button"
-              onClick={() => setActive(i)}
-              className={cn(
-                'aspect-square overflow-hidden rounded-md border-2 cursor-pointer',
-                i === active ? 'border-primary' : 'border-transparent'
-              )}
-            >
-              <img src={img.url} alt={`${productName} ${i + 1}`} className="h-full w-full object-cover" />
-            </button>
-          ))}
-        </div>
-      )}
     </div>
   );
 }

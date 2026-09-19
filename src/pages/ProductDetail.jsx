@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Truck, RotateCcw, ShieldCheck } from 'lucide-react';
+import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
+import { Truck, RotateCcw, ShieldCheck, Package } from 'lucide-react';
 import { SEO } from '../components/common/SEO';
 import { Breadcrumbs } from '../components/common/Breadcrumbs';
 import { ProductGallery } from '../components/product/ProductGallery';
@@ -12,6 +12,7 @@ import { ReviewsSection } from '../components/product/ReviewsSection';
 import { RelatedProducts } from '../components/product/RelatedProducts';
 import { Button } from '../components/ui/Button';
 import { Spinner } from '../components/ui/Spinner';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/Tabs';
 import { useAsync } from '../hooks/useAsync';
 import { productApi } from '../api/productApi';
 import { useCart } from '../context/CartContext';
@@ -19,13 +20,18 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 
 const DELIVERY_INFO = [
-  { icon: Truck, text: 'Free shipping on orders over ₹1,999, delivered in 4–8 business days' },
-  { icon: RotateCcw, text: '7-day easy returns on eligible items' },
-  { icon: ShieldCheck, text: 'Every piece carefully packed and insured in transit' },
+  { icon: Truck, text: 'Free shipping over ₹1,999', detail: 'Delivered in 4–8 business days' },
+  { icon: RotateCcw, text: 'Easy returns', detail: '7-day return window on eligible items' },
+  { icon: ShieldCheck, text: 'Secure payments', detail: 'Razorpay-protected checkout' },
+  { icon: Package, text: 'Carefully packed', detail: 'Every piece insured in transit' },
 ];
+
+const TAB_TRIGGER_CLASS =
+  'flex-1 rounded-none border-b-2 border-transparent px-0 py-3 text-base data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none';
 
 export default function ProductDetail() {
   const { slug } = useParams();
+  const location = useLocation();
   const { data: product, loading, error } = useAsync(() => productApi.getBySlug(slug), [slug]);
   const { addItem } = useCart();
   const { isAuthenticated } = useAuth();
@@ -85,6 +91,8 @@ export default function ProductDetail() {
     }
   };
 
+  const defaultTab = location.hash === '#reviews' ? 'reviews' : 'description';
+
   return (
     <div className="container-page py-10">
       <SEO title={product.name} description={product.shortDescription || product.description} image={product.images?.[0]?.url} />
@@ -109,14 +117,17 @@ export default function ProductDetail() {
           <p className="text-xs uppercase tracking-wide text-muted-foreground">{product.category?.name}</p>
           <h1 className="mt-1 font-display text-3xl text-foreground">{product.name}</h1>
 
-          {product.numReviews > 0 && (
-            <div className="mt-2 flex items-center gap-2">
-              <RatingStars rating={product.ratingAverage} size="sm" />
-              <span className="text-sm text-muted-foreground">
-                {product.ratingAverage.toFixed(1)} ({product.numReviews} review{product.numReviews === 1 ? '' : 's'})
-              </span>
-            </div>
-          )}
+          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
+            {product.numReviews > 0 && (
+              <div className="flex items-center gap-2">
+                <RatingStars rating={product.ratingAverage} size="sm" />
+                <span className="text-sm text-muted-foreground">
+                  {product.ratingAverage.toFixed(1)} ({product.numReviews} review{product.numReviews === 1 ? '' : 's'})
+                </span>
+              </div>
+            )}
+            {product.sku && <span className="text-sm text-muted-foreground">SKU: {product.sku}</span>}
+          </div>
 
           <div className="mt-3">
             <PriceDisplay price={product.price} compareAtPrice={product.compareAtPrice} size="lg" />
@@ -140,40 +151,77 @@ export default function ProductDetail() {
             </Button>
           </div>
 
-          <div className="mt-8 space-y-3 rounded-lg bg-background-soft p-4">
+          <div className="mt-8 grid grid-cols-2 gap-4 rounded-lg bg-background-soft p-4 sm:grid-cols-4">
             {DELIVERY_INFO.map((item) => (
-              <div key={item.text} className="flex items-start gap-3">
-                <item.icon className="mt-0.5 h-4.5 w-4.5 shrink-0 text-primary" strokeWidth={1.5} />
-                <p className="text-sm text-foreground">{item.text}</p>
+              <div key={item.text} className="flex flex-col items-center gap-1.5 text-center">
+                <item.icon className="h-5 w-5 shrink-0 text-primary" strokeWidth={1.5} />
+                <p className="text-xs font-medium text-foreground">{item.text}</p>
               </div>
             ))}
           </div>
 
-          <div className="mt-10 border-t border-border pt-6">
-            <h2 className="text-sm font-semibold text-foreground">Description</h2>
-            <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
-              {product.description}
-            </p>
-          </div>
+          <Tabs id="reviews" defaultValue={defaultTab} className="mt-10 scroll-mt-24">
+            <TabsList className="h-auto w-full gap-2 rounded-none border-b border-border bg-transparent p-0">
+              <TabsTrigger value="description" className={TAB_TRIGGER_CLASS}>
+                Description
+              </TabsTrigger>
+              {product.specifications?.length > 0 && (
+                <TabsTrigger value="specifications" className={TAB_TRIGGER_CLASS}>
+                  Specifications
+                </TabsTrigger>
+              )}
+              <TabsTrigger value="shipping" className={TAB_TRIGGER_CLASS}>
+                Shipping &amp; Returns
+              </TabsTrigger>
+              <TabsTrigger value="reviews" className={TAB_TRIGGER_CLASS}>
+                Reviews{product.numReviews > 0 ? ` (${product.numReviews})` : ''}
+              </TabsTrigger>
+            </TabsList>
 
-          {product.specifications?.length > 0 && (
-            <div className="mt-8 border-t border-border pt-6">
-              <h2 className="text-sm font-semibold text-foreground">Specifications</h2>
-              <dl className="mt-3 divide-y divide-border text-sm">
-                {product.specifications.map((spec) => (
-                  <div key={spec.key} className="flex justify-between gap-4 py-2">
-                    <dt className="text-muted-foreground">{spec.key}</dt>
-                    <dd className="text-right font-medium text-foreground">{spec.value}</dd>
-                  </div>
+            <TabsContent value="description">
+              <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">{product.description}</p>
+            </TabsContent>
+
+            {product.specifications?.length > 0 && (
+              <TabsContent value="specifications">
+                <dl className="divide-y divide-border text-sm">
+                  {product.specifications.map((spec) => (
+                    <div key={spec.key} className="flex justify-between gap-4 py-2">
+                      <dt className="text-muted-foreground">{spec.key}</dt>
+                      <dd className="text-right font-medium text-foreground">{spec.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </TabsContent>
+            )}
+
+            <TabsContent value="shipping">
+              <ul className="space-y-4">
+                {DELIVERY_INFO.map((item) => (
+                  <li key={item.text} className="flex items-start gap-3">
+                    <item.icon className="mt-0.5 h-4.5 w-4.5 shrink-0 text-primary" strokeWidth={1.5} />
+                    <div>
+                      <p className="text-sm font-medium text-foreground">{item.text}</p>
+                      <p className="text-sm text-muted-foreground">{item.detail}</p>
+                    </div>
+                  </li>
                 ))}
-              </dl>
-            </div>
-          )}
-        </div>
-      </div>
+              </ul>
+              <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+                <Link to="/policies/shipping" className="font-medium text-primary hover:underline">
+                  Read full shipping policy →
+                </Link>
+                <Link to="/policies/returns" className="font-medium text-primary hover:underline">
+                  Read full return policy →
+                </Link>
+              </div>
+            </TabsContent>
 
-      <div id="reviews" className="mt-16 scroll-mt-24 border-t border-border pt-12">
-        <ReviewsSection productId={product._id} ratingAverage={product.ratingAverage} numReviews={product.numReviews} />
+            <TabsContent value="reviews">
+              <ReviewsSection productId={product._id} ratingAverage={product.ratingAverage} numReviews={product.numReviews} />
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
 
       {product.category && (
