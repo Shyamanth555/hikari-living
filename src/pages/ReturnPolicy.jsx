@@ -19,7 +19,7 @@ export default function ReturnPolicy() {
           <section>
             <h2 className="mb-2 font-display text-lg text-foreground">Non-Returnable Items</h2>
             <p>
-              Made-to-order furniture, items marked as final sale, and gift cards are not eligible for return
+              Made-to-order custom sculptures, items marked as final sale, and gift cards are not eligible for return
               or exchange unless received damaged or defective.
             </p>
           </section>

@@ -9,7 +9,8 @@ export function Footer() {
         <div>
           <h2 className="font-display text-xl text-foreground">{BRAND_NAME}</h2>
           <p className="mt-3 max-w-xs text-sm text-muted-foreground">
-            Considered furniture, lighting, and decor for the modern home — thoughtfully made, built to last.
+            Handcrafted sculptures and idols — Divine Series, car dashboard idols, and Pride of India statues, made
+            by experienced artisans.
           </p>
           <div className="mt-4 flex gap-3">
             {SOCIAL_LINKS.map((link) => (
@@ -30,8 +31,10 @@ export function Footer() {
         <div>
           <h3 className="text-sm font-semibold text-foreground">Shop</h3>
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-            <li><Link to="/shop" className="hover:text-foreground">All Products</Link></li>
-            <li><Link to="/search" className="hover:text-foreground">Search</Link></li>
+            <li><Link to="/shop" className="hover:text-foreground">All Sculptures</Link></li>
+            <li><Link to="/new-launches" className="hover:text-foreground">New Launches</Link></li>
+            <li><Link to="/custom-sculpture" className="hover:text-foreground">Custom Sculpture</Link></li>
+            <li><Link to="/corporate-gifting" className="hover:text-foreground">Corporate Gifting</Link></li>
             <li><Link to="/track-order" className="hover:text-foreground">Track Your Order</Link></li>
           </ul>
         </div>
@@ -40,6 +43,8 @@ export function Footer() {
           <h3 className="text-sm font-semibold text-foreground">Company</h3>
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
             <li><Link to="/about" className="hover:text-foreground">About / Our Story</Link></li>
+            <li><Link to="/blog" className="hover:text-foreground">Blog</Link></li>
+            <li><Link to="/reviews" className="hover:text-foreground">Reviews</Link></li>
             <li><Link to="/contact" className="hover:text-foreground">Contact</Link></li>
           </ul>
         </div>

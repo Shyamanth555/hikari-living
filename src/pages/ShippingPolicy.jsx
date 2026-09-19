@@ -21,7 +21,7 @@ export default function ShippingPolicy() {
             <h2 className="mb-2 font-display text-lg text-foreground">Processing Time</h2>
             <p>
               Orders are typically processed and handed to our courier partner within 2–4 business days of
-              payment confirmation. Made-to-order or large furniture items may take longer — this will be
+              payment confirmation. Made-to-order or custom sculpture pieces may take longer — this will be
               noted on the product page.
             </p>
           </section>

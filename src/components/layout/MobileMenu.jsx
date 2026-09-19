@@ -25,14 +25,36 @@ export function MobileMenu({ open, onOpenChange, categories }) {
           </div>
 
           <nav className="flex flex-1 flex-col gap-1 px-5 py-4 text-sm">
+            <p className="mb-1 mt-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Shop</p>
             <Link to="/shop" onClick={close} className="py-2.5 font-medium">
-              Shop
+              All Sculptures
+            </Link>
+            <Link to="/new-launches" onClick={close} className="py-2.5 font-medium">
+              New Launches
             </Link>
             {categories.map((cat) => (
-              <Link key={cat._id} to={`/category/${cat.slug}`} onClick={close} className="py-2.5">
+              <Link key={cat._id} to={`/category/${cat.slug}`} onClick={close} className="py-2.5 font-medium">
                 {cat.name}
               </Link>
             ))}
+
+            <div className="my-3 border-t border-border" />
+
+            <Link to="/custom-sculpture" onClick={close} className="py-2.5 font-medium">
+              Custom Sculpture
+            </Link>
+            <Link to="/corporate-gifting" onClick={close} className="py-2.5 font-medium">
+              Corporate Gifting
+            </Link>
+            <Link to="/blog" onClick={close} className="py-2.5 font-medium">
+              Blog
+            </Link>
+            <Link to="/reviews" onClick={close} className="py-2.5 font-medium">
+              Reviews
+            </Link>
+
+            <div className="my-3 border-t border-border" />
+
             <Link to="/about" onClick={close} className="py-2.5">
               Our Story
             </Link>

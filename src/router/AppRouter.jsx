@@ -8,6 +8,7 @@ import { Spinner } from '../components/ui/Spinner';
 
 import Home from '../pages/Home';
 import Shop from '../pages/Shop';
+import NewLaunches from '../pages/NewLaunches';
 import CategoryPage from '../pages/CategoryPage';
 import ProductDetail from '../pages/ProductDetail';
 import SearchResults from '../pages/SearchResults';
@@ -17,11 +18,18 @@ import Register from '../pages/Register';
 import TrackOrder from '../pages/TrackOrder';
 import About from '../pages/About';
 import Contact from '../pages/Contact';
+import CustomSculpture from '../pages/CustomSculpture';
+import CorporateGifting from '../pages/CorporateGifting';
+import Reviews from '../pages/Reviews';
 import PrivacyPolicy from '../pages/PrivacyPolicy';
 import TermsOfService from '../pages/TermsOfService';
 import ShippingPolicy from '../pages/ShippingPolicy';
 import ReturnPolicy from '../pages/ReturnPolicy';
 import NotFound from '../pages/NotFound';
+
+// Blog pages pull in react-markdown, so they're lazy-loaded out of the main bundle.
+const Blog = lazy(() => import('../pages/Blog'));
+const BlogPost = lazy(() => import('../pages/BlogPost'));
 
 // Checkout/account/admin are behind auth, so they're lazy-loaded out of the
 // initial storefront bundle — most visitors never touch these routes.
@@ -45,6 +53,12 @@ const AdminOrderDetail = lazy(() => import('../pages/admin/orders/OrderDetail'))
 const CustomerList = lazy(() => import('../pages/admin/customers/CustomerList'));
 const CustomerDetail = lazy(() => import('../pages/admin/customers/CustomerDetail'));
 const ContactMessages = lazy(() => import('../pages/admin/ContactMessages'));
+const BlogPostList = lazy(() => import('../pages/admin/blog/BlogPostList'));
+const BlogPostCreate = lazy(() => import('../pages/admin/blog/BlogPostCreate'));
+const BlogPostEdit = lazy(() => import('../pages/admin/blog/BlogPostEdit'));
+const HeroSlideList = lazy(() => import('../pages/admin/heroSlides/HeroSlideList'));
+const HeroSlideCreate = lazy(() => import('../pages/admin/heroSlides/HeroSlideCreate'));
+const HeroSlideEdit = lazy(() => import('../pages/admin/heroSlides/HeroSlideEdit'));
 
 function PageFallback() {
   return (
@@ -61,6 +75,7 @@ export function AppRouter() {
         <Route element={<StorefrontLayout />}>
           <Route index element={<Home />} />
           <Route path="shop" element={<Shop />} />
+          <Route path="new-launches" element={<NewLaunches />} />
           <Route path="category/:slug" element={<CategoryPage />} />
           <Route path="product/:slug" element={<ProductDetail />} />
           <Route path="search" element={<SearchResults />} />
@@ -70,6 +85,11 @@ export function AppRouter() {
           <Route path="track-order" element={<TrackOrder />} />
           <Route path="about" element={<About />} />
           <Route path="contact" element={<Contact />} />
+          <Route path="custom-sculpture" element={<CustomSculpture />} />
+          <Route path="corporate-gifting" element={<CorporateGifting />} />
+          <Route path="reviews" element={<Reviews />} />
+          <Route path="blog" element={<Blog />} />
+          <Route path="blog/:slug" element={<BlogPost />} />
           <Route path="policies/privacy" element={<PrivacyPolicy />} />
           <Route path="policies/terms" element={<TermsOfService />} />
           <Route path="policies/shipping" element={<ShippingPolicy />} />
@@ -102,6 +122,12 @@ export function AppRouter() {
             <Route path="customers" element={<CustomerList />} />
             <Route path="customers/:id" element={<CustomerDetail />} />
             <Route path="messages" element={<ContactMessages />} />
+            <Route path="blog" element={<BlogPostList />} />
+            <Route path="blog/new" element={<BlogPostCreate />} />
+            <Route path="blog/:id/edit" element={<BlogPostEdit />} />
+            <Route path="hero-slides" element={<HeroSlideList />} />
+            <Route path="hero-slides/new" element={<HeroSlideCreate />} />
+            <Route path="hero-slides/:id/edit" element={<HeroSlideEdit />} />
           </Route>
         </Route>
       </Routes>

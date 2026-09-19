@@ -167,7 +167,7 @@ export function ProductForm({ defaultValues, categories = [], onSubmit, submitti
 
       <div className="space-y-1.5">
         <Label htmlFor="tags">Tags (comma-separated)</Label>
-        <Input id="tags" placeholder="e.g. sofa, linen, living room" {...register('tags')} />
+        <Input id="tags" placeholder="e.g. ganesha, brass, divine series" {...register('tags')} />
       </div>
 
       <label className="flex items-center gap-2 text-sm">

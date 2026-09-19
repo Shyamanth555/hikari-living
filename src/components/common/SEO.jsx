@@ -2,8 +2,8 @@ import { Helmet } from 'react-helmet-async';
 import { BRAND_NAME } from '../../lib/constants';
 
 export function SEO({ title, description, canonical, image }) {
-  const fullTitle = title ? `${title} | ${BRAND_NAME}` : `${BRAND_NAME} — Considered Living`;
-  const desc = description || 'Hikari Living — considered furniture, lighting, and decor for the modern home.';
+  const fullTitle = title ? `${title} | ${BRAND_NAME}` : `${BRAND_NAME} — Handcrafted Sculptures`;
+  const desc = description || 'Hikari Living — handcrafted sculptures and idols, from home temple centrepieces to car dashboard idols.';
 
   return (
     <Helmet>

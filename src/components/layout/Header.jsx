@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, Search, ShoppingBag, User } from 'lucide-react';
+import { ChevronDown, Menu, Search, ShoppingBag, User } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 import { useAsync } from '../../hooks/useAsync';
@@ -51,20 +51,37 @@ export function Header() {
         </Link>
 
         <nav className="hidden items-center gap-7 md:flex">
-          <Link to="/shop" className="text-sm font-medium text-foreground hover:text-primary">
-            Shop
+          <DropdownMenu>
+            <DropdownMenuTrigger className="flex cursor-pointer items-center gap-1 text-sm font-medium text-foreground hover:text-primary">
+              Shop <ChevronDown className="h-3.5 w-3.5" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              <DropdownMenuItem asChild>
+                <Link to="/shop">All Sculptures</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/new-launches">New Launches</Link>
+              </DropdownMenuItem>
+              {(categories || []).length > 0 && <DropdownMenuSeparator />}
+              {(categories || []).map((cat) => (
+                <DropdownMenuItem key={cat._id} asChild>
+                  <Link to={`/category/${cat.slug}`}>{cat.name}</Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <Link to="/custom-sculpture" className="text-sm font-medium text-foreground hover:text-primary">
+            Custom Sculpture
           </Link>
-          {(categories || []).slice(0, 5).map((cat) => (
-            <Link
-              key={cat._id}
-              to={`/category/${cat.slug}`}
-              className="text-sm font-medium text-foreground hover:text-primary"
-            >
-              {cat.name}
-            </Link>
-          ))}
-          <Link to="/about" className="text-sm font-medium text-foreground hover:text-primary">
-            Our Story
+          <Link to="/corporate-gifting" className="text-sm font-medium text-foreground hover:text-primary">
+            Corporate Gifting
+          </Link>
+          <Link to="/blog" className="text-sm font-medium text-foreground hover:text-primary">
+            Blog
+          </Link>
+          <Link to="/reviews" className="text-sm font-medium text-foreground hover:text-primary">
+            Reviews
           </Link>
         </nav>
 

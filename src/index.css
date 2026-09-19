@@ -88,4 +88,64 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+
+  .markdown-content {
+    color: var(--color-foreground);
+    line-height: 1.75;
+  }
+
+  .markdown-content h1,
+  .markdown-content h2,
+  .markdown-content h3 {
+    font-family: var(--font-display);
+    margin-top: 1.75em;
+    margin-bottom: 0.6em;
+  }
+
+  .markdown-content h1 { font-size: 1.75rem; }
+  .markdown-content h2 { font-size: 1.4rem; }
+  .markdown-content h3 { font-size: 1.15rem; }
+
+  .markdown-content p {
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+
+  .markdown-content ul,
+  .markdown-content ol {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    padding-left: 1.5em;
+  }
+
+  .markdown-content ul { list-style: disc; }
+  .markdown-content ol { list-style: decimal; }
+
+  .markdown-content a {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+
+  .markdown-content blockquote {
+    border-left: 3px solid var(--color-border);
+    padding-left: 1em;
+    color: var(--color-muted-foreground);
+    font-style: italic;
+  }
+
+  .markdown-content img {
+    border-radius: var(--radius-md);
+  }
+
+  .markdown-content table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .markdown-content th,
+  .markdown-content td {
+    border: 1px solid var(--color-border);
+    padding: 0.5em 0.75em;
+    text-align: left;
+  }
 }

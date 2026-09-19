@@ -1,30 +1,33 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Package, Tags, ShoppingCart, Users, Mail, ExternalLink } from 'lucide-react';
+import { LayoutDashboard, Package, Tags, ShoppingCart, Users, Mail, Newspaper, GalleryHorizontal, ExternalLink } from 'lucide-react';
 import { cn } from '../../lib/cn';
 import { BRAND_NAME } from '../../lib/constants';
 
-const NAV_ITEMS = [
+export const ADMIN_NAV_ITEMS = [
   { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, end: true },
+  { to: '/admin/hero-slides', label: 'Home Page Hero', icon: GalleryHorizontal },
   { to: '/admin/products', label: 'Products', icon: Package },
   { to: '/admin/categories', label: 'Categories', icon: Tags },
   { to: '/admin/orders', label: 'Orders', icon: ShoppingCart },
   { to: '/admin/customers', label: 'Customers', icon: Users },
   { to: '/admin/messages', label: 'Messages', icon: Mail },
+  { to: '/admin/blog', label: 'Blog', icon: Newspaper },
 ];
 
-export function AdminSidebar() {
+export function AdminSidebarContent({ onNavigate }) {
   return (
-    <aside className="hidden w-60 shrink-0 border-r border-border bg-cream-100 md:block">
+    <>
       <div className="px-5 py-6">
         <p className="font-display text-lg">{BRAND_NAME}</p>
         <p className="text-xs text-muted-foreground">Admin Panel</p>
       </div>
       <nav className="flex flex-col gap-1 px-3">
-        {NAV_ITEMS.map(({ to, label, icon: Icon, end }) => (
+        {ADMIN_NAV_ITEMS.map(({ to, label, icon: Icon, end }) => (
           <NavLink
             key={to}
             to={to}
             end={end}
+            onClick={onNavigate}
             className={({ isActive }) =>
               cn(
                 'flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors',
@@ -44,6 +47,14 @@ export function AdminSidebar() {
         <ExternalLink className="h-3.5 w-3.5" />
         View storefront
       </a>
+    </>
+  );
+}
+
+export function AdminSidebar() {
+  return (
+    <aside className="hidden w-60 shrink-0 border-r border-border bg-cream-100 md:block">
+      <AdminSidebarContent />
     </aside>
   );
 }

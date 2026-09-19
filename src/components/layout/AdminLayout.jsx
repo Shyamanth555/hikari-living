@@ -1,16 +1,30 @@
+import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
+import { Menu } from 'lucide-react';
 import { AdminSidebar } from './AdminSidebar';
+import { AdminMobileSidebar } from './AdminMobileSidebar';
 import { useAuth } from '../../context/AuthContext';
 
 export function AdminLayout() {
   const { user, logout } = useAuth();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
     <div className="flex min-h-screen">
       <AdminSidebar />
-      <div className="flex-1">
+      <div className="min-w-0 flex-1">
         <header className="flex h-16 items-center justify-between border-b border-border px-5">
-          <p className="text-sm text-muted-foreground">Logged in as {user?.name}</p>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setMobileOpen(true)}
+              className="cursor-pointer md:hidden"
+              aria-label="Open menu"
+            >
+              <Menu className="h-6 w-6" />
+            </button>
+            <p className="text-sm text-muted-foreground">Logged in as {user?.name}</p>
+          </div>
           <button
             type="button"
             onClick={() => logout()}
@@ -23,6 +37,8 @@ export function AdminLayout() {
           <Outlet />
         </main>
       </div>
+
+      <AdminMobileSidebar open={mobileOpen} onOpenChange={setMobileOpen} />
     </div>
   );
 }

@@ -1,33 +1,8 @@
-import { useState } from 'react';
 import { Mail, MapPin, Phone } from 'lucide-react';
 import { SEO } from '../components/common/SEO';
-import { Input } from '../components/ui/Input';
-import { Label } from '../components/ui/Label';
-import { Textarea } from '../components/ui/Textarea';
-import { Button } from '../components/ui/Button';
-import { contactApi } from '../api/contactApi';
+import { EnquiryForm } from '../components/common/EnquiryForm';
 
 export default function Contact() {
-  const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
-  const [submitting, setSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState('');
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setSubmitting(true);
-    try {
-      await contactApi.submit(form);
-      setSubmitted(true);
-      setForm({ name: '', email: '', phone: '', message: '' });
-    } catch (err) {
-      setError(err?.response?.data?.message || 'Something went wrong, please try again.');
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
   return (
     <div className="container-page py-14">
       <SEO title="Contact" description="Get in touch with the Hikari Living team." />
@@ -56,46 +31,7 @@ export default function Contact() {
         </div>
 
         <div>
-          {submitted ? (
-            <div className="rounded-lg border border-sage-500/30 bg-sage-50 p-6 text-sage-600">
-              Thanks for reaching out — we&apos;ll get back to you soon.
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-1.5">
-                <Label htmlFor="name">Name</Label>
-                <Input id="name" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} required />
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={form.email}
-                  onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-                  required
-                />
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="phone">Phone (optional)</Label>
-                <Input id="phone" value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} />
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="message">Message</Label>
-                <Textarea
-                  id="message"
-                  rows={5}
-                  value={form.message}
-                  onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
-                  required
-                />
-              </div>
-              {error && <p className="text-sm text-destructive">{error}</p>}
-              <Button type="submit" size="lg" disabled={submitting}>
-                {submitting ? 'Sending…' : 'Send Message'}
-              </Button>
-            </form>
-          )}
+          <EnquiryForm type="general" submitLabel="Send Message" />
         </div>
       </div>
     </div>

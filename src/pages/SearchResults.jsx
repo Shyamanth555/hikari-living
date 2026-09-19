@@ -39,7 +39,7 @@ export default function SearchResults() {
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search for furniture, lighting, decor…"
+            placeholder="Search for sculptures, idols, statues…"
             className="h-12 w-full rounded-full border border-border bg-cream-100 pl-11 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
           />
         </div>

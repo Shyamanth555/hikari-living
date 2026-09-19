@@ -18,17 +18,18 @@ export default function About() {
 
         <div className="mt-8 space-y-5 text-muted-foreground">
           <p>
-            {BRAND_NAME} began with a simple idea: that the objects we live with every day should be made
-            with care, from materials that age gracefully, and designed to be kept rather than replaced.
+            {BRAND_NAME} began with a simple idea: that sculptures and idols carry meaning, and deserve to be
+            made with the same care and skill as any fine craft — not mass-produced, but shaped by hand.
           </p>
           <p>
-            We work with small workshops and independent makers who share that philosophy — hand-thrown
-            ceramics, solid hardwood furniture, and naturally dyed textiles, each piece chosen for how it
-            will look and feel years from now, not just on the day it arrives.
+            We work with experienced artisans across India who specialise in brass casting, panchaloha work,
+            marble carving, and woodwork — from home temple centrepieces in our Divine Series, to compact
+            idols sized for a car dashboard, to statues honouring the figures of Pride of India.
           </p>
           <p>
-            Every collection is edited carefully rather than expanded for its own sake. We would rather
-            offer fewer, better things than everything at once — a quieter way to furnish a home.
+            Every piece is finished by hand and checked before it leaves the workshop. When something specific
+            is in mind — a particular deity, size, or material — our artisans also take on custom
+            commissions.
           </p>
         </div>
       </div>

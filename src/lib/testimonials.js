@@ -1,4 +1,4 @@
-// Static, config-driven social proof for the home page.
+// Static, config-driven social proof for the home page and Reviews page.
 // Not a database-backed review system — see plan assumptions.
 export const TESTIMONIALS = [
   {
@@ -6,20 +6,20 @@ export const TESTIMONIALS = [
     location: 'Bengaluru',
     rating: 5,
     quote:
-      'The quality is far beyond what I expected online. The linen sofa looks even better in person, and it arrived exactly on schedule.',
+      'The brass Ganesha idol is even more detailed in person than in the photos. Beautifully packed and arrived without a scratch.',
   },
   {
     name: 'Vikram S.',
     location: 'Pune',
     rating: 5,
     quote:
-      'Every piece feels considered — the packaging, the finish, the little care card. Hikari Living has become my go-to for gifting too.',
+      'Ordered a custom Nataraja statue for our office lobby — the team was patient through two rounds of revisions and the finish is stunning.',
   },
   {
     name: 'Meera K.',
     location: 'Mumbai',
     rating: 4,
     quote:
-      'Beautiful, understated pieces that work with almost any interior. Customer support was quick to help when I needed to change my address.',
+      'The dashboard Ganesha is exactly the size I wanted, and the finish looks premium. Customer support was quick when I needed to change my address.',
   },
 ];
