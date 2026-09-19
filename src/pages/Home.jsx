@@ -76,13 +76,13 @@ export default function Home() {
                 </Button>
               </div>
             </div>
-            <div className="aspect-4/3 overflow-hidden rounded-xl bg-cream-200">
+            {/* <div className="aspect-4/3 overflow-hidden rounded-xl bg-cream-200">
               <img
                 src="https://picsum.photos/seed/hikari-sculpture-hero/1200/900"
                 alt="Handcrafted brass and marble sculptures from Hikari Living"
                 className="h-full w-full object-cover"
               />
-            </div>
+            </div> */}
           </div>
         </section>
       )}

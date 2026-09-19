@@ -172,7 +172,7 @@ export default function ProductDetail() {
         </div>
       </div>
 
-      <div className="mt-16 border-t border-border pt-12">
+      <div id="reviews" className="mt-16 scroll-mt-24 border-t border-border pt-12">
         <ReviewsSection productId={product._id} ratingAverage={product.ratingAverage} numReviews={product.numReviews} />
       </div>
 

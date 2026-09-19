@@ -1,5 +1,5 @@
-import { useParams } from 'react-router-dom';
-import { Truck } from 'lucide-react';
+import { Link, useParams } from 'react-router-dom';
+import { Truck, Star } from 'lucide-react';
 import { Spinner } from '../../components/ui/Spinner';
 import { OrderStatusBadge } from '../../components/common/OrderStatusBadge';
 import { PriceDisplay } from '../../components/common/PriceDisplay';
@@ -74,6 +74,14 @@ export default function OrderDetail() {
                 <div className="flex-1">
                   <p className="text-sm font-medium text-foreground">{item.name}</p>
                   <p className="text-sm text-muted-foreground">Qty {item.quantity}</p>
+                  {order.status === 'delivered' && item.product?.slug && (
+                    <Link
+                      to={`/product/${item.product.slug}#reviews`}
+                      className="mt-1 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+                    >
+                      <Star className="h-3.5 w-3.5" /> Write a review
+                    </Link>
+                  )}
                 </div>
                 <PriceDisplay price={item.price * item.quantity} />
               </li>

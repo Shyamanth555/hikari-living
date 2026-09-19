@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, Pencil } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/Tabs';
 import { Input } from '../../components/ui/Input';
 import { Label } from '../../components/ui/Label';
@@ -42,7 +42,16 @@ function InfoTab() {
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="phone">Phone</Label>
-        <Input id="phone" value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} />
+        <Input
+          id="phone"
+          inputMode="numeric"
+          maxLength={10}
+          placeholder="10-digit mobile number"
+          value={form.phone}
+          onChange={(e) =>
+            setForm((f) => ({ ...f, phone: e.target.value.replace(/\D/g, '').slice(0, 10) }))
+          }
+        />
       </div>
       <Button type="submit" disabled={submitting}>
         {submitting ? 'Saving…' : 'Save changes'}
@@ -55,17 +64,34 @@ function AddressesTab() {
   const { user, updateUser } = useAuth();
   const { toast } = useToast();
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [editingAddress, setEditingAddress] = useState(null);
   const [submitting, setSubmitting] = useState(false);
 
-  const handleAdd = async (data) => {
+  const openAddDialog = () => {
+    setEditingAddress(null);
+    setDialogOpen(true);
+  };
+
+  const openEditDialog = (addr) => {
+    setEditingAddress(addr);
+    setDialogOpen(true);
+  };
+
+  const handleSubmit = async (data) => {
     setSubmitting(true);
     try {
-      const updated = await userApi.addAddress(data);
+      const updated = editingAddress
+        ? await userApi.updateAddress(editingAddress._id, data)
+        : await userApi.addAddress(data);
       updateUser(updated);
       setDialogOpen(false);
-      toast({ title: 'Address added', variant: 'success' });
+      toast({ title: editingAddress ? 'Address updated' : 'Address added', variant: 'success' });
     } catch (err) {
-      toast({ title: 'Could not add address', description: err?.response?.data?.message, variant: 'destructive' });
+      toast({
+        title: editingAddress ? 'Could not update address' : 'Could not add address',
+        description: err?.response?.data?.message,
+        variant: 'destructive',
+      });
     } finally {
       setSubmitting(false);
     }
@@ -95,28 +121,43 @@ function AddressesTab() {
               </p>
               <p className="text-muted-foreground">{addr.phone}</p>
             </div>
-            <button
-              type="button"
-              onClick={() => handleDelete(addr._id)}
-              className="text-muted-foreground hover:text-destructive cursor-pointer"
-              aria-label="Delete address"
-            >
-              <Trash2 className="h-4 w-4" />
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => openEditDialog(addr)}
+                className="text-muted-foreground hover:text-primary cursor-pointer"
+                aria-label="Edit address"
+              >
+                <Pencil className="h-4 w-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => handleDelete(addr._id)}
+                className="text-muted-foreground hover:text-destructive cursor-pointer"
+                aria-label="Delete address"
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
+            </div>
           </div>
         ))}
       </div>
 
-      <Button variant="outline" className="mt-4" onClick={() => setDialogOpen(true)}>
+      <Button variant="outline" className="mt-4" onClick={openAddDialog}>
         <Plus className="h-4 w-4" /> Add address
       </Button>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add address</DialogTitle>
+            <DialogTitle>{editingAddress ? 'Edit address' : 'Add address'}</DialogTitle>
           </DialogHeader>
-          <AddressForm onSubmit={handleAdd} submitting={submitting} submitLabel="Add address" />
+          <AddressForm
+            defaultValues={editingAddress || undefined}
+            onSubmit={handleSubmit}
+            submitting={submitting}
+            submitLabel={editingAddress ? 'Save changes' : 'Add address'}
+          />
         </DialogContent>
       </Dialog>
     </div>

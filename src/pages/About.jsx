@@ -10,7 +10,7 @@ export default function About() {
         <h1 className="font-display text-3xl text-foreground">Our Story</h1>
         <div className="mt-6 aspect-video overflow-hidden rounded-lg bg-cream-200">
           <img
-            src="https://picsum.photos/seed/hikari-about/1200/675"
+            src="/ourStory.png"
             alt="Hikari Living workshop"
             className="h-full w-full object-cover"
           />

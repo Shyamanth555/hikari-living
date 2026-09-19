@@ -13,6 +13,7 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { orderApi } from '../api/orderApi';
 import { paymentApi } from '../api/paymentApi';
+import { userApi } from '../api/userApi';
 import { formatCurrency } from '../lib/formatCurrency';
 import { PAYMENT_METHODS } from '../lib/constants';
 import { cn } from '../lib/cn';
@@ -30,7 +31,7 @@ function loadRazorpayScript() {
 
 export default function Checkout() {
   const { items, subtotal, loading, refetch } = useCart();
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   const [placing, setPlacing] = useState(false);
@@ -93,6 +94,24 @@ export default function Checkout() {
     });
 
     rzp.open();
+  };
+
+  const handleNewAddressSubmit = async (data) => {
+    setPlacing(true);
+    try {
+      const updated = await userApi.addAddress(data);
+      updateUser(updated);
+      const savedAddress = updated.addresses[updated.addresses.length - 1];
+      setSelectedAddressId(savedAddress._id);
+      await handlePlaceOrder(savedAddress);
+    } catch (err) {
+      toast({
+        title: 'Could not save address',
+        description: err?.response?.data?.message || 'Please try again',
+        variant: 'destructive',
+      });
+      setPlacing(false);
+    }
   };
 
   const handlePlaceOrder = async (shippingAddress) => {
@@ -196,7 +215,7 @@ export default function Checkout() {
 
           {(!selectedAddress || savedAddresses.length === 0) && (
             <AddressForm
-              onSubmit={handlePlaceOrder}
+              onSubmit={handleNewAddressSubmit}
               submitting={placing}
               submitLabel={paymentMethod === 'cod' ? 'Place Order (Cash on Delivery)' : 'Continue to Payment'}
             />
