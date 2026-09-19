@@ -1,7 +1,7 @@
 export const BRAND_NAME = 'Hikari Living';
 
 export const SOCIAL_LINKS = [
-  { label: 'Instagram', href: 'https://instagram.com/hikariliving' },
+  { label: 'Instagram', href: 'https://www.instagram.com/hikari.living' },
   { label: 'Facebook', href: 'https://facebook.com/hikariliving' },
   { label: 'Pinterest', href: 'https://pinterest.com/hikariliving' },
 ];

@@ -5,8 +5,8 @@ import { BRAND_NAME, POLICY_LINKS, SOCIAL_LINKS } from '../../lib/constants';
 export function Footer() {
   return (
     <footer className="border-t border-border bg-cream-100">
-      <div className="container-page grid gap-10 py-14 md:grid-cols-4">
-        <div>
+      <div className="container-page grid grid-cols-2 gap-x-6 gap-y-10 py-14 md:grid-cols-4 md:gap-10">
+        <div className="col-span-2 md:col-span-1">
           <img src="/logo.png" alt={BRAND_NAME} className="h-12 w-auto object-contain" />
           <p className="mt-3 max-w-xs text-sm text-muted-foreground">
             Handcrafted sculptures and idols — Divine Series, car dashboard idols, and Pride of India statues, made
@@ -35,7 +35,6 @@ export function Footer() {
             <li><Link to="/new-launches" className="hover:text-foreground">New Launches</Link></li>
             <li><Link to="/custom-sculpture" className="hover:text-foreground">Custom Sculpture</Link></li>
             <li><Link to="/corporate-gifting" className="hover:text-foreground">Corporate Gifting</Link></li>
-            <li><Link to="/track-order" className="hover:text-foreground">Track Your Order</Link></li>
           </ul>
         </div>
 
@@ -45,7 +44,7 @@ export function Footer() {
             <li><Link to="/about" className="hover:text-foreground">About / Our Story</Link></li>
             <li><Link to="/blog" className="hover:text-foreground">Blog</Link></li>
             <li><Link to="/reviews" className="hover:text-foreground">Reviews</Link></li>
-            <li><Link to="/contact" className="hover:text-foreground">Contact</Link></li>
+            <li><Link to="/contact" className="hover:text-foreground">Contact Us</Link></li>
           </ul>
         </div>
 
