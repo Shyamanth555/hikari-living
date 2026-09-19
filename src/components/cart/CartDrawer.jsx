@@ -42,14 +42,35 @@ export function CartDrawer({ open, onOpenChange }) {
                     className="h-20 w-20 shrink-0 rounded-md object-cover"
                   />
                   <div className="flex flex-1 flex-col">
-                    <div className="flex items-start justify-between gap-2">
-                      <Link
-                        to={`/product/${product.slug}`}
-                        onClick={() => onOpenChange(false)}
-                        className="text-sm font-medium text-foreground hover:underline"
-                      >
-                        {product.name}
-                      </Link>
+                    <Link
+                      to={`/product/${product.slug}`}
+                      onClick={() => onOpenChange(false)}
+                      className="text-sm font-medium text-foreground hover:underline"
+                    >
+                      {product.name}
+                    </Link>
+                    <p className="text-sm text-muted-foreground">{formatCurrency(product.price)}</p>
+                    <div className="mt-2 flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => updateQuantity(product._id, quantity - 1)}
+                          className="flex h-7 w-7 items-center justify-center rounded-md border border-border hover:bg-muted cursor-pointer"
+                          aria-label="Decrease quantity"
+                        >
+                          <Minus className="h-3.5 w-3.5" />
+                        </button>
+                        <span className="w-6 text-center text-sm">{quantity}</span>
+                        <button
+                          type="button"
+                          onClick={() => updateQuantity(product._id, quantity + 1)}
+                          disabled={quantity >= product.stock}
+                          className="flex h-7 w-7 items-center justify-center rounded-md border border-border hover:bg-muted disabled:opacity-40 cursor-pointer"
+                          aria-label="Increase quantity"
+                        >
+                          <Plus className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
                       <button
                         type="button"
                         onClick={() => removeItem(product._id)}
@@ -57,27 +78,6 @@ export function CartDrawer({ open, onOpenChange }) {
                         aria-label="Remove item"
                       >
                         <Trash2 className="h-4 w-4" />
-                      </button>
-                    </div>
-                    <p className="text-sm text-muted-foreground">{formatCurrency(product.price)}</p>
-                    <div className="mt-2 flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => updateQuantity(product._id, quantity - 1)}
-                        className="flex h-7 w-7 items-center justify-center rounded-md border border-border hover:bg-muted cursor-pointer"
-                        aria-label="Decrease quantity"
-                      >
-                        <Minus className="h-3.5 w-3.5" />
-                      </button>
-                      <span className="w-6 text-center text-sm">{quantity}</span>
-                      <button
-                        type="button"
-                        onClick={() => updateQuantity(product._id, quantity + 1)}
-                        disabled={quantity >= product.stock}
-                        className="flex h-7 w-7 items-center justify-center rounded-md border border-border hover:bg-muted disabled:opacity-40 cursor-pointer"
-                        aria-label="Increase quantity"
-                      >
-                        <Plus className="h-3.5 w-3.5" />
                       </button>
                     </div>
                   </div>

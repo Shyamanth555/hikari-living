@@ -11,21 +11,11 @@ export function CartItem({ product, quantity, onUpdateQuantity, onRemove }) {
       </Link>
 
       <div className="flex flex-1 flex-col justify-between">
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <Link to={`/product/${product.slug}`} className="font-medium text-foreground hover:underline">
-              {product.name}
-            </Link>
-            <p className="text-sm text-muted-foreground">{formatCurrency(product.price)} each</p>
-          </div>
-          <button
-            type="button"
-            onClick={() => onRemove(product._id)}
-            className="text-muted-foreground hover:text-destructive cursor-pointer"
-            aria-label={`Remove ${product.name}`}
-          >
-            <Trash2 className="h-4 w-4" />
-          </button>
+        <div>
+          <Link to={`/product/${product.slug}`} className="font-medium text-foreground hover:underline">
+            {product.name}
+          </Link>
+          <p className="text-sm text-muted-foreground">{formatCurrency(product.price)} each</p>
         </div>
 
         <div className="flex items-center justify-between">
@@ -34,7 +24,17 @@ export function CartItem({ product, quantity, onUpdateQuantity, onRemove }) {
             max={product.stock}
             onChange={(q) => onUpdateQuantity(product._id, q)}
           />
-          <span className="font-medium text-foreground">{formatCurrency(product.price * quantity)}</span>
+          <div className="flex items-center gap-4">
+            <span className="font-medium text-foreground">{formatCurrency(product.price * quantity)}</span>
+            <button
+              type="button"
+              onClick={() => onRemove(product._id)}
+              className="text-muted-foreground hover:text-destructive cursor-pointer"
+              aria-label={`Remove ${product.name}`}
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          </div>
         </div>
       </div>
     </div>

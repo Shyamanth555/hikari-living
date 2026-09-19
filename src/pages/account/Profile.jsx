@@ -111,17 +111,15 @@ function AddressesTab() {
     <div className="max-w-lg">
       <div className="space-y-3">
         {(user.addresses || []).map((addr) => (
-          <div key={addr._id} className="flex items-start justify-between rounded-md border border-border p-4 text-sm">
-            <div>
-              <p className="font-medium text-foreground">
-                {addr.fullName} {addr.isDefault && <span className="text-xs text-primary">(Default)</span>}
-              </p>
-              <p className="text-muted-foreground">
-                {addr.addressLine1}, {addr.city}, {addr.state} {addr.postalCode}
-              </p>
-              <p className="text-muted-foreground">{addr.phone}</p>
-            </div>
-            <div className="flex items-center gap-3">
+          <div key={addr._id} className="rounded-md border border-border p-4 text-sm">
+            <p className="font-medium text-foreground">
+              {addr.fullName} {addr.isDefault && <span className="text-xs text-primary">(Default)</span>}
+            </p>
+            <p className="text-muted-foreground">
+              {addr.addressLine1}, {addr.city}, {addr.state} {addr.postalCode}
+            </p>
+            <p className="text-muted-foreground">{addr.phone}</p>
+            <div className="mt-3 flex items-center justify-end gap-3">
               <button
                 type="button"
                 onClick={() => openEditDialog(addr)}
