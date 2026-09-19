@@ -99,7 +99,7 @@
 @layer utilities {
   .container-page {
     width: 100%;
-    max-width: 80rem;
+    max-width: 100rem;
     margin-inline: auto;
     padding-inline: 1.25rem;
   }
@@ -107,6 +107,12 @@
   @media (min-width: 768px) {
     .container-page {
       padding-inline: 2rem;
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .container-page {
+      padding-inline: 3rem;
     }
   }
 

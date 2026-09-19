@@ -123,16 +123,16 @@ export default function Home() {
       </section>
 
       <section className="border-y border-border bg-cream-100">
-        <div className="container-page flex flex-col items-center gap-4 py-14 text-center">
+        <div className="container-page flex flex-col items-center gap-4 py-10 text-center">
           <h2 className="font-display text-2xl text-foreground">Don&apos;t see exactly what you have in mind?</h2>
           <p className="max-w-md text-muted-foreground">
             Our artisans take on custom sculpture commissions and bulk corporate gifting orders.
           </p>
-          <div className="mt-2 flex flex-wrap justify-center gap-3">
-            <Button asChild>
+          <div className="mt-2 flex w-full max-w-xs flex-nowrap justify-center gap-3 sm:max-w-none sm:w-auto">
+            <Button asChild className="flex-1 sm:flex-none">
               <Link to="/custom-sculpture">Custom Sculpture</Link>
             </Button>
-            <Button asChild variant="outline">
+            <Button asChild variant="outline" className="flex-1 sm:flex-none">
               <Link to="/corporate-gifting">Corporate Gifting</Link>
             </Button>
           </div>

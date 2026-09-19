@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '../../lib/cn';
 
 const AUTO_ADVANCE_MS = 6000;
@@ -39,7 +38,7 @@ export function HeroCarousel({ slides }) {
             <img
               src={slide.image?.url}
               alt={slide.heading || slide.product?.name || ''}
-              className="h-full w-full object-cover"
+              className="h-full w-full object-contain"
               loading={i === 0 ? 'eager' : 'lazy'}
             />
           </picture>
@@ -66,36 +65,17 @@ export function HeroCarousel({ slides }) {
       ))}
 
       {slides.length > 1 && (
-        <>
-          <button
-            type="button"
-            onClick={() => goTo(index - 1)}
-            className="absolute left-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-cream-50/80 text-ink-900 hover:bg-cream-50 cursor-pointer"
-            aria-label="Previous slide"
-          >
-            <ChevronLeft className="h-4.5 w-4.5" />
-          </button>
-          <button
-            type="button"
-            onClick={() => goTo(index + 1)}
-            className="absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-cream-50/80 text-ink-900 hover:bg-cream-50 cursor-pointer"
-            aria-label="Next slide"
-          >
-            <ChevronRight className="h-4.5 w-4.5" />
-          </button>
-
-          <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-2">
-            {slides.map((slide, i) => (
-              <button
-                key={slide._id}
-                type="button"
-                onClick={() => goTo(i)}
-                className={cn('h-1.5 rounded-full transition-all cursor-pointer', i === index ? 'w-6 bg-cream-50' : 'w-1.5 bg-cream-50/50')}
-                aria-label={`Go to slide ${i + 1}`}
-              />
-            ))}
-          </div>
-        </>
+        <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-2">
+          {slides.map((slide, i) => (
+            <button
+              key={slide._id}
+              type="button"
+              onClick={() => goTo(i)}
+              className={cn('h-1.5 rounded-full transition-all cursor-pointer', i === index ? 'w-6 bg-cream-50' : 'w-1.5 bg-cream-50/50')}
+              aria-label={`Go to slide ${i + 1}`}
+            />
+          ))}
+        </div>
       )}
     </div>
   );
