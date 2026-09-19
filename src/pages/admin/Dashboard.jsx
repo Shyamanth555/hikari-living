@@ -22,10 +22,10 @@ export default function Dashboard() {
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard label="Total Orders" value={data.totalOrders} icon={ShoppingCart} />
-          <StatCard label="Total Revenue" value={formatCurrency(data.totalRevenue)} icon={IndianRupee} />
-          <StatCard label="Products" value={data.totalProducts} icon={Package} />
-          <StatCard label="Customers" value={data.totalCustomers} icon={Users} />
+          <StatCard label="Total Orders" value={data.totalOrders} icon={ShoppingCart} to="/admin/orders" />
+          <StatCard label="Total Revenue" value={formatCurrency(data.totalRevenue)} icon={IndianRupee} to="/admin/orders" />
+          <StatCard label="Products" value={data.totalProducts} icon={Package} to="/admin/products" />
+          <StatCard label="Customers" value={data.totalCustomers} icon={Users} to="/admin/customers" />
         </div>
       )}
 
