@@ -72,9 +72,11 @@ export function EnquiryForm({ type = 'general', subject, messagePlaceholder, sub
         />
       </div>
       {error && <p className="text-sm text-destructive">{error}</p>}
-      <Button type="submit" size="lg" disabled={submitting}>
-        {submitting ? 'Sending…' : submitLabel}
-      </Button>
+      <div className="flex justify-end">
+        <Button type="submit" size="lg" disabled={submitting}>
+          {submitting ? 'Sending…' : submitLabel}
+        </Button>
+      </div>
     </form>
   );
 }

@@ -17,15 +17,15 @@ export default function Contact() {
           <div className="mt-8 space-y-4 text-sm">
             <div className="flex items-center gap-3">
               <Mail className="h-4.5 w-4.5 text-primary" />
-              <span>hello@hikariliving.com</span>
+              <span>Support@hikariliving.in</span>
             </div>
             <div className="flex items-center gap-3">
               <Phone className="h-4.5 w-4.5 text-primary" />
-              <span>+91 98765 43210</span>
+              <span>+91 88855 22706</span>
             </div>
-            <div className="flex items-center gap-3">
-              <MapPin className="h-4.5 w-4.5 text-primary" />
-              <span>Bengaluru, India</span>
+            <div className="flex items-start gap-3">
+              <MapPin className="mt-0.5 h-4.5 w-4.5 shrink-0 text-primary" />
+              <span>Block-101, Rajiv Gruhakalpa, Vasanth Nagar Colony, Nizampet, Hyderabad, Telangana 500090</span>
             </div>
           </div>
         </div>
