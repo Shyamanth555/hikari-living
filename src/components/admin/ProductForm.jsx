@@ -84,6 +84,10 @@ export function ProductForm({ defaultValues, categories = [], onSubmit, submitti
         <Label>
           Images <span className="text-destructive">*</span>
         </Label>
+        <p className="text-xs text-muted-foreground">
+          Recommended 1200×1200px or larger (square, ratio 1:1) — the first image is used as the main photo and
+          product card thumbnail everywhere on the site.
+        </p>
         <ImageUploader images={images} onChange={setImages} />
         {images.length === 0 && <p className="text-xs text-destructive">At least one image is required</p>}
       </div>

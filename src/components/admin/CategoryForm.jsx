@@ -44,6 +44,10 @@ export function CategoryForm({ defaultValues, onSubmit, submitting = false, subm
     <form onSubmit={handleSubmit(submit)} className="space-y-6">
       <div className="space-y-1.5">
         <Label>Image</Label>
+        <p className="text-xs text-muted-foreground">
+          Recommended 800×800px or larger (square, ratio 1:1) — shown as a card on the homepage's "Shop by
+          Collection" row.
+        </p>
         <ImageUploader images={image} onChange={setImage} max={1} />
       </div>
 

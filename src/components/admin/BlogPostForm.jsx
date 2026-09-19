@@ -57,6 +57,10 @@ export function BlogPostForm({ defaultValues, onSubmit, submitting = false, subm
     <form onSubmit={handleSubmit(submit)} className="space-y-6">
       <div className="space-y-1.5">
         <Label>Cover image</Label>
+        <p className="text-xs text-muted-foreground">
+          Recommended 1600×900px or larger (landscape, ratio 16:9) — shown on the blog listing, homepage, and at
+          the top of the post.
+        </p>
         <ImageUploader images={coverImage} onChange={setCoverImage} max={1} />
       </div>
 
