@@ -24,6 +24,7 @@ export function CartItem({ product, quantity, onUpdateQuantity, onRemove }) {
             value={quantity}
             max={product.stock}
             onChange={(q) => onUpdateQuantity(product._id, q)}
+            size="sm"
           />
           <div className="flex items-center gap-4">
             <span className="font-medium text-foreground">{formatCurrency(product.price * quantity)}</span>
