@@ -12,6 +12,7 @@ import { ReviewsSection } from '../components/product/ReviewsSection';
 import { RelatedProducts } from '../components/product/RelatedProducts';
 import { Button } from '../components/ui/Button';
 import { Spinner } from '../components/ui/Spinner';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../components/ui/Accordion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/Tabs';
 import { useAsync } from '../hooks/useAsync';
 import { productApi } from '../api/productApi';
@@ -25,9 +26,6 @@ const DELIVERY_INFO = [
   { icon: ShieldCheck, text: 'Secure payments', detail: 'Razorpay-protected checkout' },
   { icon: Package, text: 'Carefully packed', detail: 'Every piece insured in transit' },
 ];
-
-const TAB_TRIGGER_CLASS =
-  'flex-1 rounded-none border-b-2 border-transparent px-0 py-3 text-base data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none';
 
 export default function ProductDetail() {
   const { slug } = useParams();
@@ -91,7 +89,54 @@ export default function ProductDetail() {
     }
   };
 
-  const defaultTab = location.hash === '#reviews' ? 'reviews' : 'description';
+  const defaultSection = location.hash === '#reviews' ? 'reviews' : 'description';
+
+  const descriptionContent = (
+    <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">{product.description}</p>
+  );
+
+  const specificationsContent = (
+    <dl className="max-w-sm divide-y divide-border text-sm">
+      {product.specifications?.map((spec) => (
+        <div key={spec.key} className="flex justify-between gap-4 py-2">
+          <dt className="text-muted-foreground">{spec.key}</dt>
+          <dd className="text-right font-medium text-foreground">{spec.value}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+
+  const shippingContent = (
+    <>
+      <ul className="space-y-4">
+        {DELIVERY_INFO.map((item) => (
+          <li key={item.text} className="flex items-start gap-3">
+            <item.icon className="mt-0.5 h-4.5 w-4.5 shrink-0 text-primary" strokeWidth={1.5} />
+            <div>
+              <p className="text-sm font-medium text-foreground">{item.text}</p>
+              <p className="text-sm text-muted-foreground">{item.detail}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+        <Link to="/policies/shipping" className="font-medium text-primary hover:underline">
+          Read full shipping policy →
+        </Link>
+        <Link to="/policies/returns" className="font-medium text-primary hover:underline">
+          Read full return policy →
+        </Link>
+      </div>
+    </>
+  );
+
+  const reviewsHeading = `Reviews${product.numReviews > 0 ? ` (${product.numReviews})` : ''}`;
+  const reviewsContent = (
+    <ReviewsSection productId={product._id} ratingAverage={product.ratingAverage} numReviews={product.numReviews} />
+  );
+
+  const TAB_TRIGGER_CLASS =
+    'flex-1 rounded-none border-b-2 border-transparent px-0 py-3 text-base data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none';
 
   return (
     <div className="container-page py-10">
@@ -105,7 +150,7 @@ export default function ProductDetail() {
         ]}
       />
 
-      <div className="grid gap-10 md:grid-cols-2">
+      <div className="grid gap-10 md:grid-cols-2 md:items-start">
         <ProductGallery
           images={product.images}
           productName={product.name}
@@ -160,8 +205,41 @@ export default function ProductDetail() {
             ))}
           </div>
 
-          <Tabs id="reviews" defaultValue={defaultTab} className="mt-10 scroll-mt-24">
-            <TabsList className="h-auto w-full gap-2 rounded-none border-b border-border bg-transparent p-0">
+          {/* Shared scroll target for the "Write a review" deep link (#reviews) —
+              always in the DOM regardless of which of the two blocks below is
+              visible at the current breakpoint. */}
+          <div id="reviews" className="mt-10 scroll-mt-24" />
+
+          {/* Mobile: accordion — each section's own header sits right above its content */}
+          <Accordion type="single" collapsible defaultValue={defaultSection} className="md:hidden">
+            <AccordionItem value="description">
+              <AccordionTrigger className="font-display text-base text-foreground">Description</AccordionTrigger>
+              <AccordionContent>{descriptionContent}</AccordionContent>
+            </AccordionItem>
+
+            {product.specifications?.length > 0 && (
+              <AccordionItem value="specifications">
+                <AccordionTrigger className="font-display text-base text-foreground">Specifications</AccordionTrigger>
+                <AccordionContent>{specificationsContent}</AccordionContent>
+              </AccordionItem>
+            )}
+
+            <AccordionItem value="shipping">
+              <AccordionTrigger className="font-display text-base text-foreground">Shipping &amp; Returns</AccordionTrigger>
+              <AccordionContent>{shippingContent}</AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="reviews">
+              <AccordionTrigger className="font-display text-base text-foreground">{reviewsHeading}</AccordionTrigger>
+              <AccordionContent>{reviewsContent}</AccordionContent>
+            </AccordionItem>
+          </Accordion>
+
+          {/* Desktop: tabs — keeps the info column's height compact and steady
+              next to the fixed-size product image, instead of growing/shrinking
+              with whichever accordion section happens to be open. */}
+          <Tabs defaultValue={defaultSection} className="hidden md:block">
+            <TabsList className="w-full gap-2 rounded-none border-b border-border bg-transparent p-0">
               <TabsTrigger value="description" className={TAB_TRIGGER_CLASS}>
                 Description
               </TabsTrigger>
@@ -174,52 +252,16 @@ export default function ProductDetail() {
                 Shipping &amp; Returns
               </TabsTrigger>
               <TabsTrigger value="reviews" className={TAB_TRIGGER_CLASS}>
-                Reviews{product.numReviews > 0 ? ` (${product.numReviews})` : ''}
+                {reviewsHeading}
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="description">
-              <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">{product.description}</p>
-            </TabsContent>
-
+            <TabsContent value="description">{descriptionContent}</TabsContent>
             {product.specifications?.length > 0 && (
-              <TabsContent value="specifications">
-                <dl className="divide-y divide-border text-sm">
-                  {product.specifications.map((spec) => (
-                    <div key={spec.key} className="flex justify-between gap-4 py-2">
-                      <dt className="text-muted-foreground">{spec.key}</dt>
-                      <dd className="text-right font-medium text-foreground">{spec.value}</dd>
-                    </div>
-                  ))}
-                </dl>
-              </TabsContent>
+              <TabsContent value="specifications">{specificationsContent}</TabsContent>
             )}
-
-            <TabsContent value="shipping">
-              <ul className="space-y-4">
-                {DELIVERY_INFO.map((item) => (
-                  <li key={item.text} className="flex items-start gap-3">
-                    <item.icon className="mt-0.5 h-4.5 w-4.5 shrink-0 text-primary" strokeWidth={1.5} />
-                    <div>
-                      <p className="text-sm font-medium text-foreground">{item.text}</p>
-                      <p className="text-sm text-muted-foreground">{item.detail}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm">
-                <Link to="/policies/shipping" className="font-medium text-primary hover:underline">
-                  Read full shipping policy →
-                </Link>
-                <Link to="/policies/returns" className="font-medium text-primary hover:underline">
-                  Read full return policy →
-                </Link>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="reviews">
-              <ReviewsSection productId={product._id} ratingAverage={product.ratingAverage} numReviews={product.numReviews} />
-            </TabsContent>
+            <TabsContent value="shipping">{shippingContent}</TabsContent>
+            <TabsContent value="reviews">{reviewsContent}</TabsContent>
           </Tabs>
         </div>
       </div>
