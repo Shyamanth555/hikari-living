@@ -119,12 +119,14 @@ export default function ProductDetail() {
           </li>
         ))}
       </ul>
-      <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm">
-        <Link to="/policies/shipping" className="font-medium text-primary hover:underline">
-          Read full shipping policy →
+      <div className="mt-4 space-y-2">
+        <Link to="/policies/shipping" className="flex items-start gap-3 text-sm">
+          <Truck className="mt-0.5 h-4.5 w-4.5 shrink-0 text-primary" strokeWidth={1.5} />
+          <span className="font-medium text-primary hover:underline">Read full shipping policy →</span>
         </Link>
-        <Link to="/policies/returns" className="font-medium text-primary hover:underline">
-          Read full return policy →
+        <Link to="/policies/returns" className="flex items-start gap-3 text-sm">
+          <RotateCcw className="mt-0.5 h-4.5 w-4.5 shrink-0 text-primary" strokeWidth={1.5} />
+          <span className="font-medium text-primary hover:underline">Read full return policy →</span>
         </Link>
       </div>
     </>
