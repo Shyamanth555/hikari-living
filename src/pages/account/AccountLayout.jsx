@@ -14,7 +14,7 @@ export default function AccountLayout() {
       <h1 className="mb-8 font-display text-3xl text-foreground">My Account</h1>
 
       <div className="flex flex-col gap-10 md:flex-row">
-        <nav className="flex shrink-0 gap-2 md:w-48 md:flex-col">
+        <nav className="sticky top-16 z-10 flex shrink-0 gap-2 md:top-24 md:w-48 md:flex-col">
           {NAV_ITEMS.map(({ to, label, end }) => (
             <NavLink
               key={to}
