@@ -23,7 +23,8 @@ export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
 
-  const { data: categories } = useAsync(() => categoryApi.list(), []);
+  const { data: categoriesData } = useAsync(() => categoryApi.list(), []);
+  const categories = Array.isArray(categoriesData) ? categoriesData : [];
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-cream-50/95 backdrop-blur">
@@ -52,13 +53,13 @@ export function Header() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start">
               <DropdownMenuItem asChild>
-                <Link to="/shop">All Sculptures</Link>
+                <Link to="/shop">All Idols</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link to="/new-launches">New Launches</Link>
               </DropdownMenuItem>
-              {(categories || []).length > 0 && <DropdownMenuSeparator />}
-              {(categories || []).map((cat) => (
+              {categories.length > 0 && <DropdownMenuSeparator />}
+              {categories.map((cat) => (
                 <DropdownMenuItem key={cat._id} asChild>
                   <Link to={`/category/${cat.slug}`}>{cat.name}</Link>
                 </DropdownMenuItem>
@@ -138,7 +139,7 @@ export function Header() {
       </div>
 
       <CartDrawer open={cartOpen} onOpenChange={setCartOpen} />
-      <MobileMenu open={mobileOpen} onOpenChange={setMobileOpen} categories={categories || []} />
+      <MobileMenu open={mobileOpen} onOpenChange={setMobileOpen} categories={categories} />
     </header>
   );
 }

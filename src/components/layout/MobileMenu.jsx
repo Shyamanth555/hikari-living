@@ -4,7 +4,7 @@ import { X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { POLICY_LINKS } from '../../lib/constants';
 
-export function MobileMenu({ open, onOpenChange, categories }) {
+export function MobileMenu({ open, onOpenChange, categories = [] }) {
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
 
   const close = () => onOpenChange(false);
@@ -32,7 +32,7 @@ export function MobileMenu({ open, onOpenChange, categories }) {
           <nav className="flex flex-1 flex-col gap-1 px-5 py-4 text-sm">
             <p className="mb-1 mt-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Shop</p>
             <Link to="/shop" onClick={close} className="py-2.5 font-medium">
-              All Sculptures
+              All Idols
             </Link>
             <Link to="/new-launches" onClick={close} className="py-2.5 font-medium">
               New Launches

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Hammer, ShieldCheck, Truck } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Truck } from 'lucide-react';
 import { SEO } from '../components/common/SEO';
 import { ProductGrid } from '../components/product/ProductGrid';
 import { RatingStars } from '../components/common/RatingStars';
@@ -16,7 +16,6 @@ import { BRAND_NAME } from '../lib/constants';
 
 const PROMOS = [
   { icon: Truck, title: 'Free shipping on every order', description: 'Delivered across India' },
-  { icon: Hammer, title: 'Handcrafted by artisans', description: 'Brass, panchaloha, marble, and wood' },
   { icon: ShieldCheck, title: 'Secure, careful packaging', description: 'Every piece insured in transit' },
 ];
 
@@ -44,7 +43,7 @@ export default function Home() {
               </h1>
               <p className="max-w-md text-muted-foreground">
                 {BRAND_NAME} brings together handcrafted idols and statues — from home temple centrepieces to
-                car dashboard companions — made in brass, marble, and wood by experienced artisans.
+                car dashboard companions — made with polyresin and hand painted.
               </p>
               <div className="mt-2 flex flex-wrap justify-center gap-3">
                 <Button asChild size="lg">
@@ -71,7 +70,7 @@ export default function Home() {
             </h1>
             <p className="max-w-lg text-muted-foreground md:text-lg">
               {BRAND_NAME} brings together handcrafted idols and statues — from home temple centrepieces to
-              car dashboard companions — made in brass, marble, and wood by experienced artisans.
+              car dashboard companions — made with polyresin and hand painted.
             </p>
             <div className="mt-2 flex flex-wrap justify-center gap-3">
               <Button asChild size="lg">
