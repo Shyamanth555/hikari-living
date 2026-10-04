@@ -8,6 +8,7 @@ import { useAsync } from '../../../hooks/useAsync';
 import { orderApi } from '../../../api/orderApi';
 import { formatCurrency } from '../../../lib/formatCurrency';
 import { ORDER_STATUSES, ORDER_STATUS_LABELS } from '../../../lib/constants';
+import { courierStatusLabel } from '../../../lib/courierStatus';
 
 export default function OrderList() {
   const [page, setPage] = useState(1);
@@ -27,8 +28,23 @@ export default function OrderList() {
       render: (row) => new Date(row.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
     },
     { key: 'totalPrice', label: 'Total', render: (row) => formatCurrency(row.totalPrice) },
-    { key: 'isPaid', label: 'Paid', render: (row) => (row.isPaid ? 'Yes' : 'No') },
-    { key: 'status', label: 'Status', render: (row) => <OrderStatusBadge status={row.status} /> },
+    {
+      key: 'isPaid',
+      label: 'Paid',
+      render: (row) => (row.isPaid ? 'Yes' : row.paymentMethod === 'cod' ? 'On delivery (COD)' : 'No'),
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      render: (row) => (
+        <div>
+          <OrderStatusBadge status={row.status} />
+          {row.status === 'shipped' && row.tracking?.courierStatus && (
+            <p className="mt-1 text-xs text-muted-foreground">{courierStatusLabel(row.tracking.courierStatus)}</p>
+          )}
+        </div>
+      ),
+    },
     {
       key: 'actions',
       label: '',

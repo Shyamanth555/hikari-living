@@ -8,6 +8,7 @@ import { Button } from '../../components/ui/Button';
 import { useAsync } from '../../hooks/useAsync';
 import { orderApi } from '../../api/orderApi';
 import { formatCurrency } from '../../lib/formatCurrency';
+import { courierStatusLabel } from '../../lib/courierStatus';
 import { useState } from 'react';
 
 export default function OrderHistory() {
@@ -64,7 +65,12 @@ export default function OrderHistory() {
               </div>
               <p className="text-sm text-muted-foreground">{order.items.length} item(s)</p>
               <p className="text-sm font-medium text-foreground">{formatCurrency(order.totalPrice)}</p>
-              <OrderStatusBadge status={order.status} />
+              <div>
+                <OrderStatusBadge status={order.status} />
+                {order.status === 'shipped' && order.tracking?.courierStatus && (
+                  <p className="mt-1 text-xs text-muted-foreground">{courierStatusLabel(order.tracking.courierStatus)}</p>
+                )}
+              </div>
             </Link>
           ))}
         </div>

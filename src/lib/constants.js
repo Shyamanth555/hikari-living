@@ -9,8 +9,8 @@ export const SOCIAL_LINKS = [
 export const ORDER_STATUSES = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
 
 export const ORDER_STATUS_LABELS = {
-  pending: 'Pending',
-  processing: 'Processing',
+  pending: 'Awaiting Payment',
+  processing: 'Ready for Shipment',
   shipped: 'Shipped',
   delivered: 'Delivered',
   cancelled: 'Cancelled',

@@ -1,8 +1,9 @@
 import { Link, useParams } from 'react-router-dom';
-import { Truck, Star } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { Spinner } from '../../components/ui/Spinner';
 import { OrderStatusBadge } from '../../components/common/OrderStatusBadge';
 import { PriceDisplay } from '../../components/common/PriceDisplay';
+import { ShipmentTimeline } from '../../components/common/ShipmentTimeline';
 import { useAsync } from '../../hooks/useAsync';
 import { orderApi } from '../../api/orderApi';
 import { formatCurrency } from '../../lib/formatCurrency';
@@ -44,25 +45,7 @@ export default function OrderDetail() {
         <OrderStatusBadge status={order.status} />
       </div>
 
-      {order.tracking?.trackingId && order.status !== 'delivered' && (
-        <div className="mt-5 rounded-md bg-cream-100 p-4">
-          <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-            <Truck className="h-4 w-4" /> Shipment Tracking
-          </div>
-          <p className="mt-2 text-sm text-muted-foreground">Carrier: {order.tracking.carrier}</p>
-          <p className="text-sm text-muted-foreground">Tracking ID: {order.tracking.trackingId}</p>
-          {order.tracking.trackingUrl && (
-            <a
-              href={order.tracking.trackingUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-2 inline-block text-sm font-medium text-primary hover:underline"
-            >
-              Track with carrier →
-            </a>
-          )}
-        </div>
-      )}
+      <ShipmentTimeline className="mt-5" tracking={order.tracking} isDelivered={order.status === 'delivered'} />
 
       <div className="mt-6 grid gap-8 md:grid-cols-3">
         <div className="md:col-span-2">

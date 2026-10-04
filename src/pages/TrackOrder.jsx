@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { PackageCheck, PackageSearch, Truck } from 'lucide-react';
+import { PackageCheck, PackageSearch } from 'lucide-react';
 import { SEO } from '../components/common/SEO';
 import { Input } from '../components/ui/Input';
 import { Label } from '../components/ui/Label';
 import { Button } from '../components/ui/Button';
 import { OrderStatusBadge } from '../components/common/OrderStatusBadge';
+import { ShipmentTimeline } from '../components/common/ShipmentTimeline';
 import { orderApi } from '../api/orderApi';
 
 export default function TrackOrder() {
@@ -88,32 +89,24 @@ export default function TrackOrder() {
               ))}
             </ul>
 
-            {result.status === 'delivered' ? (
+            {result.status === 'delivered' && (
               <p className="mt-5 flex items-center gap-2 text-sm text-pine-600">
                 <PackageCheck className="h-4 w-4" /> Delivered — thanks for shopping with us.
               </p>
-            ) : result.tracking?.trackingId ? (
-              <div className="mt-5 rounded-md bg-cream-100 p-4">
-                <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-                  <Truck className="h-4 w-4" /> Shipment Tracking
-                </div>
-                <p className="mt-2 text-sm text-muted-foreground">Carrier: {result.tracking.carrier}</p>
-                <p className="text-sm text-muted-foreground">Tracking ID: {result.tracking.trackingId}</p>
-                {result.tracking.trackingUrl && (
-                  <a
-                    href={result.tracking.trackingUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-2 inline-block text-sm font-medium text-primary hover:underline"
-                  >
-                    Track with carrier →
-                  </a>
-                )}
-              </div>
+            )}
+
+            {result.tracking?.trackingId ? (
+              <ShipmentTimeline
+                className="mt-5"
+                tracking={result.tracking}
+                isDelivered={result.status === 'delivered'}
+              />
             ) : (
-              <p className="mt-5 flex items-center gap-2 text-sm text-muted-foreground">
-                <PackageCheck className="h-4 w-4" /> Tracking details will appear here once your order ships.
-              </p>
+              result.status !== 'delivered' && (
+                <p className="mt-5 flex items-center gap-2 text-sm text-muted-foreground">
+                  <PackageCheck className="h-4 w-4" /> Tracking details will appear here once your order ships.
+                </p>
+              )
             )}
           </div>
         )}

@@ -14,6 +14,12 @@ export const orderApi = {
     axiosClient.put(`/admin/orders/${id}/status`, { status }).then((r) => r.data),
   adminUpdateTracking: (id, data) =>
     axiosClient.put(`/admin/orders/${id}/tracking`, data).then((r) => r.data),
-  adminRetryShiprocket: (id) =>
-    axiosClient.post(`/admin/orders/${id}/shiprocket/retry`).then((r) => r.data),
+  adminShipWithShiprocket: (id, parcel) =>
+    axiosClient.post(`/admin/orders/${id}/shiprocket/ship`, parcel).then((r) => r.data),
+  adminRetryShiprocketPickup: (id) =>
+    axiosClient.post(`/admin/orders/${id}/shiprocket/pickup`).then((r) => r.data),
+  adminSyncShiprocketTracking: (id) =>
+    axiosClient.post(`/admin/orders/${id}/shiprocket/sync`).then((r) => r.data),
+  adminGetShiprocketLabel: (id) =>
+    axiosClient.get(`/admin/orders/${id}/shiprocket/label`).then((r) => r.data),
 };
