@@ -31,7 +31,7 @@ export function Footer() {
         <div>
           <h3 className="text-sm font-semibold text-foreground">Shop</h3>
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-            <li><Link to="/shop" className="hover:text-foreground">All Sculptures</Link></li>
+            <li><Link to="/shop" className="hover:text-foreground">All Idols</Link></li>
             <li><Link to="/new-launches" className="hover:text-foreground">New Launches</Link></li>
             <li><Link to="/custom-sculpture" className="hover:text-foreground">Custom Sculpture</Link></li>
             <li><Link to="/corporate-gifting" className="hover:text-foreground">Corporate Gifting</Link></li>

@@ -48,7 +48,7 @@ export default function Home() {
               <div className="mt-2 flex flex-wrap justify-center gap-3">
                 <Button asChild size="lg">
                   <Link to="/shop">
-                    Shop All Sculptures <ArrowRight className="h-4 w-4" />
+                    Shop All Idols <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>
               </div>
@@ -75,7 +75,7 @@ export default function Home() {
             <div className="mt-2 flex flex-wrap justify-center gap-3">
               <Button asChild size="lg">
                 <Link to="/shop">
-                  Shop All Sculptures <ArrowRight className="h-4 w-4" />
+                  Shop All Idols <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
             </div>

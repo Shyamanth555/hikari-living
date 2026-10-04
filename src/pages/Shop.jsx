@@ -44,7 +44,7 @@ export default function Shop() {
       <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Shop' }]} />
 
       <div className="mb-6 flex flex-nowrap items-center justify-between gap-3 sm:gap-4">
-        <h1 className="font-display text-xl text-foreground sm:text-3xl">All Sculptures</h1>
+        <h1 className="font-display text-xl text-foreground sm:text-3xl">All Idols</h1>
         <ProductSort value={filters.sort} onChange={(sort) => updateParams({ ...filters, sort, page: 1 })} />
       </div>
 
