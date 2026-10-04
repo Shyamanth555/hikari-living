@@ -1,16 +1,37 @@
+import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Star } from 'lucide-react';
 import { Spinner } from '../../components/ui/Spinner';
+import { Button } from '../../components/ui/Button';
 import { OrderStatusBadge } from '../../components/common/OrderStatusBadge';
 import { PriceDisplay } from '../../components/common/PriceDisplay';
 import { ShipmentTimeline } from '../../components/common/ShipmentTimeline';
+import { CancelOrderDialog } from '../../components/common/CancelOrderDialog';
 import { useAsync } from '../../hooks/useAsync';
 import { orderApi } from '../../api/orderApi';
+import { useToast } from '../../context/ToastContext';
 import { formatCurrency } from '../../lib/formatCurrency';
 
 export default function OrderDetail() {
   const { orderNumber } = useParams();
-  const { data: order, loading, error } = useAsync(() => orderApi.myByNumber(orderNumber), [orderNumber]);
+  const { data: order, loading, error, refetch } = useAsync(() => orderApi.myByNumber(orderNumber), [orderNumber]);
+  const { toast } = useToast();
+  const [confirmCancel, setConfirmCancel] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
+
+  const handleCancel = async () => {
+    setCancelling(true);
+    try {
+      await orderApi.cancelMy(orderNumber);
+      toast({ title: 'Order cancelled', variant: 'success' });
+      setConfirmCancel(false);
+      refetch();
+    } catch (err) {
+      toast({ title: 'Could not cancel order', description: err?.response?.data?.message, variant: 'destructive' });
+    } finally {
+      setCancelling(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -42,8 +63,21 @@ export default function OrderDetail() {
                 : 'Payment pending'}
           </p>
         </div>
-        <OrderStatusBadge status={order.status} />
+        <div className="flex items-center gap-3">
+          <OrderStatusBadge status={order.status} />
+          {order.canCancel && (
+            <Button size="sm" variant="outline" onClick={() => setConfirmCancel(true)}>
+              Cancel Order
+            </Button>
+          )}
+        </div>
       </div>
+
+      <CancelOrderDialog open={confirmCancel} onOpenChange={setConfirmCancel} onConfirm={handleCancel} cancelling={cancelling}>
+        You can cancel until the courier picks up your parcel. This can&apos;t be undone.
+        {order.isPaid && order.paymentMethod === 'razorpay' &&
+          ` Your payment of ${formatCurrency(order.totalPrice)} will be refunded to your original payment method.`}
+      </CancelOrderDialog>
 
       <ShipmentTimeline className="mt-5" tracking={order.tracking} isDelivered={order.status === 'delivered'} />
 

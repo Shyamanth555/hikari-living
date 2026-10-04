@@ -4,6 +4,7 @@ import { Spinner } from '../../../components/ui/Spinner';
 import { OrderStatusBadge } from '../../../components/common/OrderStatusBadge';
 import { PriceDisplay } from '../../../components/common/PriceDisplay';
 import { ShipmentTimeline } from '../../../components/common/ShipmentTimeline';
+import { CancelOrderDialog } from '../../../components/common/CancelOrderDialog';
 import { OrderStatusUpdater } from '../../../components/admin/OrderStatusUpdater';
 import { TrackingForm } from '../../../components/admin/TrackingForm';
 import { ParcelForm } from '../../../components/admin/ParcelForm';
@@ -28,6 +29,22 @@ export default function OrderDetail() {
   const [syncingTracking, setSyncingTracking] = useState(false);
   const [downloadingLabel, setDownloadingLabel] = useState(false);
   const [labelUrl, setLabelUrl] = useState('');
+  const [confirmCancel, setConfirmCancel] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
+
+  const handleCancel = async () => {
+    setCancelling(true);
+    try {
+      await orderApi.adminCancel(id);
+      toast({ title: 'Order cancelled', variant: 'success' });
+      setConfirmCancel(false);
+      refetch();
+    } catch (err) {
+      toast({ title: 'Could not cancel order', description: err?.response?.data?.message, variant: 'destructive' });
+    } finally {
+      setCancelling(false);
+    }
+  };
 
   const handleDownloadLabel = async () => {
     // Open the tab synchronously, inside the click, so the browser doesn't
@@ -159,8 +176,24 @@ export default function OrderDetail() {
             {order.user?.name} — {order.user?.email}
           </p>
         </div>
-        <OrderStatusBadge status={order.status} />
+        <div className="flex items-center gap-3">
+          <OrderStatusBadge status={order.status} />
+          {order.canCancel && (
+            <Button size="sm" variant="outline" onClick={() => setConfirmCancel(true)}>
+              Cancel Order
+            </Button>
+          )}
+        </div>
       </div>
+
+      <CancelOrderDialog open={confirmCancel} onOpenChange={setConfirmCancel} onConfirm={handleCancel} cancelling={cancelling}>
+        {hasShiprocketShipment
+          ? "The Shiprocket shipment will be cancelled too, so the courier won't come for pickup."
+          : 'The order will be cancelled before it is shipped.'}{' '}
+        Its items go back into stock. This can&apos;t be undone.
+        {order.isPaid && order.paymentMethod === 'razorpay' &&
+          ` Refund ${formatCurrency(order.totalPrice)} to the customer from the Razorpay dashboard.`}
+      </CancelOrderDialog>
 
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
@@ -221,7 +254,14 @@ export default function OrderDetail() {
               <CardTitle>{hasShiprocketShipment ? 'Order Status' : 'Update Status'}</CardTitle>
             </CardHeader>
             <CardContent>
-              {hasShiprocketShipment ? (
+              {order.status === 'cancelled' ? (
+                <div>
+                  <OrderStatusBadge status={order.status} />
+                  <p className="mt-2 text-xs text-muted-foreground">
+                    Cancelled orders can&apos;t be reopened.
+                  </p>
+                </div>
+              ) : hasShiprocketShipment ? (
                 // Once Shiprocket has the shipment, the courier's scans are the
                 // only source of truth for status — no manual changes.
                 <div>
