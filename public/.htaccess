@@ -1,5 +1,8 @@
 # React Router handles routes like /admin or /shop in the browser, so on a
 # reload the server must serve index.html for any path that isn't a real file.
+# The PWA manifest — the server otherwise sends it as text/plain.
+AddType application/manifest+json .webmanifest
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /

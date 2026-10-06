@@ -1,5 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import './lib/pwaInstall' // first, so the browser's install prompt event isn't missed
 import './index.css'
 import App from './App.jsx'
 
