@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const PX_PER_SECOND = 32;
@@ -7,13 +7,16 @@ const PX_PER_SECOND = 32;
 // can also grab and drag/swipe by hand. Both are driven from the same
 // requestAnimationFrame loop over a plain translateX offset — dragging just
 // pauses the auto-advance and moves the offset directly, so there's no
-// fighting between "smooth auto-slide" and "user control". The track is
-// duplicated once so the loop wraps seamlessly with no visible jump, and
-// since positioning is via transform (not native scroll), there's no
-// scrollbar to hide.
+// fighting between "smooth auto-slide" and "user control". The set is
+// repeated enough times to cover the visible width plus one more set, so the
+// loop wraps seamlessly with no visible jump or empty gap — even with only a
+// few categories on a wide screen. Since positioning is via transform (not
+// native scroll), there's no scrollbar to hide.
 export function CategoryCarousel({ categories }) {
-  const items = [...categories, ...categories];
+  const [copies, setCopies] = useState(2);
+  const items = Array.from({ length: copies }, () => categories).flat();
 
+  const containerRef = useRef(null);
   const trackRef = useRef(null);
   const offsetRef = useRef(0);
   const singleSetWidthRef = useRef(0);
@@ -23,11 +26,35 @@ export function CategoryCarousel({ categories }) {
   const rafRef = useRef(null);
   const lastTsRef = useRef(null);
 
+  // One set's width is measured from the first card to the first card of the
+  // next copy, so it includes the gap between sets. Re-measured on resize,
+  // since card widths change at the sm breakpoint.
+  useEffect(() => {
+    const container = containerRef.current;
+    const track = trackRef.current;
+    if (!container || !track || categories.length === 0) return;
+
+    const measure = () => {
+      const nextSetStart = track.children[categories.length];
+      if (!nextSetStart) return;
+      const setWidth = nextSetStart.offsetLeft - track.children[0].offsetLeft;
+      if (setWidth <= 0) return;
+      singleSetWidthRef.current = setWidth;
+      offsetRef.current %= setWidth;
+      // Enough sets to fill the width, +1 for the set the loop scrolls through,
+      // +1 more since the track ends a gap short of a whole number of sets.
+      setCopies(Math.ceil(container.clientWidth / setWidth) + 2);
+    };
+
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, [categories.length]);
+
   useEffect(() => {
     const track = trackRef.current;
     if (!track || categories.length === 0) return;
-
-    singleSetWidthRef.current = track.scrollWidth / 2;
 
     const wrap = (value) => {
       const w = singleSetWidthRef.current;
@@ -85,7 +112,10 @@ export function CategoryCarousel({ categories }) {
   };
 
   return (
-    <div className="overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]">
+    <div
+      ref={containerRef}
+      className="overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]"
+    >
       <div
         ref={trackRef}
         className="flex w-max cursor-grab touch-pan-y select-none gap-5 active:cursor-grabbing"
