@@ -11,7 +11,7 @@ export function PriceDisplay({ price, compareAtPrice, size = 'md', showBadge = t
     <div className={cn('flex flex-wrap items-baseline gap-x-2 gap-y-0.5', className)}>
       <span className={cn('font-medium text-foreground', priceSize)}>{formatCurrency(price)}</span>
       {hasDiscount && (
-        <span className={cn('text-muted-foreground line-through', detailSize)}>{formatCurrency(compareAtPrice)}</span>
+        <span className={cn('text-destructive line-through decoration-muted-foreground decoration-2', detailSize)}>{formatCurrency(compareAtPrice)}</span>
       )}
       {hasDiscount && showBadge && (
         <span className={cn('font-medium text-gold-600', detailSize)}>{percentOff}% off</span>

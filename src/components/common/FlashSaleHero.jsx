@@ -51,7 +51,7 @@ function FlashSaleSlide({ product, live, now }) {
 
         <div className="mt-5 flex flex-wrap items-baseline justify-center gap-x-3 gap-y-2 md:justify-start">
           <span className="font-display text-3xl text-foreground md:text-4xl">{formatCurrency(product.salePrice)}</span>
-          <span className="text-lg text-muted-foreground line-through">{formatCurrency(product.price)}</span>
+          <span className="text-lg text-destructive line-through decoration-muted-foreground decoration-2">{formatCurrency(product.price)}</span>
           <span className="rounded-full bg-pine-50 px-2.5 py-0.5 text-sm font-medium text-pine-600">
             Save {formatCurrency(product.price - product.salePrice)}
           </span>

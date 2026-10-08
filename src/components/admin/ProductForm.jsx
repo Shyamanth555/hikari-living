@@ -246,7 +246,7 @@ export function ProductForm({ defaultValues, categories = [], onSubmit, submitti
             {salePreviewPrice !== null && (
               <>
                 Sale price <span className="font-medium text-foreground">{formatCurrency(salePreviewPrice)}</span>{' '}
-                <span className="line-through">{formatCurrency(watchedPrice)}</span>
+                <span className="text-destructive line-through decoration-muted-foreground decoration-2">{formatCurrency(watchedPrice)}</span>
               </>
             )}
             {salePreviewPrice !== null && saleStatusLabel && ' · '}

@@ -4,6 +4,7 @@ const formatter = new Intl.NumberFormat('en-IN', {
   maximumFractionDigits: 0,
 });
 
+// e.g. "₹2,000/-" — the "/-" marks a whole-rupee amount, as Indian price tags do.
 export function formatCurrency(amount) {
-  return formatter.format(Number(amount) || 0);
+  return `${formatter.format(Number(amount) || 0)}/-`;
 }
