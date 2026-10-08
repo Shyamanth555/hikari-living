@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Plus, Search, SquarePen, Trash2 } from 'lucide-react';
+import { Plus, Search, SquarePen, Trash2, Zap } from 'lucide-react';
 import { DataTable } from '../../../components/admin/DataTable';
+import { AllProductsSaleDialog } from '../../../components/admin/AllProductsSaleDialog';
 import { Button } from '../../../components/ui/Button';
 import { Badge } from '../../../components/ui/Badge';
 import { StockBadge } from '../../../components/common/StockBadge';
@@ -18,6 +19,7 @@ import { useDebounce } from '../../../hooks/useDebounce';
 import { productApi } from '../../../api/productApi';
 import { useToast } from '../../../context/ToastContext';
 import { formatCurrency } from '../../../lib/formatCurrency';
+import { getSaleStatus } from '../../../lib/pricing';
 
 export default function ProductList() {
   const [page, setPage] = useState(1);
@@ -25,6 +27,7 @@ export default function ProductList() {
   const debouncedSearch = useDebounce(search, 400);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleting, setDeleting] = useState(false);
+  const [saleDialogOpen, setSaleDialogOpen] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -59,7 +62,20 @@ export default function ProductList() {
       ),
     },
     { key: 'category', label: 'Category', render: (row) => row.category?.name },
-    { key: 'price', label: 'Price', render: (row) => formatCurrency(row.price) },
+    {
+      key: 'price',
+      label: 'Price',
+      render: (row) => {
+        const saleStatus = getSaleStatus(row);
+        return (
+          <div className="flex flex-col items-start gap-1">
+            <span>{formatCurrency(row.price)}</span>
+            {saleStatus === 'live' && <Badge className="bg-sale text-sale-foreground">Sale live · {row.sale.percentOff}% off</Badge>}
+            {saleStatus === 'upcoming' && <Badge variant="gold">Sale scheduled · {row.sale.percentOff}% off</Badge>}
+          </div>
+        );
+      },
+    },
     { key: 'stock', label: 'Stock', render: (row) => <StockBadge stock={row.stock} /> },
     {
       key: 'status',
@@ -96,11 +112,16 @@ export default function ProductList() {
     <div>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <h1 className="font-display text-2xl text-foreground">Products</h1>
-        <Button asChild className="ml-auto">
-          <Link to="/admin/products/new">
-            <Plus className="h-4 w-4" /> Add Product
-          </Link>
-        </Button>
+        <div className="ml-auto flex flex-wrap gap-2">
+          <Button variant="outline" onClick={() => setSaleDialogOpen(true)}>
+            <Zap className="h-4 w-4 text-sale" /> Sale on all products
+          </Button>
+          <Button asChild>
+            <Link to="/admin/products/new">
+              <Plus className="h-4 w-4" /> Add Product
+            </Link>
+          </Button>
+        </div>
       </div>
 
       <div className="relative mb-4 max-w-sm">
@@ -126,6 +147,8 @@ export default function ProductList() {
         onPageChange={setPage}
         emptyMessage="No products yet"
       />
+
+      <AllProductsSaleDialog open={saleDialogOpen} onOpenChange={setSaleDialogOpen} onDone={refetch} />
 
       <Dialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
         <DialogContent>

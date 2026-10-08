@@ -1,13 +1,15 @@
 import { Link } from 'react-router-dom';
-import { ShoppingBag } from 'lucide-react';
+import { ShoppingBag, Zap } from 'lucide-react';
 import { PriceDisplay } from './PriceDisplay';
 import { RatingStars } from './RatingStars';
 import { useCart } from '../../context/CartContext';
 import { useToast } from '../../context/ToastContext';
+import { getProductPricing } from '../../lib/pricing';
 
 export function ProductCard({ product }) {
   const { addItem } = useCart();
   const { toast } = useToast();
+  const { price, compareAtPrice, onSale } = getProductPricing(product);
 
   const handleQuickAdd = async (e) => {
     e.preventDefault();
@@ -43,10 +45,17 @@ export function ProductCard({ product }) {
             <ShoppingBag className="h-4.5 w-4.5" />
           </button>
         )}
-        {product.compareAtPrice > product.price && (
-          <span className="absolute left-3 top-3 rounded-full bg-gold-500 px-2.5 py-1 text-xs font-medium text-cream-50">
-            {Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100)}% off
+        {onSale ? (
+          <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-sale px-2.5 py-1 text-xs font-medium text-sale-foreground">
+            <Zap className="h-3 w-3 fill-current" />
+            {product.sale.percentOff}% off
           </span>
+        ) : (
+          compareAtPrice > price && (
+            <span className="absolute left-3 top-3 rounded-full bg-gold-500 px-2.5 py-1 text-xs font-medium text-cream-50">
+              {Math.round(((compareAtPrice - price) / compareAtPrice) * 100)}% off
+            </span>
+          )
         )}
         {product.stock <= 0 && (
           <span className="absolute left-3 top-3 rounded-full bg-ink-800 px-2.5 py-1 text-xs font-medium text-cream-50">
@@ -65,7 +74,7 @@ export function ProductCard({ product }) {
             <span className="text-xs text-muted-foreground">({product.numReviews})</span>
           </div>
         )}
-        <PriceDisplay price={product.price} compareAtPrice={product.compareAtPrice} showBadge={false} />
+        <PriceDisplay price={price} compareAtPrice={compareAtPrice} showBadge={false} />
       </div>
     </Link>
   );

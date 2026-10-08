@@ -4,6 +4,7 @@ import { SEO } from '../components/common/SEO';
 import { ProductGrid } from '../components/product/ProductGrid';
 import { RatingStars } from '../components/common/RatingStars';
 import { HeroCarousel } from '../components/common/HeroCarousel';
+import { FlashSaleHero } from '../components/common/FlashSaleHero';
 import { CategoryCarousel } from '../components/common/CategoryCarousel';
 import { Button } from '../components/ui/Button';
 import { useAsync } from '../hooks/useAsync';
@@ -27,10 +28,13 @@ export default function Home() {
   const { data: categories } = useAsync(() => categoryApi.list(), []);
   const { data: recentPosts } = useAsync(() => blogApi.list({ limit: 3 }), []);
   const { data: heroSlides } = useAsync(() => heroSlideApi.list(), []);
+  const { data: flashSales } = useAsync(() => productApi.flashSale(), []);
 
   return (
     <>
       <SEO title="Home" description="Handcrafted sculptures and idols — Divine Series, car dashboard idols, and Pride of India statues." />
+
+      {flashSales && flashSales.length > 0 && <FlashSaleHero products={flashSales} />}
 
       {heroSlides && heroSlides.length > 0 ? (
         <>

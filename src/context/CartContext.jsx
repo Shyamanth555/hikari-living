@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { cartApi } from '../api/cartApi';
 import { productApi } from '../api/productApi';
+import { getProductPricing } from '../lib/pricing';
 import { useAuth } from './AuthContext';
 
 const CartContext = createContext(null);
@@ -38,7 +39,7 @@ const resolveGuestCart = async (guestItems) => {
     })
     .filter(Boolean);
 
-  const subtotal = items.reduce((sum, i) => sum + i.product.price * i.quantity, 0);
+  const subtotal = items.reduce((sum, i) => sum + getProductPricing(i.product).price * i.quantity, 0);
   return { items, subtotal };
 };
 

@@ -56,6 +56,10 @@
 
   --color-destructive: #a8433a;
 
+  /* Terracotta — flash sale badges and urgency, kept apart from error red */
+  --color-sale: #b94e2a;
+  --color-sale-foreground: #ffffff;
+
   --radius-sm: 0.375rem;
   --radius-md: 0.625rem;
   --radius-lg: 0.875rem;

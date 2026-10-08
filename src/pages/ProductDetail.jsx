@@ -10,12 +10,15 @@ import { QuantitySelector } from '../components/common/QuantitySelector';
 import { RatingStars } from '../components/common/RatingStars';
 import { ReviewsSection } from '../components/product/ReviewsSection';
 import { RelatedProducts } from '../components/product/RelatedProducts';
+import { FlashSaleBanner } from '../components/product/FlashSaleBanner';
 import { Button } from '../components/ui/Button';
 import { Spinner } from '../components/ui/Spinner';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../components/ui/Accordion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/Tabs';
 import { useAsync } from '../hooks/useAsync';
+import { useNow } from '../hooks/useNow';
 import { productApi } from '../api/productApi';
+import { getProductPricing } from '../lib/pricing';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
@@ -38,6 +41,8 @@ export default function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
   const [adding, setAdding] = useState(false);
   const [buyingNow, setBuyingNow] = useState(false);
+  // Ticks only for products with a sale, so the price flips the moment it starts or ends.
+  const now = useNow(Boolean(product?.sale));
 
   if (loading) {
     return (
@@ -90,6 +95,7 @@ export default function ProductDetail() {
   };
 
   const defaultSection = location.hash === '#reviews' ? 'reviews' : 'description';
+  const pricing = getProductPricing(product, now);
 
   const descriptionContent = (
     <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">{product.description}</p>
@@ -177,8 +183,9 @@ export default function ProductDetail() {
           </div>
 
           <div className="mt-3">
-            <PriceDisplay price={product.price} compareAtPrice={product.compareAtPrice} size="lg" />
+            <PriceDisplay price={pricing.price} compareAtPrice={pricing.compareAtPrice} size="lg" />
           </div>
+          <FlashSaleBanner product={product} now={now} className="mt-4" />
           <div className="mt-3">
             <StockBadge stock={product.stock} />
           </div>

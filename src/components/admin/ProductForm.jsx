@@ -9,7 +9,24 @@ import { Button } from '../ui/Button';
 import { Checkbox } from '../ui/Checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/Select';
 import { ImageUploader } from './ImageUploader';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, Zap } from 'lucide-react';
+import { formatCurrency } from '../../lib/formatCurrency';
+import { getSaleStatus, salePriceOf } from '../../lib/pricing';
+
+// <input type="datetime-local"> holds a zone-less local time; the API stores
+// ISO instants. new Date('YYYY-MM-DDTHH:mm') parses as local time, which
+// covers the other direction.
+const toDateTimeLocal = (iso) => {
+  if (!iso) return '';
+  const date = new Date(iso);
+  return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+};
+
+const SALE_STATUS_LABELS = {
+  upcoming: 'Scheduled',
+  live: 'Live now',
+  ended: 'Ended — clear it or pick new dates',
+};
 
 const productSchema = z.object({
   name: z.string().min(1, 'Product name is required'),
@@ -25,6 +42,22 @@ const productSchema = z.object({
   featured: z.boolean().optional(),
   isNewLaunch: z.boolean().optional(),
   tags: z.string().optional(),
+  salePercentOff: z.string().optional(),
+  saleStartsAt: z.string().optional(),
+  saleEndsAt: z.string().optional(),
+}).superRefine(({ salePercentOff, saleStartsAt, saleEndsAt }, ctx) => {
+  // The flash sale is optional, but once any of its fields is filled, all three must be valid.
+  if (!salePercentOff && !saleStartsAt && !saleEndsAt) return;
+
+  const percentOff = Number(salePercentOff);
+  if (!Number.isInteger(percentOff) || percentOff < 1 || percentOff > 90) {
+    ctx.addIssue({ code: 'custom', path: ['salePercentOff'], message: 'Enter a whole number from 1 to 90' });
+  }
+  if (!saleStartsAt) ctx.addIssue({ code: 'custom', path: ['saleStartsAt'], message: 'Pick a start time' });
+  if (!saleEndsAt) ctx.addIssue({ code: 'custom', path: ['saleEndsAt'], message: 'Pick an end time' });
+  if (saleStartsAt && saleEndsAt && new Date(saleEndsAt) <= new Date(saleStartsAt)) {
+    ctx.addIssue({ code: 'custom', path: ['saleEndsAt'], message: 'Must be after the start time' });
+  }
 });
 
 export function ProductForm({ defaultValues, categories = [], onSubmit, submitting = false, submitLabel = 'Save product' }) {
@@ -60,16 +93,48 @@ export function ProductForm({ defaultValues, categories = [], onSubmit, submitti
       ...defaultValues,
       category: defaultValues?.category?._id || defaultValues?.category || '',
       tags: (defaultValues?.tags || []).join(', '),
+      salePercentOff: defaultValues?.sale ? String(defaultValues.sale.percentOff) : '',
+      saleStartsAt: toDateTimeLocal(defaultValues?.sale?.startsAt),
+      saleEndsAt: toDateTimeLocal(defaultValues?.sale?.endsAt),
     },
   });
 
-  const submit = (values) => {
+  const [watchedPrice, salePercentOff, saleStartsAt, saleEndsAt] = watch([
+    'price',
+    'salePercentOff',
+    'saleStartsAt',
+    'saleEndsAt',
+  ]);
+  const hasSale = Boolean(salePercentOff || saleStartsAt || saleEndsAt);
+  const percentOff = Number(salePercentOff);
+  const salePreviewPrice =
+    Number(watchedPrice) > 0 && Number.isInteger(percentOff) && percentOff >= 1 && percentOff <= 90
+      ? salePriceOf(Number(watchedPrice), percentOff)
+      : null;
+  // datetime-local strings parse as local time, same as on submit.
+  const saleStatus = getSaleStatus({ sale: { startsAt: saleStartsAt, endsAt: saleEndsAt } });
+  const saleStatusLabel = SALE_STATUS_LABELS[saleStatus];
+
+  const clearSale = () => {
+    setValue('salePercentOff', '');
+    setValue('saleStartsAt', '');
+    setValue('saleEndsAt', '');
+  };
+
+  const submit = ({ salePercentOff, saleStartsAt, saleEndsAt, ...values }) => {
     if (images.length === 0) {
       return;
     }
     onSubmit({
       ...values,
       compareAtPrice: values.compareAtPrice ? Number(values.compareAtPrice) : null,
+      sale: salePercentOff
+        ? {
+            percentOff: Number(salePercentOff),
+            startsAt: new Date(saleStartsAt).toISOString(),
+            endsAt: new Date(saleEndsAt).toISOString(),
+          }
+        : null,
       images,
       tags: values.tags
         ? values.tags.split(',').map((t) => t.trim()).filter(Boolean)
@@ -138,6 +203,58 @@ export function ProductForm({ defaultValues, categories = [], onSubmit, submitti
           {errors.weight && <p className="text-xs text-destructive">{errors.weight.message}</p>}
           <p className="text-xs text-muted-foreground">Per unit — used for shipping calculations</p>
         </div>
+      </div>
+
+      <div className="space-y-4 rounded-lg border border-border p-4">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="flex items-center gap-2 text-sm font-medium text-foreground">
+              <Zap className="h-4 w-4 text-sale" /> Flash sale (optional)
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Takes the discount off the price between the start and end time, and promotes the product in the home
+              page hero from 24 hours before it starts. Times are in this device&apos;s time zone.
+            </p>
+          </div>
+          {hasSale && (
+            <Button type="button" variant="ghost" size="sm" onClick={clearSale}>
+              Remove sale
+            </Button>
+          )}
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-[8rem_minmax(0,1fr)_minmax(0,1fr)]">
+          <div className="space-y-1.5">
+            <Label htmlFor="salePercentOff">Discount (%)</Label>
+            <Input id="salePercentOff" type="number" min="1" max="90" step="1" placeholder="e.g. 50" {...register('salePercentOff')} />
+            {errors.salePercentOff && <p className="text-xs text-destructive">{errors.salePercentOff.message}</p>}
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="saleStartsAt">Starts</Label>
+            <Input id="saleStartsAt" type="datetime-local" {...register('saleStartsAt')} />
+            {errors.saleStartsAt && <p className="text-xs text-destructive">{errors.saleStartsAt.message}</p>}
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="saleEndsAt">Ends</Label>
+            <Input id="saleEndsAt" type="datetime-local" {...register('saleEndsAt')} />
+            {errors.saleEndsAt && <p className="text-xs text-destructive">{errors.saleEndsAt.message}</p>}
+          </div>
+        </div>
+
+        {(salePreviewPrice !== null || saleStatusLabel) && (
+          <p className="text-sm text-muted-foreground">
+            {salePreviewPrice !== null && (
+              <>
+                Sale price <span className="font-medium text-foreground">{formatCurrency(salePreviewPrice)}</span>{' '}
+                <span className="line-through">{formatCurrency(watchedPrice)}</span>
+              </>
+            )}
+            {salePreviewPrice !== null && saleStatusLabel && ' · '}
+            {saleStatusLabel && (
+              <span className={saleStatus === 'live' ? 'font-medium text-sale' : undefined}>{saleStatusLabel}</span>
+            )}
+          </p>
+        )}
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
