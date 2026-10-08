@@ -3,6 +3,7 @@ import { Check, Trash2, X } from 'lucide-react';
 import { DataTable } from '../../../components/admin/DataTable';
 import { Badge } from '../../../components/ui/Badge';
 import { RatingStars } from '../../../components/common/RatingStars';
+import { ReviewPhotos } from '../../../components/review/ReviewPhotos';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../components/ui/Select';
 import { useAsync } from '../../../hooks/useAsync';
 import { reviewApi } from '../../../api/reviewApi';
@@ -48,6 +49,17 @@ export default function ReviewList() {
     { key: 'user', label: 'Customer', render: (row) => row.user?.name },
     { key: 'rating', label: 'Rating', render: (row) => <RatingStars rating={row.rating} size="sm" /> },
     { key: 'comment', label: 'Review', render: (row) => <span className="line-clamp-2 max-w-xs">{row.comment}</span> },
+    {
+      key: 'images',
+      label: 'Photos',
+      // Shown publicly once approved — tap one to check it full screen first.
+      render: (row) =>
+        row.images?.length ? (
+          <ReviewPhotos images={row.images} size="xs" className="flex-nowrap" />
+        ) : (
+          <span className="text-muted-foreground">—</span>
+        ),
+    },
     {
       key: 'status',
       label: 'Status',

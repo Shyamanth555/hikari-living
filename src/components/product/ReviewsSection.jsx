@@ -12,11 +12,16 @@ import { useAsync } from '../../hooks/useAsync';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { reviewApi } from '../../api/reviewApi';
+import { ReviewPhotos } from '../review/ReviewPhotos';
+import { ReviewPhotoPicker } from '../review/ReviewPhotoPicker';
+
+const MAX_REVIEW_PHOTOS = 4;
 
 function ReviewForm({ productId, onSubmitted }) {
   const [rating, setRating] = useState(0);
   const [title, setTitle] = useState('');
   const [comment, setComment] = useState('');
+  const [photos, setPhotos] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const { toast } = useToast();
 
@@ -28,7 +33,7 @@ function ReviewForm({ productId, onSubmitted }) {
     }
     setSubmitting(true);
     try {
-      await reviewApi.create(productId, { rating, title, comment });
+      await reviewApi.create(productId, { rating, title, comment, images: photos.map((p) => p.file) });
       toast({ title: 'Review submitted', description: 'Thanks — it will appear once approved.', variant: 'success' });
       onSubmitted();
     } catch (err) {
@@ -56,8 +61,12 @@ function ReviewForm({ productId, onSubmitted }) {
         </Label>
         <Textarea id="review-comment" rows={4} value={comment} onChange={(e) => setComment(e.target.value)} required />
       </div>
+      <div className="space-y-1.5">
+        <Label>Add photos (optional)</Label>
+        <ReviewPhotoPicker photos={photos} onChange={setPhotos} max={MAX_REVIEW_PHOTOS} disabled={submitting} />
+      </div>
       <Button type="submit" disabled={submitting}>
-        {submitting ? 'Submitting…' : 'Submit Review'}
+        {submitting ? (photos.length > 0 ? 'Uploading photos…' : 'Submitting…') : 'Submit Review'}
       </Button>
     </form>
   );
@@ -148,13 +157,14 @@ export function ReviewsSection({ productId, ratingAverage, numReviews }) {
                 <li key={review._id} className="border-b border-border pb-6 last:border-0">
                   <div className="flex items-center gap-3">
                     <RatingStars rating={review.rating} size="sm" />
-                    <span className="text-sm font-medium text-foreground">{review.user?.name || 'Customer'}</span>
+                    <span className="text-sm font-medium text-foreground">{review.customer.name}</span>
                     <span className="text-xs text-muted-foreground">
                       {new Date(review.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                     </span>
                   </div>
                   {review.title && <p className="mt-2 text-sm font-medium text-foreground">{review.title}</p>}
                   <p className="mt-1 text-sm text-muted-foreground">{review.comment}</p>
+                  <ReviewPhotos images={review.images} size="md" className="mt-3" />
                 </li>
               ))}
             </ul>

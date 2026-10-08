@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ShieldCheck, Truck } from 'lucide-react';
 import { SEO } from '../components/common/SEO';
 import { ProductGrid } from '../components/product/ProductGrid';
-import { RatingStars } from '../components/common/RatingStars';
+import { ReviewCard } from '../components/review/ReviewCard';
+import { ReviewDetailDialog } from '../components/review/ReviewDetailDialog';
 import { HeroCarousel } from '../components/common/HeroCarousel';
 import { FlashSaleHero } from '../components/common/FlashSaleHero';
 import { CategoryCarousel } from '../components/common/CategoryCarousel';
@@ -12,7 +14,8 @@ import { productApi } from '../api/productApi';
 import { categoryApi } from '../api/categoryApi';
 import { blogApi } from '../api/blogApi';
 import { heroSlideApi } from '../api/heroSlideApi';
-import { TESTIMONIALS } from '../lib/testimonials';
+import { reviewApi } from '../api/reviewApi';
+import { cn } from '../lib/cn';
 import { BRAND_NAME } from '../lib/constants';
 
 const PROMOS = [
@@ -29,6 +32,10 @@ export default function Home() {
   const { data: recentPosts } = useAsync(() => blogApi.list({ limit: 3 }), []);
   const { data: heroSlides } = useAsync(() => heroSlideApi.list(), []);
   const { data: flashSales } = useAsync(() => productApi.flashSale(), []);
+  // Latest well-rated reviews here; every approved review is on the Reviews page.
+  const { data: reviews } = useAsync(() => reviewApi.listAll({ limit: 3, minRating: 4 }), []);
+  const [openReview, setOpenReview] = useState(null);
+  const reviewCount = reviews?.data.length || 0;
 
   return (
     <>
@@ -137,25 +144,28 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="container-page py-16">
-        <h2 className="text-center font-display text-2xl text-foreground">What our customers say</h2>
-        <div className="mt-10 grid gap-8 md:grid-cols-3">
-          {TESTIMONIALS.map((t) => (
-            <div key={t.name} className="rounded-lg border border-border bg-cream-50 p-6">
-              <RatingStars rating={t.rating} />
-              <p className="mt-3 text-sm text-foreground">&ldquo;{t.quote}&rdquo;</p>
-              <p className="mt-4 text-sm font-medium text-foreground">
-                {t.name} <span className="font-normal text-muted-foreground">— {t.location}</span>
-              </p>
-            </div>
-          ))}
-        </div>
-        <div className="mt-8 text-center">
-          <Link to="/reviews" className="text-sm font-medium text-foreground hover:underline">
-            Read more reviews →
-          </Link>
-        </div>
-      </section>
+      {reviewCount > 0 && (
+        <section className="container-page py-16">
+          <h2 className="text-center font-display text-2xl text-foreground">What our customers say</h2>
+          {/* Fewer than three reviews are centred rather than leaving empty columns. */}
+          <div
+            className={cn(
+              'mx-auto mt-10 grid gap-8',
+              reviewCount >= 3 ? 'md:grid-cols-3' : reviewCount === 2 ? 'max-w-3xl md:grid-cols-2' : 'max-w-md'
+            )}
+          >
+            {reviews.data.map((review) => (
+              <ReviewCard key={review._id} review={review} onOpen={() => setOpenReview(review)} />
+            ))}
+          </div>
+          <div className="mt-8 text-center">
+            <Link to="/reviews" className="text-sm font-medium text-foreground hover:underline">
+              Read more reviews →
+            </Link>
+          </div>
+          <ReviewDetailDialog review={openReview} onClose={() => setOpenReview(null)} />
+        </section>
+      )}
 
       {recentPosts && recentPosts.data.length > 0 && (
         <section className="border-t border-border bg-cream-100">
