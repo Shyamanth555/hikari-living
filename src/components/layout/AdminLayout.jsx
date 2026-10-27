@@ -33,7 +33,10 @@ export function AdminLayout() {
             Log out
           </button>
         </header>
-        <main className="min-h-0 flex-1 overflow-y-auto p-5 md:p-8">
+        {/* relative: Radix Select/Checkbox put visually-hidden, absolutely positioned
+            native inputs in forms. Without a positioned scroll container they
+            anchor to <body> and stretch the page, adding a second, page-level scroll. */}
+        <main className="relative min-h-0 flex-1 overflow-y-auto p-5 md:p-8">
           <Outlet />
         </main>
       </div>
