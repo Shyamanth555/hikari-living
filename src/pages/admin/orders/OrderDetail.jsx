@@ -5,13 +5,10 @@ import { OrderStatusBadge } from '../../../components/common/OrderStatusBadge';
 import { PriceDisplay } from '../../../components/common/PriceDisplay';
 import { ShipmentTimeline } from '../../../components/common/ShipmentTimeline';
 import { CancelOrderDialog } from '../../../components/common/CancelOrderDialog';
-import { OrderStatusUpdater } from '../../../components/admin/OrderStatusUpdater';
-import { TrackingForm } from '../../../components/admin/TrackingForm';
 import { ParcelForm } from '../../../components/admin/ParcelForm';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/Card';
 import { Badge } from '../../../components/ui/Badge';
 import { Button } from '../../../components/ui/Button';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../../../components/ui/Accordion';
 import { useAsync } from '../../../hooks/useAsync';
 import { orderApi } from '../../../api/orderApi';
 import { useToast } from '../../../context/ToastContext';
@@ -22,8 +19,6 @@ export default function OrderDetail() {
   const { id } = useParams();
   const { data: order, loading, refetch } = useAsync(() => orderApi.adminGetById(id), [id]);
   const { toast } = useToast();
-  const [updatingStatus, setUpdatingStatus] = useState(false);
-  const [updatingTracking, setUpdatingTracking] = useState(false);
   const [shipping, setShipping] = useState(false);
   const [retryingPickup, setRetryingPickup] = useState(false);
   const [syncingTracking, setSyncingTracking] = useState(false);
@@ -85,32 +80,6 @@ export default function OrderDetail() {
       });
     } finally {
       setSyncingTracking(false);
-    }
-  };
-
-  const handleStatusUpdate = async (status) => {
-    setUpdatingStatus(true);
-    try {
-      await orderApi.adminUpdateStatus(id, status);
-      toast({ title: 'Order status updated', variant: 'success' });
-      refetch();
-    } catch (err) {
-      toast({ title: 'Could not update status', description: err?.response?.data?.message, variant: 'destructive' });
-    } finally {
-      setUpdatingStatus(false);
-    }
-  };
-
-  const handleTrackingUpdate = async (trackingData) => {
-    setUpdatingTracking(true);
-    try {
-      await orderApi.adminUpdateTracking(id, trackingData);
-      toast({ title: 'Tracking updated', variant: 'success' });
-      refetch();
-    } catch (err) {
-      toast({ title: 'Could not update tracking', description: err?.response?.data?.message, variant: 'destructive' });
-    } finally {
-      setUpdatingTracking(false);
     }
   };
 
@@ -251,34 +220,19 @@ export default function OrderDetail() {
         <div className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>{hasShiprocketShipment ? 'Order Status' : 'Update Status'}</CardTitle>
+              <CardTitle>Order Status</CardTitle>
             </CardHeader>
             <CardContent>
-              {order.status === 'cancelled' ? (
-                <div>
-                  <OrderStatusBadge status={order.status} />
-                  <p className="mt-2 text-xs text-muted-foreground">
-                    Cancelled orders can&apos;t be reopened.
-                  </p>
-                </div>
-              ) : hasShiprocketShipment ? (
-                // Once Shiprocket has the shipment, the courier's scans are the
-                // only source of truth for status — no manual changes.
-                <div>
-                  <OrderStatusBadge status={order.status} />
-                  <p className="mt-2 text-xs text-muted-foreground">
-                    Updated automatically by Shiprocket as the courier moves the parcel. If it looks out of date,
-                    use &ldquo;Refresh status from Shiprocket&rdquo; under Shipment.
-                  </p>
-                </div>
-              ) : (
-                <OrderStatusUpdater
-                  currentStatus={order.status}
-                  onUpdate={handleStatusUpdate}
-                  updating={updatingStatus}
-                  canAwaitPayment={awaitingPayment}
-                />
-              )}
+              {/* Status is never set by hand: payment, Ship Now, Cancel Order and
+                  Shiprocket's courier scans move it along. */}
+              <OrderStatusBadge status={order.status} />
+              <p className="mt-2 text-xs text-muted-foreground">
+                {order.status === 'cancelled'
+                  ? 'Cancelled orders can’t be reopened.'
+                  : hasShiprocketShipment
+                    ? 'Updated automatically by Shiprocket as the courier moves the parcel. If it looks out of date, use “Refresh status from Shiprocket” under Shipment.'
+                    : 'Updates automatically once the order is shipped with Shiprocket.'}
+              </p>
               <p className="mt-3 text-xs text-muted-foreground">
                 Method: {order.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Razorpay (online)'}
               </p>
@@ -398,25 +352,6 @@ export default function OrderDetail() {
                     ? `No shipment can be created for a ${order.status} order.`
                     : 'Waiting for payment — this order can be shipped once the customer has paid.'}
                 </p>
-              )}
-
-              {!hasShiprocketShipment && (
-                <Accordion type="single" collapsible className="mt-4">
-                  <AccordionItem value="manual">
-                    <AccordionTrigger className="text-sm">Manual tracking override</AccordionTrigger>
-                    <AccordionContent>
-                      <p className="mb-3 text-xs text-muted-foreground">
-                        For shipments sent outside Shiprocket. Submitting this replaces whatever tracking info is
-                        currently shown.
-                      </p>
-                      <TrackingForm
-                        tracking={order.tracking}
-                        onSubmit={handleTrackingUpdate}
-                        submitting={updatingTracking}
-                      />
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
               )}
             </CardContent>
           </Card>

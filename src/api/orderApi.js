@@ -12,11 +12,7 @@ export const orderApi = {
 
   adminList: (params) => axiosClient.get('/admin/orders', { params }).then((r) => r.data),
   adminGetById: (id) => axiosClient.get(`/admin/orders/${id}`).then((r) => r.data),
-  adminUpdateStatus: (id, status) =>
-    axiosClient.put(`/admin/orders/${id}/status`, { status }).then((r) => r.data),
   adminCancel: (id) => axiosClient.post(`/admin/orders/${id}/cancel`).then((r) => r.data),
-  adminUpdateTracking: (id, data) =>
-    axiosClient.put(`/admin/orders/${id}/tracking`, data).then((r) => r.data),
   adminShipWithShiprocket: (id, parcel) =>
     axiosClient.post(`/admin/orders/${id}/shiprocket/ship`, parcel).then((r) => r.data),
   adminRetryShiprocketPickup: (id) =>
