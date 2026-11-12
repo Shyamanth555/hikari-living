@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '../../lib/cn';
+import { cloudinarySrcSet, cloudinaryUrl } from '../../lib/cloudinaryImage';
+
+// Full-bleed slides: phones pick a small width, large screens the big one.
+const HERO_WIDTHS = [640, 1080, 1600, 2400];
 
 const AUTO_ADVANCE_MS = 6000;
 const SWIPE_THRESHOLD_PX = 40;
@@ -51,7 +55,9 @@ export function HeroCarousel({ slides }) {
           aria-hidden={i !== index}
         >
           <img
-            src={slide.image?.url}
+            src={cloudinaryUrl(slide.image?.url, { width: 1600 })}
+            srcSet={cloudinarySrcSet(slide.image?.url, HERO_WIDTHS)}
+            sizes="100vw"
             alt={slide.heading || slide.product?.name || ''}
             className="h-full w-full object-cover"
             loading={i === 0 ? 'eager' : 'lazy'}

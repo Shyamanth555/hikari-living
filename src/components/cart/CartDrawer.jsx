@@ -7,6 +7,7 @@ import { formatCurrency } from '../../lib/formatCurrency';
 import { EmptyState } from '../common/EmptyState';
 import { PriceDisplay } from '../common/PriceDisplay';
 import { getProductPricing } from '../../lib/pricing';
+import { cloudinaryUrl } from '../../lib/cloudinaryImage';
 
 export function CartDrawer({ open, onOpenChange }) {
   const { items, subtotal, updateQuantity, removeItem, loading } = useCart();
@@ -39,7 +40,7 @@ export function CartDrawer({ open, onOpenChange }) {
               {items.map(({ product, quantity }) => (
                 <li key={product._id} className="flex gap-3">
                   <img
-                    src={product.images?.[0]?.url}
+                    src={cloudinaryUrl(product.images?.[0]?.url, { width: 200, height: 200, crop: 'fill' })}
                     alt={product.name}
                     className="h-20 w-20 shrink-0 rounded-md object-cover"
                   />

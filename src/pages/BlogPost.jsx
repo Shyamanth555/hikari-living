@@ -6,6 +6,7 @@ import { Breadcrumbs } from '../components/common/Breadcrumbs';
 import { Spinner } from '../components/ui/Spinner';
 import { useAsync } from '../hooks/useAsync';
 import { blogApi } from '../api/blogApi';
+import { cloudinaryUrl } from '../lib/cloudinaryImage';
 
 export default function BlogPost() {
   const { slug } = useParams();
@@ -48,7 +49,7 @@ export default function BlogPost() {
 
         {post.coverImage?.url && (
           <div className="mt-6 aspect-video overflow-hidden rounded-lg bg-cream-200">
-            <img src={post.coverImage.url} alt={post.title} className="h-full w-full object-cover" />
+            <img src={cloudinaryUrl(post.coverImage.url, { width: 1600 })} alt={post.title} className="h-full w-full object-cover" />
           </div>
         )}
 

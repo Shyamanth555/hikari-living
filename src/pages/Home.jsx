@@ -16,6 +16,7 @@ import { blogApi } from '../api/blogApi';
 import { heroSlideApi } from '../api/heroSlideApi';
 import { reviewApi } from '../api/reviewApi';
 import { cn } from '../lib/cn';
+import { cloudinaryUrl } from '../lib/cloudinaryImage';
 import { BRAND_NAME } from '../lib/constants';
 
 const PROMOS = [
@@ -181,7 +182,7 @@ export default function Home() {
                 <Link key={post._id} to={`/blog/${post.slug}`} className="group block">
                   <div className="aspect-video overflow-hidden rounded-lg bg-cream-200">
                     <img
-                      src={post.coverImage?.url}
+                      src={cloudinaryUrl(post.coverImage?.url, { width: 800 })}
                       alt={post.title}
                       className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />

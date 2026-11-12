@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Button } from '../ui/Button';
 import { RatingStars } from '../common/RatingStars';
 import { ReviewPhotos } from './ReviewPhotos';
+import { cloudinaryUrl } from '../../lib/cloudinaryImage';
 
 const formatDate = (iso) =>
   new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -44,7 +45,7 @@ export function ReviewDetailDialog({ review, onClose }) {
             {review.product && (
               <div className="mt-6 flex flex-wrap items-center gap-4 rounded-lg bg-background-soft p-3">
                 {review.product.image && (
-                  <img src={review.product.image} alt="" className="h-14 w-14 shrink-0 rounded-md object-cover" />
+                  <img src={cloudinaryUrl(review.product.image, { width: 150, height: 150, crop: 'fill' })} alt="" className="h-14 w-14 shrink-0 rounded-md object-cover" />
                 )}
                 {/* basis-40 makes the button wrap below on narrow screens instead of squeezing the name. */}
                 <div className="min-w-0 flex-1 basis-40">

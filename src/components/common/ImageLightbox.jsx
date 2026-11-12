@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { cloudinaryUrl } from '../../lib/cloudinaryImage';
 
 const SWIPE_THRESHOLD_PX = 40;
 
@@ -53,7 +54,7 @@ export function ImageLightbox({ images, index, onIndexChange, onClose, alt = '' 
 
           {open && (
             <img
-              src={images[index].url}
+              src={cloudinaryUrl(images[index].url, { width: 2000, height: 2000 })}
               alt={alt}
               className="max-h-full max-w-full select-none rounded-md object-contain"
               draggable={false}

@@ -15,6 +15,7 @@ import {
 import { useAsync } from '../../../hooks/useAsync';
 import { heroSlideApi } from '../../../api/heroSlideApi';
 import { useToast } from '../../../context/ToastContext';
+import { cloudinaryUrl } from '../../../lib/cloudinaryImage';
 
 export default function HeroSlideList() {
   const { data: slides, loading, refetch } = useAsync(() => heroSlideApi.adminList(), []);
@@ -43,7 +44,7 @@ export default function HeroSlideList() {
       label: 'Slide',
       render: (row) => (
         <div className="flex items-center gap-3">
-          <img src={row.image?.url} alt="" className="h-10 w-16 rounded object-cover" />
+          <img src={cloudinaryUrl(row.image?.url, { width: 160, height: 100, crop: 'fill' })} alt="" className="h-10 w-16 rounded object-cover" />
           <span className="font-medium text-foreground">{row.heading || '—'}</span>
         </div>
       ),

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { cloudinaryUrl } from '../../lib/cloudinaryImage';
 
 const PX_PER_SECOND = 32;
 
@@ -136,7 +137,7 @@ export function CategoryCarousel({ categories }) {
           >
             <div className="aspect-square overflow-hidden rounded-lg bg-cream-200">
               <img
-                src={cat.image?.url}
+                src={cloudinaryUrl(cat.image?.url, { width: 400 })}
                 alt={cat.name}
                 draggable={false}
                 className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"

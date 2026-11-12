@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ImageLightbox } from '../common/ImageLightbox';
 import { cn } from '../../lib/cn';
+import { cloudinaryUrl } from '../../lib/cloudinaryImage';
 
 const SIZES = {
   xs: { box: 'h-10 w-10', px: 80 },
@@ -8,10 +9,8 @@ const SIZES = {
   md: { box: 'h-20 w-20', px: 160 },
 };
 
-// Asks Cloudinary for a small square crop instead of the full upload, so a
-// row of thumbnails stays light. Non-Cloudinary URLs pass through untouched.
-const thumbnailUrl = (url, px) =>
-  url.includes('/upload/') ? url.replace('/upload/', `/upload/c_fill,w_${px},h_${px},q_auto,f_auto/`) : url;
+// A small square crop instead of the full upload, so a row of thumbnails stays light.
+const thumbnailUrl = (url, px) => cloudinaryUrl(url, { width: px, height: px, crop: 'fill' });
 
 // A customer's review photos as thumbnails; tapping one opens it full screen.
 export function ReviewPhotos({ images, size = 'md', alt = 'Customer photo', className }) {

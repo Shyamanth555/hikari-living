@@ -15,6 +15,7 @@ import {
 import { useAsync } from '../../../hooks/useAsync';
 import { categoryApi } from '../../../api/categoryApi';
 import { useToast } from '../../../context/ToastContext';
+import { cloudinaryUrl } from '../../../lib/cloudinaryImage';
 
 export default function CategoryList() {
   const { data: categories, loading, refetch } = useAsync(() => categoryApi.adminList(), []);
@@ -43,7 +44,7 @@ export default function CategoryList() {
       label: 'Category',
       render: (row) => (
         <div className="flex items-center gap-3">
-          <img src={row.image?.url} alt="" className="h-10 w-10 rounded object-cover" />
+          <img src={cloudinaryUrl(row.image?.url, { width: 100, height: 100, crop: 'fill' })} alt="" className="h-10 w-10 rounded object-cover" />
           <span className="font-medium text-foreground">{row.name}</span>
         </div>
       ),

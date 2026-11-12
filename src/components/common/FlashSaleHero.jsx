@@ -8,6 +8,7 @@ import { useNow } from '../../hooks/useNow';
 import { cn } from '../../lib/cn';
 import { formatCurrency } from '../../lib/formatCurrency';
 import { formatSaleTime, getSaleStatus } from '../../lib/pricing';
+import { cloudinaryUrl } from '../../lib/cloudinaryImage';
 
 const LOW_STOCK_THRESHOLD = 10;
 const AUTO_ADVANCE_MS = 6000;
@@ -23,7 +24,7 @@ function FlashSaleSlide({ product, live, now }) {
       <Link to={productUrl} className="group relative mx-auto block w-full max-w-xs sm:max-w-sm md:max-w-none">
         <div className="aspect-square overflow-hidden rounded-xl bg-cream-200 shadow-xl ring-1 ring-border">
           <img
-            src={product.images?.[0]?.url}
+            src={cloudinaryUrl(product.images?.[0]?.url, { width: 900 })}
             alt={product.name}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />

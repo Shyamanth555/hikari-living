@@ -15,6 +15,7 @@ import {
 import { useAsync } from '../../../hooks/useAsync';
 import { blogApi } from '../../../api/blogApi';
 import { useToast } from '../../../context/ToastContext';
+import { cloudinaryUrl } from '../../../lib/cloudinaryImage';
 
 export default function BlogPostList() {
   const [page, setPage] = useState(1);
@@ -45,7 +46,7 @@ export default function BlogPostList() {
       label: 'Post',
       render: (row) => (
         <div className="flex items-center gap-3">
-          {row.coverImage?.url && <img src={row.coverImage.url} alt="" className="h-10 w-10 rounded object-cover" />}
+          {row.coverImage?.url && <img src={cloudinaryUrl(row.coverImage.url, { width: 100, height: 100, crop: 'fill' })} alt="" className="h-10 w-10 rounded object-cover" />}
           <span className="font-medium text-foreground">{row.title}</span>
         </div>
       ),
