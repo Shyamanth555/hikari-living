@@ -4,10 +4,13 @@ import { PriceDisplay } from './PriceDisplay';
 import { RatingStars } from './RatingStars';
 import { useCart } from '../../context/CartContext';
 import { useToast } from '../../context/ToastContext';
-import { getProductPricing } from '../../lib/pricing';
+import { getProductPricing, hasPriceRange } from '../../lib/pricing';
 import { imageUrl } from '../../lib/cloudinaryImage';
 
+const MAX_DOTS = 5;
+
 export function ProductCard({ product }) {
+  const hasColors = product.colors?.length > 0;
   const { addItem } = useCart();
   const { toast } = useToast();
   const { price, compareAtPrice, onSale } = getProductPricing(product);
@@ -36,7 +39,8 @@ export function ProductCard({ product }) {
           loading="lazy"
           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
-        {product.stock > 0 && (
+        {/* Quick add can't know which colour, so products with colours go to their page instead. */}
+        {product.stock > 0 && !hasColors && (
           <button
             type="button"
             onClick={handleQuickAdd}
@@ -75,7 +79,25 @@ export function ProductCard({ product }) {
             <span className="text-xs text-muted-foreground">({product.numReviews})</span>
           </div>
         )}
-        <PriceDisplay price={price} compareAtPrice={compareAtPrice} showBadge={false} />
+        {hasColors && (
+          <div className="flex items-center gap-1.5 pt-0.5" aria-label={`${product.colors.length} colours`}>
+            {product.colors.slice(0, MAX_DOTS).map((c) => (
+              <span
+                key={c._id}
+                title={c.name}
+                className="h-3.5 w-3.5 rounded-full ring-1 ring-border"
+                style={{ backgroundColor: c.hex }}
+              />
+            ))}
+            {product.colors.length > MAX_DOTS && (
+              <span className="text-xs text-muted-foreground">+{product.colors.length - MAX_DOTS}</span>
+            )}
+          </div>
+        )}
+        <div className="flex items-baseline gap-1">
+          {hasPriceRange(product) && <span className="text-xs text-muted-foreground">From</span>}
+          <PriceDisplay price={price} compareAtPrice={compareAtPrice} showBadge={false} />
+        </div>
       </div>
     </Link>
   );

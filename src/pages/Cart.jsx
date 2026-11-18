@@ -46,10 +46,11 @@ export default function Cart() {
       ) : (
         <div className="grid gap-10 lg:grid-cols-3">
           <div className="divide-y divide-border lg:col-span-2">
-            {items.map(({ product, quantity }) => (
+            {items.map(({ product, color, quantity }) => (
               <CartItem
-                key={product._id}
+                key={`${product._id}-${color?._id || ''}`}
                 product={product}
+                color={color}
                 quantity={quantity}
                 onUpdateQuantity={updateQuantity}
                 onRemove={removeItem}

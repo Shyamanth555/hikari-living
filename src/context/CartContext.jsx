@@ -24,22 +24,47 @@ const writeGuestCart = (items) => {
   }
 };
 
-// Resolves a guest cart's [{productId, quantity}] into full {items, subtotal} using live product data.
+// A cart line is a product plus, for a product with colours, the chosen colour.
+const sameLine = (item, productId, colorId) =>
+  item.productId === productId && (item.colorId || null) === (colorId || null);
+
+// The line's colour in the same shape the server's cart sends, so cart UI
+// treats guest and signed-in carts alike.
+const toLineColor = (c) => ({
+  _id: c._id,
+  name: c.name,
+  hex: c.hex,
+  price: c.price,
+  compareAtPrice: c.compareAtPrice,
+  image: c.images?.[0]?.url || '',
+  stock: c.stock,
+});
+
+// Resolves a guest cart's [{productId, colorId, quantity}] into full {items, subtotal}
+// using live product data — mirroring the server's cart (backend cartController).
 const resolveGuestCart = async (guestItems) => {
   if (guestItems.length === 0) return { items: [], subtotal: 0 };
 
-  const products = await productApi.bulk(guestItems.map((i) => i.productId));
+  const products = await productApi.bulk([...new Set(guestItems.map((i) => i.productId))]);
   const productMap = new Map(products.map((p) => [p._id, p]));
 
   const items = guestItems
     .map((gi) => {
       const product = productMap.get(gi.productId);
       if (!product) return null;
-      return { product, quantity: Math.min(gi.quantity, Math.max(product.stock, 0)) || gi.quantity };
+      let color = null;
+      if (product.colors?.length) {
+        const match = product.colors.find((c) => c._id === gi.colorId);
+        if (!match) return null; // colour removed since being added
+        color = toLineColor(match);
+      }
+      const stock = color ? color.stock : product.stock;
+      return { product, color, quantity: Math.min(gi.quantity, Math.max(stock, 0)) || gi.quantity };
     })
     .filter(Boolean);
 
-  const subtotal = items.reduce((sum, i) => sum + getProductPricing(i.product).price * i.quantity, 0);
+  const now = Date.now();
+  const subtotal = items.reduce((sum, i) => sum + getProductPricing(i.product, now, i.color).price * i.quantity, 0);
   return { items, subtotal };
 };
 
@@ -90,17 +115,18 @@ export function CartProvider({ children }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, authLoading]);
 
+  // colorId: the chosen colour for a product with colours, else null.
   const addItem = useCallback(
-    async (productId, quantity = 1) => {
+    async (productId, quantity = 1, colorId = null) => {
       if (isAuthenticated) {
-        applyCartResponse(await cartApi.add(productId, quantity));
+        applyCartResponse(await cartApi.add(productId, quantity, colorId));
       } else {
         const guestItems = readGuestCart();
-        const existing = guestItems.find((i) => i.productId === productId);
+        const existing = guestItems.find((i) => sameLine(i, productId, colorId));
         if (existing) {
           existing.quantity += quantity;
         } else {
-          guestItems.push({ productId, quantity });
+          guestItems.push({ productId, colorId, quantity });
         }
         writeGuestCart(guestItems);
         applyCartResponse(await resolveGuestCart(guestItems));
@@ -110,15 +136,15 @@ export function CartProvider({ children }) {
   );
 
   const updateQuantity = useCallback(
-    async (productId, quantity) => {
+    async (productId, quantity, colorId = null) => {
       if (isAuthenticated) {
-        applyCartResponse(await cartApi.updateQuantity(productId, quantity));
+        applyCartResponse(await cartApi.updateQuantity(productId, quantity, colorId));
       } else {
         let guestItems = readGuestCart();
         if (quantity <= 0) {
-          guestItems = guestItems.filter((i) => i.productId !== productId);
+          guestItems = guestItems.filter((i) => !sameLine(i, productId, colorId));
         } else {
-          const existing = guestItems.find((i) => i.productId === productId);
+          const existing = guestItems.find((i) => sameLine(i, productId, colorId));
           if (existing) existing.quantity = quantity;
         }
         writeGuestCart(guestItems);
@@ -129,11 +155,11 @@ export function CartProvider({ children }) {
   );
 
   const removeItem = useCallback(
-    async (productId) => {
+    async (productId, colorId = null) => {
       if (isAuthenticated) {
-        applyCartResponse(await cartApi.remove(productId));
+        applyCartResponse(await cartApi.remove(productId, colorId));
       } else {
-        const guestItems = readGuestCart().filter((i) => i.productId !== productId);
+        const guestItems = readGuestCart().filter((i) => !sameLine(i, productId, colorId));
         writeGuestCart(guestItems);
         applyCartResponse(await resolveGuestCart(guestItems));
       }

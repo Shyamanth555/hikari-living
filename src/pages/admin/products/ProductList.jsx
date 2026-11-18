@@ -19,7 +19,7 @@ import { useDebounce } from '../../../hooks/useDebounce';
 import { productApi } from '../../../api/productApi';
 import { useToast } from '../../../context/ToastContext';
 import { formatCurrency } from '../../../lib/formatCurrency';
-import { getSaleStatus } from '../../../lib/pricing';
+import { getSaleStatus, hasPriceRange } from '../../../lib/pricing';
 import { imageUrl } from '../../../lib/cloudinaryImage';
 
 export default function ProductList() {
@@ -70,7 +70,15 @@ export default function ProductList() {
         const saleStatus = getSaleStatus(row);
         return (
           <div className="flex flex-col items-start gap-1">
-            <span>{formatCurrency(row.price)}</span>
+            <span>
+              {hasPriceRange(row) && <span className="text-muted-foreground">from </span>}
+              {formatCurrency(row.price)}
+            </span>
+            {row.colors?.length > 0 && (
+              <span className="text-xs text-muted-foreground">
+                {row.colors.length} colour{row.colors.length === 1 ? '' : 's'}
+              </span>
+            )}
             {saleStatus === 'live' && <Badge className="bg-sale text-sale-foreground">Sale live · {row.sale.percentOff}% off</Badge>}
             {saleStatus === 'upcoming' && <Badge variant="gold">Sale scheduled · {row.sale.percentOff}% off</Badge>}
           </div>

@@ -12,6 +12,7 @@ import { orderApi } from '../../api/orderApi';
 import { useToast } from '../../context/ToastContext';
 import { formatCurrency } from '../../lib/formatCurrency';
 import { imageUrl } from '../../lib/cloudinaryImage';
+import { ColorTag } from '../../components/common/ColorTag';
 
 export default function OrderDetail() {
   const { orderNumber } = useParams();
@@ -91,6 +92,7 @@ export default function OrderDetail() {
                 <img src={imageUrl(item.image, 'thumb')} alt={item.name} className="h-14 w-14 rounded-md object-cover" />
                 <div className="flex-1">
                   <p className="text-sm font-medium text-foreground">{item.name}</p>
+                  {item.color && <ColorTag name={item.color.name} hex={item.color.hex} className="flex" />}
                   <p className="text-sm text-muted-foreground">Qty {item.quantity}</p>
                   {order.status === 'delivered' && item.product?.slug && (
                     <Link

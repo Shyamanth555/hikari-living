@@ -4,8 +4,9 @@ import { getProductPricing } from './pricing';
 // compareAtPrice (MRP), or the regular price during a flash sale — used to show
 // a "You save ₹X" line in the cart summary.
 export function calculateSavings(items) {
-  return items.reduce((total, { product, quantity }) => {
-    const { price, compareAtPrice } = getProductPricing(product);
+  const now = Date.now();
+  return items.reduce((total, { product, color, quantity }) => {
+    const { price, compareAtPrice } = getProductPricing(product, now, color);
     const discount = compareAtPrice > price ? compareAtPrice - price : 0;
     return total + discount * quantity;
   }, 0);

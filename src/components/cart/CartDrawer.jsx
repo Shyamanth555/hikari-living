@@ -6,8 +6,10 @@ import { Button } from '../ui/Button';
 import { formatCurrency } from '../../lib/formatCurrency';
 import { EmptyState } from '../common/EmptyState';
 import { PriceDisplay } from '../common/PriceDisplay';
+import { ColorTag } from '../common/ColorTag';
 import { getProductPricing } from '../../lib/pricing';
 import { imageUrl } from '../../lib/cloudinaryImage';
+import { productUrl } from '../../lib/productColors';
 
 export function CartDrawer({ open, onOpenChange }) {
   const { items, subtotal, updateQuantity, removeItem, loading } = useCart();
@@ -37,27 +39,28 @@ export function CartDrawer({ open, onOpenChange }) {
             )}
 
             <ul className="space-y-5">
-              {items.map(({ product, quantity }) => (
-                <li key={product._id} className="flex gap-3">
+              {items.map(({ product, color, quantity }) => (
+                <li key={`${product._id}-${color?._id || ''}`} className="flex gap-3">
                   <img
-                    src={imageUrl(product.images?.[0]?.url, 'thumb')}
+                    src={imageUrl(color?.image || product.images?.[0]?.url, 'thumb')}
                     alt={product.name}
                     className="h-20 w-20 shrink-0 rounded-md object-cover"
                   />
                   <div className="flex flex-1 flex-col">
                     <Link
-                      to={`/product/${product.slug}`}
+                      to={productUrl(product.slug, color?.name)}
                       onClick={() => onOpenChange(false)}
                       className="text-sm font-medium text-foreground hover:underline"
                     >
                       {product.name}
                     </Link>
-                    <PriceDisplay {...getProductPricing(product)} size="sm" />
+                    {color && <ColorTag name={color.name} hex={color.hex} />}
+                    <PriceDisplay {...getProductPricing(product, Date.now(), color)} size="sm" />
                     <div className="mt-2 flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2">
                         <button
                           type="button"
-                          onClick={() => updateQuantity(product._id, quantity - 1)}
+                          onClick={() => updateQuantity(product._id, quantity - 1, color?._id || null)}
                           className="flex h-7 w-7 items-center justify-center rounded-md border border-border hover:bg-muted cursor-pointer"
                           aria-label="Decrease quantity"
                         >
@@ -66,8 +69,8 @@ export function CartDrawer({ open, onOpenChange }) {
                         <span className="w-6 text-center text-sm">{quantity}</span>
                         <button
                           type="button"
-                          onClick={() => updateQuantity(product._id, quantity + 1)}
-                          disabled={quantity >= product.stock}
+                          onClick={() => updateQuantity(product._id, quantity + 1, color?._id || null)}
+                          disabled={quantity >= (color ? color.stock : product.stock)}
                           className="flex h-7 w-7 items-center justify-center rounded-md border border-border hover:bg-muted disabled:opacity-40 cursor-pointer"
                           aria-label="Increase quantity"
                         >
@@ -76,7 +79,7 @@ export function CartDrawer({ open, onOpenChange }) {
                       </div>
                       <button
                         type="button"
-                        onClick={() => removeItem(product._id)}
+                        onClick={() => removeItem(product._id, color?._id || null)}
                         className="text-muted-foreground hover:text-destructive cursor-pointer"
                         aria-label="Remove item"
                       >

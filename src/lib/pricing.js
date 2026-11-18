@@ -14,14 +14,21 @@ export function getSaleStatus(product, now = Date.now()) {
   return 'ended';
 }
 
-// The price to show and charge right now. During a live sale the regular price
+// The price to show and charge right now — of the chosen colour when given
+// (each colour has its own price), else the product's, which for a product
+// with colours is its cheapest one. During a live sale the regular price
 // becomes the struck-through one, so the "% off" shown matches the sale.
-export function getProductPricing(product, now = Date.now()) {
+export function getProductPricing(product, now = Date.now(), color = null) {
+  const base = color ? color.price : product.price;
   if (getSaleStatus(product, now) === 'live') {
-    return { price: product.salePrice, compareAtPrice: product.price, onSale: true };
+    return { price: salePriceOf(base, product.sale.percentOff), compareAtPrice: base, onSale: true };
   }
-  return { price: product.price, compareAtPrice: product.compareAtPrice, onSale: false };
+  return { price: base, compareAtPrice: color ? color.compareAtPrice : product.compareAtPrice, onSale: false };
 }
+
+// True when a product's colours don't all cost the same — its listed price is
+// then the cheapest one, shown as "From ₹X".
+export const hasPriceRange = (product) => new Set((product?.colors || []).map((c) => c.price)).size > 1;
 
 // Splits a duration into countdown units, clamped at zero.
 export function getCountdownParts(ms) {

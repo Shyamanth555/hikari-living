@@ -85,7 +85,8 @@ export default function TrackOrder() {
               {result.items.map((item, i) => (
                 <li key={i} className="flex items-center gap-3">
                   <img src={imageUrl(item.image, 'thumb')} alt={item.name} className="h-10 w-10 rounded object-cover" />
-                  {item.name} × {item.quantity}
+                  {item.name}
+                  {item.color && ` (${item.color})`} × {item.quantity}
                 </li>
               ))}
             </ul>

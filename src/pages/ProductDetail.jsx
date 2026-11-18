@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
+import { useParams, useNavigate, useLocation, useSearchParams, Link } from 'react-router-dom';
 import { Truck, RotateCcw, ShieldCheck, Package } from 'lucide-react';
 import { SEO } from '../components/common/SEO';
 import { Breadcrumbs } from '../components/common/Breadcrumbs';
@@ -11,6 +11,7 @@ import { RatingStars } from '../components/common/RatingStars';
 import { ReviewsSection } from '../components/product/ReviewsSection';
 import { RelatedProducts } from '../components/product/RelatedProducts';
 import { FlashSaleBanner } from '../components/product/FlashSaleBanner';
+import { ColorPicker } from '../components/product/ColorPicker';
 import { Button } from '../components/ui/Button';
 import { Spinner } from '../components/ui/Spinner';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../components/ui/Accordion';
@@ -20,6 +21,7 @@ import { useNow } from '../hooks/useNow';
 import { productApi } from '../api/productApi';
 import { getProductPricing } from '../lib/pricing';
 import { imageUrl } from '../lib/cloudinaryImage';
+import { colorSlug } from '../lib/productColors';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
@@ -34,6 +36,7 @@ const DELIVERY_INFO = [
 export default function ProductDetail() {
   const { slug } = useParams();
   const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { data: product, loading, error } = useAsync(() => productApi.getBySlug(slug), [slug]);
   const { addItem } = useCart();
   const { isAuthenticated } = useAuth();
@@ -64,11 +67,35 @@ export default function ProductDetail() {
     );
   }
 
+  // The chosen colour lives in the URL (?color=antique-gold), so links from
+  // the cart or a share open on it. Without one, the first colour in stock.
+  const colors = product.colors || [];
+  const selectedColor = colors.length
+    ? colors.find((c) => colorSlug(c.name) === searchParams.get('color')) ||
+      colors.find((c) => c.stock > 0) ||
+      colors[0]
+    : null;
+  const selectColor = (color) =>
+    setSearchParams(
+      (params) => {
+        params.set('color', colorSlug(color.name));
+        return params;
+      },
+      { replace: true }
+    );
+
+  // Price, photos and stock are the chosen colour's when the product has colours.
+  const stock = selectedColor ? selectedColor.stock : product.stock;
+  const galleryImages = selectedColor ? selectedColor.images : product.images;
+  // A colour with less stock may have been picked after the quantity was set.
+  const qty = Math.min(quantity, Math.max(stock, 1));
+  const itemLabel = selectedColor ? `${product.name} (${selectedColor.name})` : product.name;
+
   const handleAddToCart = async () => {
     setAdding(true);
     try {
-      await addItem(product._id, quantity);
-      toast({ title: 'Added to cart', description: `${product.name} × ${quantity}`, variant: 'success' });
+      await addItem(product._id, qty, selectedColor?._id || null);
+      toast({ title: 'Added to cart', description: `${itemLabel} × ${qty}`, variant: 'success' });
     } catch (err) {
       toast({
         title: 'Could not add to cart',
@@ -83,7 +110,7 @@ export default function ProductDetail() {
   const handleBuyNow = async () => {
     setBuyingNow(true);
     try {
-      await addItem(product._id, quantity);
+      await addItem(product._id, qty, selectedColor?._id || null);
       navigate(isAuthenticated ? '/checkout' : `/login?redirect=/checkout`);
     } catch (err) {
       toast({
@@ -96,7 +123,7 @@ export default function ProductDetail() {
   };
 
   const defaultSection = location.hash === '#reviews' ? 'reviews' : 'description';
-  const pricing = getProductPricing(product, now);
+  const pricing = getProductPricing(product, now, selectedColor);
 
   const descriptionContent = (
     <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">{product.description}</p>
@@ -161,10 +188,12 @@ export default function ProductDetail() {
 
       <div className="grid gap-10 md:grid-cols-2 md:items-start">
         <ProductGallery
-          images={product.images}
-          productName={product.name}
+          // Remount on a colour change so the gallery starts at that colour's first photo.
+          key={selectedColor?._id || 'default'}
+          images={galleryImages}
+          productName={itemLabel}
           onAddToCart={handleAddToCart}
-          addToCartDisabled={product.stock <= 0 || adding}
+          addToCartDisabled={stock <= 0 || adding}
         />
 
         <div>
@@ -180,29 +209,34 @@ export default function ProductDetail() {
                 </span>
               </div>
             )}
-            {product.sku && <span className="text-sm text-muted-foreground">SKU: {product.sku}</span>}
+            {(selectedColor?.sku || product.sku) && (
+              <span className="text-sm text-muted-foreground">SKU: {selectedColor?.sku || product.sku}</span>
+            )}
           </div>
 
           <div className="mt-3">
             <PriceDisplay price={pricing.price} compareAtPrice={pricing.compareAtPrice} size="lg" />
           </div>
           <FlashSaleBanner product={product} now={now} className="mt-4" />
+          {selectedColor && (
+            <ColorPicker colors={colors} selected={selectedColor} onSelect={selectColor} className="mt-5" />
+          )}
           <div className="mt-3">
-            <StockBadge stock={product.stock} />
+            <StockBadge stock={stock} />
           </div>
 
           {product.shortDescription && <p className="mt-5 text-muted-foreground">{product.shortDescription}</p>}
 
           <div className="mt-8 flex flex-wrap items-center gap-4">
-            <QuantitySelector value={quantity} onChange={setQuantity} max={Math.max(product.stock, 1)} />
+            <QuantitySelector value={qty} onChange={setQuantity} max={Math.max(stock, 1)} />
             <Button
               size="lg"
               variant="accent"
-              disabled={product.stock <= 0 || buyingNow}
+              disabled={stock <= 0 || buyingNow}
               onClick={handleBuyNow}
               className="flex-1"
             >
-              {product.stock <= 0 ? 'Out of stock' : buyingNow ? 'Please wait…' : 'Buy Now'}
+              {stock <= 0 ? 'Out of stock' : buyingNow ? 'Please wait…' : 'Buy Now'}
             </Button>
           </div>
 

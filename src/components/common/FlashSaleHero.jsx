@@ -7,7 +7,7 @@ import { SaleCountdown } from './SaleCountdown';
 import { useNow } from '../../hooks/useNow';
 import { cn } from '../../lib/cn';
 import { formatCurrency } from '../../lib/formatCurrency';
-import { formatSaleTime, getSaleStatus } from '../../lib/pricing';
+import { formatSaleTime, getSaleStatus, hasPriceRange } from '../../lib/pricing';
 import { imageUrl } from '../../lib/cloudinaryImage';
 
 const LOW_STOCK_THRESHOLD = 10;
@@ -18,6 +18,7 @@ function FlashSaleSlide({ product, live, now, loadImage }) {
   const { percentOff, startsAt, endsAt } = product.sale;
   const soldOut = product.stock <= 0;
   const productUrl = `/product/${product.slug}`;
+  const priceRange = hasPriceRange(product);
 
   return (
     <div className="mx-auto grid h-full max-w-5xl content-center items-center gap-10 md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] md:gap-12 lg:gap-16">
@@ -52,7 +53,9 @@ function FlashSaleSlide({ product, live, now, loadImage }) {
           <p className="mt-2 max-w-md text-sm text-muted-foreground md:text-base">{product.shortDescription}</p>
         )}
 
+        {/* For colours at different prices these are the cheapest colour's, hence "From". */}
         <div className="mt-5 flex flex-wrap items-baseline justify-center gap-x-3 gap-y-2 md:justify-start">
+          {priceRange && <span className="text-sm text-muted-foreground">From</span>}
           <span className="font-display text-3xl text-foreground md:text-4xl">{formatCurrency(product.salePrice)}</span>
           <span className="text-lg text-destructive line-through decoration-muted-foreground decoration-2">{formatCurrency(product.price)}</span>
           <span className="rounded-full bg-pine-50 px-2.5 py-0.5 text-sm font-medium text-pine-600">
@@ -70,7 +73,7 @@ function FlashSaleSlide({ product, live, now, loadImage }) {
           ) : (
             <Button asChild size="lg" variant={live ? 'accent' : 'outline'}>
               <Link to={productUrl}>
-                {live ? `Buy now at ${formatCurrency(product.salePrice)}` : 'View product'}
+                {live ? `Buy now ${priceRange ? 'from' : 'at'} ${formatCurrency(product.salePrice)}` : 'View product'}
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>

@@ -9,6 +9,7 @@ import { Button } from '../ui/Button';
 import { Checkbox } from '../ui/Checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/Select';
 import { ImageUploader } from './ImageUploader';
+import { ColorsEditor, newColorRow, toColorPayload, validateColors } from './ColorsEditor';
 import { Plus, Trash2, Zap } from 'lucide-react';
 import { formatCurrency } from '../../lib/formatCurrency';
 import { getSaleStatus, salePriceOf } from '../../lib/pricing';
@@ -63,6 +64,17 @@ const productSchema = z.object({
 export function ProductForm({ defaultValues, categories = [], onSubmit, submitting = false, submitLabel = 'Save product' }) {
   const [images, setImages] = useState(defaultValues?.images || []);
   const [specifications, setSpecifications] = useState(defaultValues?.specifications || []);
+  const [colors, setColors] = useState(() => (defaultValues?.colors || []).map(newColorRow));
+  const [colorError, setColorError] = useState(null);
+
+  // With colours, price, MRP and stock are set per colour; the product's own
+  // are the cheapest colour's and the total (the server derives the same).
+  const hasColors = colors.length > 0;
+  const pricedColors = colors.filter((c) => c.price !== '' && Number(c.price) >= 0);
+  const cheapestColor = pricedColors.length
+    ? pricedColors.reduce((min, c) => (Number(c.price) < Number(min.price) ? c : min))
+    : null;
+  const totalColorStock = colors.reduce((sum, c) => sum + (Number(c.stock) || 0), 0);
 
   const addSpec = () => setSpecifications((s) => [...s, { key: '', value: '' }]);
   const updateSpec = (i, field, val) =>
@@ -107,9 +119,11 @@ export function ProductForm({ defaultValues, categories = [], onSubmit, submitti
   ]);
   const hasSale = Boolean(salePercentOff || saleStartsAt || saleEndsAt);
   const percentOff = Number(salePercentOff);
+  // Previewed on the cheapest colour for a product with colours.
+  const previewBase = hasColors ? Number(cheapestColor?.price) : Number(watchedPrice);
   const salePreviewPrice =
-    Number(watchedPrice) > 0 && Number.isInteger(percentOff) && percentOff >= 1 && percentOff <= 90
-      ? salePriceOf(Number(watchedPrice), percentOff)
+    previewBase > 0 && Number.isInteger(percentOff) && percentOff >= 1 && percentOff <= 90
+      ? salePriceOf(previewBase, percentOff)
       : null;
   // datetime-local strings parse as local time, same as on submit.
   const saleStatus = getSaleStatus({ sale: { startsAt: saleStartsAt, endsAt: saleEndsAt } });
@@ -122,12 +136,21 @@ export function ProductForm({ defaultValues, categories = [], onSubmit, submitti
   };
 
   const submit = ({ salePercentOff, saleStartsAt, saleEndsAt, ...values }) => {
-    if (images.length === 0) {
+    const colorProblem = validateColors(colors);
+    setColorError(colorProblem);
+    if (images.length === 0 || colorProblem) {
       return;
     }
+    const colorPayload = toColorPayload(colors);
     onSubmit({
       ...values,
       compareAtPrice: values.compareAtPrice ? Number(values.compareAtPrice) : null,
+      ...(hasColors && {
+        price: Number(cheapestColor.price),
+        compareAtPrice: colorPayload.find((c) => c.price === Number(cheapestColor.price))?.compareAtPrice ?? null,
+        stock: totalColorStock,
+      }),
+      colors: colorPayload,
       sale: salePercentOff
         ? {
             percentOff: Number(salePercentOff),
@@ -152,6 +175,7 @@ export function ProductForm({ defaultValues, categories = [], onSubmit, submitti
         <p className="text-xs text-muted-foreground">
           Recommended 1200×1200px or larger (square, ratio 1:1) — the first image is used as the main photo and
           product card thumbnail everywhere on the site.
+          {hasColors && ' On the product page, the chosen colour’s own photos are shown instead.'}
         </p>
         <ImageUploader images={images} onChange={setImages} />
         {images.length === 0 && <p className="text-xs text-destructive">At least one image is required</p>}
@@ -179,24 +203,44 @@ export function ProductForm({ defaultValues, categories = [], onSubmit, submitti
       </div>
 
       <div className="grid gap-4 sm:grid-cols-4">
-        <div className="space-y-1.5">
-          <Label htmlFor="price">
-            Price (₹) <span className="text-destructive">*</span>
-          </Label>
-          <Input id="price" type="number" step="0.01" {...register('price')} />
-          {errors.price && <p className="text-xs text-destructive">{errors.price.message}</p>}
-        </div>
-        <div className="space-y-1.5">
-          <Label htmlFor="compareAtPrice">Compare-at price (₹)</Label>
-          <Input id="compareAtPrice" type="number" step="0.01" {...register('compareAtPrice')} />
-        </div>
-        <div className="space-y-1.5">
-          <Label htmlFor="stock">
-            Stock <span className="text-destructive">*</span>
-          </Label>
-          <Input id="stock" type="number" {...register('stock')} />
-          {errors.stock && <p className="text-xs text-destructive">{errors.stock.message}</p>}
-        </div>
+        {hasColors ? (
+          <div className="rounded-md bg-background-soft p-3 text-sm sm:col-span-3">
+            <p className="font-medium text-foreground">Price, MRP and stock are set per colour below</p>
+            <p className="mt-1 text-muted-foreground">
+              Listed as{' '}
+              {cheapestColor ? (
+                <>
+                  {pricedColors.some((c) => Number(c.price) !== Number(cheapestColor.price)) && 'from '}
+                  <span className="font-medium text-foreground">{formatCurrency(cheapestColor.price)}</span>
+                </>
+              ) : (
+                '—'
+              )}{' '}
+              · {totalColorStock} in stock across {colors.length} colour{colors.length === 1 ? '' : 's'}
+            </p>
+          </div>
+        ) : (
+          <>
+            <div className="space-y-1.5">
+              <Label htmlFor="price">
+                Price (₹) <span className="text-destructive">*</span>
+              </Label>
+              <Input id="price" type="number" step="0.01" {...register('price')} />
+              {errors.price && <p className="text-xs text-destructive">{errors.price.message}</p>}
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="compareAtPrice">Compare-at price (₹)</Label>
+              <Input id="compareAtPrice" type="number" step="0.01" {...register('compareAtPrice')} />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="stock">
+                Stock <span className="text-destructive">*</span>
+              </Label>
+              <Input id="stock" type="number" {...register('stock')} />
+              {errors.stock && <p className="text-xs text-destructive">{errors.stock.message}</p>}
+            </div>
+          </>
+        )}
         <div className="space-y-1.5">
           <Label htmlFor="weight">Weight (kg)</Label>
           <Input id="weight" type="number" step="0.01" {...register('weight')} />
@@ -204,6 +248,8 @@ export function ProductForm({ defaultValues, categories = [], onSubmit, submitti
           <p className="text-xs text-muted-foreground">Per unit — used for shipping calculations</p>
         </div>
       </div>
+
+      <ColorsEditor colors={colors} onChange={setColors} error={colorError} />
 
       <div className="space-y-4 rounded-lg border border-border p-4">
         <div className="flex items-start justify-between gap-4">
@@ -246,7 +292,7 @@ export function ProductForm({ defaultValues, categories = [], onSubmit, submitti
             {salePreviewPrice !== null && (
               <>
                 Sale price <span className="font-medium text-foreground">{formatCurrency(salePreviewPrice)}</span>{' '}
-                <span className="text-destructive line-through decoration-muted-foreground decoration-2">{formatCurrency(watchedPrice)}</span>
+                <span className="text-destructive line-through decoration-muted-foreground decoration-2">{formatCurrency(previewBase)}</span>
               </>
             )}
             {salePreviewPrice !== null && saleStatusLabel && ' · '}
