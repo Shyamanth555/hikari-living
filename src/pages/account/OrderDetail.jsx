@@ -11,7 +11,7 @@ import { useAsync } from '../../hooks/useAsync';
 import { orderApi } from '../../api/orderApi';
 import { useToast } from '../../context/ToastContext';
 import { formatCurrency } from '../../lib/formatCurrency';
-import { cloudinaryUrl } from '../../lib/cloudinaryImage';
+import { imageUrl } from '../../lib/cloudinaryImage';
 
 export default function OrderDetail() {
   const { orderNumber } = useParams();
@@ -88,7 +88,7 @@ export default function OrderDetail() {
           <ul className="divide-y divide-border rounded-lg border border-border">
             {order.items.map((item, i) => (
               <li key={i} className="flex items-center gap-3 p-4">
-                <img src={cloudinaryUrl(item.image, { width: 150, height: 150, crop: 'fill' })} alt={item.name} className="h-14 w-14 rounded-md object-cover" />
+                <img src={imageUrl(item.image, 'thumb')} alt={item.name} className="h-14 w-14 rounded-md object-cover" />
                 <div className="flex-1">
                   <p className="text-sm font-medium text-foreground">{item.name}</p>
                   <p className="text-sm text-muted-foreground">Qty {item.quantity}</p>

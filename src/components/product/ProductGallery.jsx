@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight, ShoppingBag } from 'lucide-react';
 import { cn } from '../../lib/cn';
-import { cloudinaryUrl } from '../../lib/cloudinaryImage';
+import { imageUrl } from '../../lib/cloudinaryImage';
 
 const SWIPE_THRESHOLD_PX = 40;
 
@@ -40,7 +40,7 @@ export function ProductGallery({ images = [], productName, onAddToCart, addToCar
               )}
             >
               <img
-                src={cloudinaryUrl(img.url, { width: 160, height: 160, crop: 'fill' })}
+                src={imageUrl(img.url, 'thumb')}
                 alt={`${productName} ${i + 1}`}
                 className="h-full w-full object-cover"
               />
@@ -55,7 +55,7 @@ export function ProductGallery({ images = [], productName, onAddToCart, addToCar
         onTouchEnd={handleTouchEnd}
       >
         {activeImage && (
-          <img src={cloudinaryUrl(activeImage.url, { width: 1200 })} alt={productName} className="h-full w-full object-cover" />
+          <img src={imageUrl(activeImage.url, 'large')} alt={productName} className="h-full w-full object-cover" />
         )}
         {onAddToCart && (
           <button

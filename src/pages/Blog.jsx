@@ -7,7 +7,7 @@ import { Skeleton } from '../components/ui/Skeleton';
 import { EmptyState } from '../components/common/EmptyState';
 import { useAsync } from '../hooks/useAsync';
 import { blogApi } from '../api/blogApi';
-import { cloudinaryUrl } from '../lib/cloudinaryImage';
+import { imageUrl } from '../lib/cloudinaryImage';
 import { Newspaper } from 'lucide-react';
 
 export default function Blog() {
@@ -46,7 +46,7 @@ export default function Blog() {
             <Link key={post._id} to={`/blog/${post.slug}`} className="group block">
               <div className="aspect-video overflow-hidden rounded-lg bg-cream-200">
                 <img
-                  src={cloudinaryUrl(post.coverImage?.url, { width: 800 })}
+                  src={imageUrl(post.coverImage?.url, 'card')}
                   alt={post.title}
                   loading="lazy"
                   className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"

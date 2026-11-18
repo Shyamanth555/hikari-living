@@ -22,6 +22,17 @@ export function HeroCarousel({ slides }) {
     return () => clearInterval(timer);
   }, [slides.length, paused]);
 
+  // Slides are stacked on top of each other, so loading="lazy" can't hold the
+  // hidden ones back — every slide's image would download on page load. A
+  // slide's image is instead rendered only once it's showing or next up (so it
+  // is ready before it fades in), and kept after that.
+  const [loadedSlides, setLoadedSlides] = useState(() => new Set([0, 1]));
+  useEffect(() => {
+    if (slides.length === 0) return;
+    const next = (index + 1) % slides.length;
+    setLoadedSlides((prev) => (prev.has(index) && prev.has(next) ? prev : new Set([...prev, index, next])));
+  }, [index, slides.length]);
+
   if (slides.length === 0) return null;
 
   const handleTouchStart = (e) => {
@@ -54,14 +65,15 @@ export function HeroCarousel({ slides }) {
           )}
           aria-hidden={i !== index}
         >
-          <img
-            src={cloudinaryUrl(slide.image?.url, { width: 1600 })}
-            srcSet={cloudinarySrcSet(slide.image?.url, HERO_WIDTHS)}
-            sizes="100vw"
-            alt={slide.heading || slide.product?.name || ''}
-            className="h-full w-full object-cover"
-            loading={i === 0 ? 'eager' : 'lazy'}
-          />
+          {loadedSlides.has(i) && (
+            <img
+              src={cloudinaryUrl(slide.image?.url, { width: 1600 })}
+              srcSet={cloudinarySrcSet(slide.image?.url, HERO_WIDTHS)}
+              sizes="100vw"
+              alt={slide.heading || slide.product?.name || ''}
+              className="h-full w-full object-cover"
+            />
+          )}
 
           <div className="absolute inset-0 bg-gradient-to-t from-ink-900/70 via-ink-900/10 to-transparent" />
 

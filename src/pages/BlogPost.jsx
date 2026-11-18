@@ -6,7 +6,7 @@ import { Breadcrumbs } from '../components/common/Breadcrumbs';
 import { Spinner } from '../components/ui/Spinner';
 import { useAsync } from '../hooks/useAsync';
 import { blogApi } from '../api/blogApi';
-import { cloudinaryUrl } from '../lib/cloudinaryImage';
+import { imageUrl } from '../lib/cloudinaryImage';
 
 export default function BlogPost() {
   const { slug } = useParams();
@@ -33,7 +33,7 @@ export default function BlogPost() {
 
   return (
     <div className="container-page py-10">
-      <SEO title={post.title} description={post.excerpt} image={post.coverImage?.url} />
+      <SEO title={post.title} description={post.excerpt} image={imageUrl(post.coverImage?.url, 'large')} />
       <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Blog', href: '/blog' }, { label: post.title }]} />
 
       <article className="mx-auto max-w-2xl">
@@ -49,7 +49,7 @@ export default function BlogPost() {
 
         {post.coverImage?.url && (
           <div className="mt-6 aspect-video overflow-hidden rounded-lg bg-cream-200">
-            <img src={cloudinaryUrl(post.coverImage.url, { width: 1600 })} alt={post.title} className="h-full w-full object-cover" />
+            <img src={imageUrl(post.coverImage.url, 'large')} alt={post.title} className="h-full w-full object-cover" />
           </div>
         )}
 

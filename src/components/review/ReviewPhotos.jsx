@@ -1,22 +1,22 @@
 import { useState } from 'react';
 import { ImageLightbox } from '../common/ImageLightbox';
 import { cn } from '../../lib/cn';
-import { cloudinaryUrl } from '../../lib/cloudinaryImage';
+import { imageUrl } from '../../lib/cloudinaryImage';
 
+// Display sizes only — every size loads the same 'thumb' image, so a photo
+// seen in a review card is already cached when the review dialog or product
+// page shows it again.
 const SIZES = {
-  xs: { box: 'h-10 w-10', px: 80 },
-  sm: { box: 'h-14 w-14', px: 112 },
-  md: { box: 'h-20 w-20', px: 160 },
+  xs: 'h-10 w-10',
+  sm: 'h-14 w-14',
+  md: 'h-20 w-20',
 };
-
-// A small square crop instead of the full upload, so a row of thumbnails stays light.
-const thumbnailUrl = (url, px) => cloudinaryUrl(url, { width: px, height: px, crop: 'fill' });
 
 // A customer's review photos as thumbnails; tapping one opens it full screen.
 export function ReviewPhotos({ images, size = 'md', alt = 'Customer photo', className }) {
   const [openIndex, setOpenIndex] = useState(null);
   if (!images?.length) return null;
-  const { box, px } = SIZES[size];
+  const box = SIZES[size];
 
   return (
     <>
@@ -32,7 +32,7 @@ export function ReviewPhotos({ images, size = 'md', alt = 'Customer photo', clas
             )}
             aria-label={`View photo ${i + 1} of ${images.length} full screen`}
           >
-            <img src={thumbnailUrl(img.url, px)} alt="" loading="lazy" className="h-full w-full object-cover" />
+            <img src={imageUrl(img.url, 'thumb')} alt="" loading="lazy" className="h-full w-full object-cover" />
           </button>
         ))}
       </div>

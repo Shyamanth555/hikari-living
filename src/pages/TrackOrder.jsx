@@ -7,7 +7,7 @@ import { Button } from '../components/ui/Button';
 import { OrderStatusBadge } from '../components/common/OrderStatusBadge';
 import { ShipmentTimeline } from '../components/common/ShipmentTimeline';
 import { orderApi } from '../api/orderApi';
-import { cloudinaryUrl } from '../lib/cloudinaryImage';
+import { imageUrl } from '../lib/cloudinaryImage';
 
 export default function TrackOrder() {
   const [form, setForm] = useState({ orderNumber: '', email: '' });
@@ -84,7 +84,7 @@ export default function TrackOrder() {
             <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
               {result.items.map((item, i) => (
                 <li key={i} className="flex items-center gap-3">
-                  <img src={cloudinaryUrl(item.image, { width: 100, height: 100, crop: 'fill' })} alt={item.name} className="h-10 w-10 rounded object-cover" />
+                  <img src={imageUrl(item.image, 'thumb')} alt={item.name} className="h-10 w-10 rounded object-cover" />
                   {item.name} × {item.quantity}
                 </li>
               ))}

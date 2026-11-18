@@ -3,7 +3,7 @@ import { ImagePlus, Loader2, RefreshCw, X } from 'lucide-react';
 import { uploadApi } from '../../api/uploadApi';
 import { useToast } from '../../context/ToastContext';
 import { cn } from '../../lib/cn';
-import { cloudinaryUrl } from '../../lib/cloudinaryImage';
+import { imageUrl } from '../../lib/cloudinaryImage';
 
 export function ImageUploader({ images = [], onChange, max = 8 }) {
   const inputRef = useRef(null);
@@ -74,7 +74,7 @@ export function ImageUploader({ images = [], onChange, max = 8 }) {
       <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
         {images.map((img, index) => (
           <div key={img.publicId} className="group relative aspect-square overflow-hidden rounded-md border border-border">
-            <img src={cloudinaryUrl(img.url, { width: 300, height: 300, crop: 'fill' })} alt="" className="h-full w-full object-cover" />
+            <img src={imageUrl(img.url, 'thumb')} alt="" className="h-full w-full object-cover" />
             <div className="absolute inset-x-0 top-0 flex items-center justify-between p-1.5">
               <button
                 type="button"

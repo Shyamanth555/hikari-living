@@ -20,7 +20,7 @@ import { productApi } from '../../../api/productApi';
 import { useToast } from '../../../context/ToastContext';
 import { formatCurrency } from '../../../lib/formatCurrency';
 import { getSaleStatus } from '../../../lib/pricing';
-import { cloudinaryUrl } from '../../../lib/cloudinaryImage';
+import { imageUrl } from '../../../lib/cloudinaryImage';
 
 export default function ProductList() {
   const [page, setPage] = useState(1);
@@ -57,7 +57,7 @@ export default function ProductList() {
       label: 'Product',
       render: (row) => (
         <div className="flex items-center gap-3">
-          <img src={cloudinaryUrl(row.images?.[0]?.url, { width: 100, height: 100, crop: 'fill' })} alt="" className="h-10 w-10 rounded object-cover" />
+          <img src={imageUrl(row.images?.[0]?.url, 'thumb')} loading="lazy" alt="" className="h-10 w-10 rounded object-cover" />
           <span className="font-medium text-foreground">{row.name}</span>
         </div>
       ),

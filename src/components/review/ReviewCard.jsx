@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { BadgeCheck } from 'lucide-react';
 import { RatingStars } from '../common/RatingStars';
 import { ReviewPhotos } from './ReviewPhotos';
-import { cloudinaryUrl } from '../../lib/cloudinaryImage';
+import { imageUrl } from '../../lib/cloudinaryImage';
 
 /**
  * A review on the home page / Reviews page. The whole card opens the review
@@ -26,7 +26,7 @@ export function ReviewCard({ review, onOpen }) {
           to={`/product/${product.slug}`}
           className="relative z-10 flex items-center gap-3 self-start rounded-md pr-1 hover:underline"
         >
-          {product.image && <img src={cloudinaryUrl(product.image, { width: 100, height: 100, crop: 'fill' })} alt="" className="h-10 w-10 shrink-0 rounded object-cover" />}
+          {product.image && <img src={imageUrl(product.image, 'thumb')} loading="lazy" alt="" className="h-10 w-10 shrink-0 rounded object-cover" />}
           <span className="line-clamp-1 text-sm font-medium text-foreground">{product.name}</span>
         </Link>
       )}

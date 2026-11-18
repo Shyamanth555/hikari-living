@@ -19,6 +19,7 @@ import { useAsync } from '../hooks/useAsync';
 import { useNow } from '../hooks/useNow';
 import { productApi } from '../api/productApi';
 import { getProductPricing } from '../lib/pricing';
+import { imageUrl } from '../lib/cloudinaryImage';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
@@ -148,7 +149,7 @@ export default function ProductDetail() {
 
   return (
     <div className="container-page py-10">
-      <SEO title={product.name} description={product.shortDescription || product.description} image={product.images?.[0]?.url} />
+      <SEO title={product.name} description={product.shortDescription || product.description} image={imageUrl(product.images?.[0]?.url, 'large')} />
       <Breadcrumbs
         items={[
           { label: 'Home', href: '/' },

@@ -5,7 +5,7 @@ import { RatingStars } from './RatingStars';
 import { useCart } from '../../context/CartContext';
 import { useToast } from '../../context/ToastContext';
 import { getProductPricing } from '../../lib/pricing';
-import { cloudinaryUrl } from '../../lib/cloudinaryImage';
+import { imageUrl } from '../../lib/cloudinaryImage';
 
 export function ProductCard({ product }) {
   const { addItem } = useCart();
@@ -31,7 +31,7 @@ export function ProductCard({ product }) {
     <Link to={`/product/${product.slug}`} className="group block">
       <div className="relative aspect-square overflow-hidden rounded-lg bg-cream-200">
         <img
-          src={cloudinaryUrl(product.images?.[0]?.url, { width: 600 })}
+          src={imageUrl(product.images?.[0]?.url, 'card')}
           alt={product.name}
           loading="lazy"
           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"

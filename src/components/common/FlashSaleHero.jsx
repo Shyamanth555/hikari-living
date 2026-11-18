@@ -8,13 +8,13 @@ import { useNow } from '../../hooks/useNow';
 import { cn } from '../../lib/cn';
 import { formatCurrency } from '../../lib/formatCurrency';
 import { formatSaleTime, getSaleStatus } from '../../lib/pricing';
-import { cloudinaryUrl } from '../../lib/cloudinaryImage';
+import { imageUrl } from '../../lib/cloudinaryImage';
 
 const LOW_STOCK_THRESHOLD = 10;
 const AUTO_ADVANCE_MS = 6000;
 const SWIPE_THRESHOLD_PX = 40;
 
-function FlashSaleSlide({ product, live, now }) {
+function FlashSaleSlide({ product, live, now, loadImage }) {
   const { percentOff, startsAt, endsAt } = product.sale;
   const soldOut = product.stock <= 0;
   const productUrl = `/product/${product.slug}`;
@@ -23,11 +23,13 @@ function FlashSaleSlide({ product, live, now }) {
     <div className="mx-auto grid h-full max-w-5xl content-center items-center gap-10 md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] md:gap-12 lg:gap-16">
       <Link to={productUrl} className="group relative mx-auto block w-full max-w-xs sm:max-w-sm md:max-w-none">
         <div className="aspect-square overflow-hidden rounded-xl bg-cream-200 shadow-xl ring-1 ring-border">
-          <img
-            src={cloudinaryUrl(product.images?.[0]?.url, { width: 900 })}
-            alt={product.name}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
+          {loadImage && (
+            <img
+              src={imageUrl(product.images?.[0]?.url, 'large')}
+              alt={product.name}
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+          )}
         </div>
         <div className="absolute -right-3 -top-3 flex h-20 w-20 rotate-12 flex-col items-center justify-center rounded-full bg-sale text-sale-foreground shadow-lg ring-4 ring-cream-100 md:h-24 md:w-24">
           <span className="font-display text-2xl leading-none md:text-3xl">{percentOff}%</span>
@@ -118,6 +120,17 @@ export function FlashSaleHero({ products }) {
     return () => clearTimeout(timer);
   }, [index, count, paused]);
 
+  // Slides are stacked, so loading="lazy" can't hold the hidden ones back. A
+  // slide's photo loads only once it's showing or next up, then stays. Tracked
+  // by product, since slides reorder as sales go live or end.
+  const activeId = slides[active]?.product._id;
+  const nextId = count > 1 ? slides[(active + 1) % count].product._id : activeId;
+  const [loadedIds, setLoadedIds] = useState(() => new Set());
+  useEffect(() => {
+    if (!activeId) return;
+    setLoadedIds((prev) => (prev.has(activeId) && prev.has(nextId) ? prev : new Set([...prev, activeId, nextId])));
+  }, [activeId, nextId]);
+
   if (count === 0) return null;
 
   const goTo = (i) => setIndex((i + count) % count);
@@ -192,7 +205,13 @@ export function FlashSaleHero({ products }) {
                 i === active ? 'opacity-100' : 'pointer-events-none opacity-0'
               )}
             >
-              <FlashSaleSlide product={product} live={status === 'live'} now={now} />
+              <FlashSaleSlide
+                product={product}
+                live={status === 'live'}
+                now={now}
+                // The first render has no effect run yet, so the active slide is always allowed.
+                loadImage={i === active || loadedIds.has(product._id)}
+              />
             </div>
           ))}
         </div>
